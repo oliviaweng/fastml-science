@@ -465,12 +465,12 @@ def evaluate_model(model,charges,aux_arrs,eval_dict,args):
             # Try multiprocessing
             start = time.time()
 
-            # with Pool() as pool:
-            #     vals = pool.starmap(metric, zip(input_calQ, alg_out))
-            # vals = np.array(vals)
+            with Pool() as pool:
+                vals = pool.starmap(metric, zip(input_calQ, alg_out))
+            vals = np.array(vals)
 
 
-            vals = np.array([metric(input_calQ[i],alg_out[i]) for i in range(0,len(input_Q_abs))])
+            # vals = np.array([metric(input_calQ[i],alg_out[i]) for i in range(0,len(input_Q_abs))])
 
             print(f'EMD compute time: {time.time() - start} seconds')
 
@@ -654,8 +654,8 @@ def main(args):
     eval_dict={
         # compare to other algorithms
         'algnames'    :['ae','stc','thr_lo','thr_hi','bc'],
-        'metrics'     :{'EMD': emd},
-        # 'metrics'     : {'EMD': emd_multiproc},
+        # 'metrics'     :{'EMD': emd},
+        'metrics'     : {'EMD': emd_multiproc},
         "occ_nbins"   :12,
         "occ_range"   :(0,24),
 	"occ_bins"    : [0,2,5,10,15],
