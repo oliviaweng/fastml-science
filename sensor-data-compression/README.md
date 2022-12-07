@@ -12,12 +12,6 @@ source setup.sh # if you do not have the ecoder-env environment (i.e. if it is y
 conda activate ecoder-env
 ```
 
-Clone the repository (or your own fork):
-```
-git clone git@github.com:cmantill/Ecoder.git
-cd Ecoder/
-``` 
-
 ## Input data
 
 Get data from Cernbox
@@ -25,6 +19,7 @@ Get data from Cernbox
 mkdir data/{nELinks_5}
 
 cernbox: https://cernbox.cern.ch/index.php/s/YpAWu24aw6EaBk7
+```
 
 ## Training ECON-T autoencoder
 
@@ -32,13 +27,14 @@ The default model uses the telescope loss, we can train the model as such:
 
 ```
 python3 train.py -i data/nElinks_5/  -o ./output/ --epoch 96 --AEonly 1 --nELinks 5 --noHeader --models 8x8_c8_S2_tele
+```
 
 here:
 - `-i data/nElinks_5/`: Input directory or input file. Here we have an example of the input training. In this case the .csv files are already shuffled and they do not contain headers. So the `--noHeader` option is needed.
 - `-o ./output/`: Output directory. Here we have `output` as an example of the output directory. Change this to something more meaninful for future tests.
 - `--epoch 96`: this represents the number of epochs to train the model. We usually train for ~100 epochs.
 - `--AEonly`: is an argument to only evaluate the AutoEncoder algorithm (instead of also the other algorithms such as BSC,STC,Threshold..). This is usually an option that we want to include in this stage
-- `--nElinks`: this is the number of active elinks for the input dataset (in this case 5 for the signal allocation algorithm.) Find more about the number of elinks and allocation [here](https://github.com/cmantill/ECONAutoencoderStudy/blob/master/fragments/README.MD#number-of-elinks).
+- `--nELinks`: this is the number of active elinks for the input dataset (in this case 5 for the signal allocation algorithm.) Find more about the number of elinks and allocation [here](https://github.com/cmantill/ECONAutoencoderStudy/blob/master/fragments/README.MD#number-of-elinks).
 - `--noHeader`: this argument is needed only for the shuffled dataset since it has no header. Other datasets (default `data/nElinks_5`) will contain headers.
 
 Other possible arguments are:

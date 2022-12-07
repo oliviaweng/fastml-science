@@ -7,9 +7,13 @@ import os
 import numba
 import tensorflow as tf
 from tensorflow.keras import losses
+from pathlib import Path
 
 from qkeras import get_quantizer,QActivation
 from qkeras.utils import model_save_quantized_weights
+
+from fkeras.fdense import FQDense
+from fkeras.fconvolutional import FQConv2D
 
 from qDenseCNN import qDenseCNN
 from denseCNN import denseCNN
@@ -19,6 +23,9 @@ from get_flops import get_flops_from_model
 from utils.logger import _logger
 from utils.plot import plot_loss, plot_hist, visualize_displays, plot_profile, overlay_plots
 from emd_v_eta import plot_eta
+
+import time
+from multiprocessing import Process, Pool, Array
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-o',"--odir", type=str, default='output/', dest="odir",
@@ -76,6 +83,24 @@ parser.add_argument("--noHeader", action='store_true', default = False,dest="noH
 
 parser.add_argument("--models", type=str, default="8x8_c8_S2_tele", dest="models",
                     help="models to run, if empty string run all")
+parser.add_argument(
+    "--pretrained-model", 
+    type=str, 
+    default="", 
+    help="path to pretrained model .hdf5 file"
+)
+parser.add_argument(
+    "--eval-ber",
+    type=float,
+    default=0,
+    help="Bit error rate during model evaluation"
+)
+parser.add_argument(
+    "--log-file",
+    type=Path,
+    default='log.txt',
+    help="path to log file"
+)
 
 @numba.jit
 def normalize(data,rescaleInputToMax=False, sumlog2=True):
@@ -217,18 +242,29 @@ def build_model(args):
              _logger.info('qKeras model encod {total}, {integer}, {keep_negative}'.format(**m['params']['nBits_encod']))
              
         # re-use trained weights 
+        m['ws'] = args.pretrained_model
         if m['ws']=="":
-            if os.path.exists(args.odir+m['name']+"/"+m['name']+".hdf5"):
+            saved_model_filename = m['name'] + '.hdf5'
+            trained_weights_path = os.path.join(
+                args.odir, 
+                m['name'], 
+                saved_model_filename
+            )
+            if os.path.exists(trained_weights_path):
                 if args.retrain:
                     _logger.info('Found weights, but going to re-train as told.')
                     m['ws'] = ""
                 else:
                     _logger.info('Found weights, using it by default')
-                    m['ws'] = m['name']+".hdf5"
+                    m['ws'] = saved_model_filename # Because we change into this file's directory
             else:
-                _logger.info('Have not found trained weights in dir: %s'%(args.odir+m['name']+"/"+m['name']+".hdf5"))
+                _logger.info(f'Have not found trained weights in dir: {trained_weights_path}')
         else:
-            _logger.info('Found user input weights, using %s'%m['ws'])
+            if os.path.exists(m['ws']):
+                _logger.info('Found user input weights, using %s'%m['ws'])
+            else:
+                _logger.info(f"Provided weights file doesn't exist. File not found error: {m['ws']}")
+            
             
         if args.loss:
             m['params']['loss'] = args.loss
@@ -305,6 +341,23 @@ def train(autoencoder,encoder,train_input,train_target,val_input,name,n_epochs=1
 
     return history
 
+def log_ber_metric(ber, metric_name, value, log_file):
+    """
+    Write to output log file what the metric of a certain BER is in csv format.
+
+    Example:
+    BER, <metric_name>
+    1e-2, 1.5
+    1e-3, 1.2
+    ...
+    """
+    f = open(log_file, "a")
+    if os.path.getsize(log_file) == 0: # If file is empty
+        f.write(f'BER, {metric_name}\n')
+    f.write(f'{ber}, {value}\n')
+    f.close()
+
+
 def evaluate_model(model,charges,aux_arrs,eval_dict,args):
     # input arrays
     input_Q         = charges['input_Q']
@@ -326,7 +379,7 @@ def evaluate_model(model,charges,aux_arrs,eval_dict,args):
     if not model['isQK']:
         conv2d  = None
     else:
-        conv2d = kr.models.Model(
+        conv2d = tf.keras.models.Model(
             inputs =model['m_autoCNNen'].inputs,
             outputs=model['m_autoCNNen'].get_layer("conv2d_0_m").output
         )
@@ -396,11 +449,33 @@ def evaluate_model(model,charges,aux_arrs,eval_dict,args):
         if(not args.skipPlot):
             Nevents = 8
             index = np.random.choice(input_Q.shape[0], Nevents, replace=False)
-            visualize_displays(index, input_Q, input_calQ, alg_out, (cnn_enQ if algname=='ae' else np.array([])),(conv2d if algname=='ae' else None), name=algname)
+            visualize_displays(
+                index, 
+                input_Q, 
+                input_calQ, 
+                alg_out, 
+                (cnn_enQ if algname=='ae' else np.array([])),
+                (conv2d if algname=='ae' else None), 
+                name=algname
+            )
 
         for mname, metric in eval_dict['metrics'].items():
             name = mname+"_"+algname
+
+            # Try multiprocessing
+            start = time.time()
+
+            # with Pool() as pool:
+            #     vals = pool.starmap(metric, zip(input_calQ, alg_out))
+            # vals = np.array(vals)
+
+
             vals = np.array([metric(input_calQ[i],alg_out[i]) for i in range(0,len(input_Q_abs))])
+
+            print(f'EMD compute time: {time.time() - start} seconds')
+
+            print(f"Eval ber {args.eval_ber} avg metric: {name} = {np.mean(vals)}")
+            log_ber_metric(args.eval_ber, name, np.mean(vals), args.log_file)
 
             model[name] = np.round(np.mean(vals), 3)
             model[name+'_err'] = np.round(np.std(vals), 3)
@@ -574,12 +649,13 @@ def main(args):
     models = build_model(args)
     
     # evaluate performance
-    from utils.metrics import emd,d_weighted_mean,d_abs_weighted_rms,zero_frac,ssd
+    from utils.metrics import emd, emd_multiproc, d_weighted_mean,d_abs_weighted_rms,zero_frac,ssd
     
     eval_dict={
         # compare to other algorithms
         'algnames'    :['ae','stc','thr_lo','thr_hi','bc'],
-        'metrics'     :{'EMD':emd},
+        'metrics'     :{'EMD': emd},
+        # 'metrics'     : {'EMD': emd_multiproc},
         "occ_nbins"   :12,
         "occ_range"   :(0,24),
 	"occ_bins"    : [0,2,5,10,15],
@@ -694,6 +770,13 @@ def main(args):
 
         # evaluate model
         _logger.info('Evaluate AutoEncoder, model %s'%model_name)
+        eval_ber = args.eval_ber
+        print(m_autoCNNen.summary())
+        for layer in m_autoCNNen.layers:
+            if type(layer) == FQDense or type(layer) == FQConv2D:
+                layer.set_ber(eval_ber)
+                print(f"Setting Encoder layer {layer} ber = {eval_ber}")
+
         input_Q, cnn_deQ, cnn_enQ = m.predict(val_input)
         
         input_calQ  = m.mapToCalQ(input_Q)   # shape = (N,48) in CALQ order
@@ -708,7 +791,7 @@ def main(args):
         input_calQ  = np.array([input_calQ[i]*(val_max[i] if args.rescaleInputToMax else val_sum[i]) for i in range(0,len(input_calQ)) ])  # shape = (N,48) in CALQ order                                
         output_calQ =  unnormalize(output_calQ_fr.copy(), val_max if args.rescaleOutputToMax else val_sum, rescaleOutputToMax=args.rescaleOutputToMax)
 
-        isRTL = True
+        isRTL = False
         if isRTL:
             _logger.info('Save CSV for RTL verification')
             N_csv= (args.nCSV if args.nCSV>=0 else input_Q.shape[0]) # about 80k                                                                                                                          
@@ -751,7 +834,7 @@ def main(args):
     
     os.chdir(orig_dir)
     
-    plot_eta(args.odir,args.models,phys_val_input)
+    # plot_eta(args.odir,args.models,phys_val_input)
 
 
 if __name__ == '__main__':

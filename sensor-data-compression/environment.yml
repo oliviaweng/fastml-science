@@ -1,4 +1,4 @@
-name: ecoder-env
+name: fastml-science-ecoder-env
 channels:
   - conda-forge
   - defaults
@@ -18,3 +18,4 @@ dependencies:
     - tensorflow-model-optimization
     - pot
     - mplhep
+    - git+ssh://git@github.com/KastnerRG/fkeras.git#egg=fkeras

@@ -46,6 +46,28 @@ def emd(_x, _y, threshold=-1):
 
     return ot.emd2(x, y, hexMetric)
 
+# calculate energy movers distance
+# (cost, in distance, to move energy from one config to another)  
+def emd_multiproc(_x, _y, threshold=-1):
+    if (np.sum(_x)==0): return -1.
+    if (np.sum(_y)==0): return -0.5
+    x = np.array(_x, dtype=np.float64)
+    y = np.array(_y, dtype=np.float64)
+    x = (1./x.sum() if x.sum() else 1.)*x.flatten()
+    y = (1./y.sum() if y.sum() else 1.)*y.flatten()
+
+    if threshold > 0:
+        # only keep entries above 2%, e.g.
+        x = np.where(x>threshold,x,0)
+        y = np.where(y>threshold,y,0)
+        x = 1.*x/x.sum()
+        y = 1.*y/y.sum()
+    
+    # shared_array[shared_array_idx] = ot.emd2(x, y, hexMetric)
+
+    return ot.emd2(x, y, hexMetric)
+
+
 # difference in energy-weighted mean
 def d_weighted_mean(x, y):
     if (np.sum(x)==0): return -1.

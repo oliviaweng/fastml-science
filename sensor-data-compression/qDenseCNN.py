@@ -2,6 +2,8 @@ import tensorflow as tf
 import tensorflow.keras as kr
 from tensorflow.keras.layers import Input, Dense, Conv2D, MaxPooling2D, UpSampling2D, Flatten, \
     Conv2DTranspose, Reshape, Activation
+from fkeras.fdense import FQDense
+from fkeras.fconvolutional import FQConv2D
 from tensorflow.keras.models import Model
 from tensorflow.keras import backend as K
 import qkeras as qkr
@@ -69,6 +71,8 @@ class qDenseCNN(denseCNN):
         }
 
         self.weights_f = weights_f
+        # Bit error rate (only relevant to FKeras when is_fkeras is true)
+        self.ber = 0 
         # self.extend = False
         
     def GetQbits(self, inp, keep_negative=1):
@@ -92,6 +96,9 @@ class qDenseCNN(denseCNN):
 
         inputs = Input(shape=self.pams['shape'])  # adapt this if using `channels_first` image data format
 
+        # Check if we need to build an FKeras model
+        is_fkeras = self.pams['is_fkeras'] if 'is_fkeras' in self.pams else False
+
         # load bits to quantize
         nBits_input  = self.pams['nBits_input']
         nBits_accum  = self.pams['nBits_accum']
@@ -114,12 +121,44 @@ class qDenseCNN(denseCNN):
         x = QActivation(input_Qbits, name='input_qa')(x)
         for i, n_nodes in enumerate(CNN_layer_nodes):
             if channels_first:
-                x = QConv2D(n_nodes, CNN_kernel_size[i], padding=CNN_padding[i],
-                            data_format='channels_first', name="conv2d_"+str(i)+"_m", strides = CNN_strides[i],
-                            kernel_quantizer=conv_Qbits, bias_quantizer=conv_Qbits)(x)
+                if is_fkeras:
+                    x = FQConv2D(
+                        n_nodes, 
+                        CNN_kernel_size[i], 
+                        padding=CNN_padding[i],
+                        data_format='channels_first', 
+                        name="conv2d_"+str(i)+"_m", 
+                        strides = CNN_strides[i],
+                        kernel_quantizer=conv_Qbits, 
+                        bias_quantizer=conv_Qbits,
+                        ber=self.ber,
+                    )(x)
+                else:
+                    x = QConv2D(
+                        n_nodes,
+                        CNN_kernel_size[i], 
+                        padding=CNN_padding[i],
+                        data_format='channels_first', 
+                        name="conv2d_"+str(i)+"_m", 
+                        strides = CNN_strides[i],
+                        kernel_quantizer=conv_Qbits, 
+                        bias_quantizer=conv_Qbits
+                    )(x)
             else:
-                x = QConv2D(n_nodes, CNN_kernel_size[i], padding=CNN_padding[i], name="conv2d_"+str(i)+"_m", strides = CNN_strides[i],
-                            kernel_quantizer=conv_Qbits, bias_quantizer=conv_Qbits)(x)
+                if is_fkeras:
+                    x = FQConv2D(
+                        n_nodes, 
+                        CNN_kernel_size[i], 
+                        padding=CNN_padding[i], 
+                        name="conv2d_"+str(i)+"_m", 
+                        strides = CNN_strides[i],
+                        kernel_quantizer=conv_Qbits, 
+                        bias_quantizer=conv_Qbits,
+                        ber=self.ber,
+                    )(x)
+                else:
+                    x = QConv2D(n_nodes, CNN_kernel_size[i], padding=CNN_padding[i], name="conv2d_"+str(i)+"_m", strides = CNN_strides[i],
+                                kernel_quantizer=conv_Qbits, bias_quantizer=conv_Qbits)(x)
             if CNN_pool[i]:
                 if channels_first:
                     x = MaxPooling2D((2, 2), padding='same', data_format='channels_first', name="mp_"+str(i))(x)
@@ -141,14 +180,40 @@ class qDenseCNN(denseCNN):
 
         # encoder dense nodes
         for i, n_nodes in enumerate(Dense_layer_nodes):
-            x = QDense(n_nodes,  name="en_dense_"+str(i),
-                           kernel_quantizer=dense_Qbits, bias_quantizer=dense_Qbits)(x)
+            if is_fkeras:
+                x = FQDense(
+                    n_nodes,  
+                    name="en_dense_"+str(i),
+                    kernel_quantizer=dense_Qbits, 
+                    bias_quantizer=dense_Qbits,
+                    ber=self.ber,
+                )
+            else:
+                x = QDense(
+                    n_nodes,  
+                    name="en_dense_"+str(i),
+                    kernel_quantizer=dense_Qbits, 
+                    bias_quantizer=dense_Qbits
+                )(x)
 
 
         #x = QDense(encoded_dim, activation='relu', name='encoded_vector',
         #                      kernel_quantizer=dense_Qbits, bias_quantizer=dense_Qbits)(x)
-        x = QDense(encoded_dim, name='encoded_vector',
-                              kernel_quantizer=dense_Qbits, bias_quantizer=dense_Qbits)(x)
+        if is_fkeras:
+            x = FQDense(
+                encoded_dim, 
+                name='encoded_vector',
+                kernel_quantizer=dense_Qbits, 
+                bias_quantizer=dense_Qbits,
+                ber=self.ber,
+            )(x)
+        else:
+            x = QDense(
+                encoded_dim, 
+                name='encoded_vector',
+                kernel_quantizer=dense_Qbits, 
+                bias_quantizer=dense_Qbits
+            )(x)
         encodedLayer = QActivation(qa_encod, name='encod_qa')(x)
 
         # Instantiate Encoder Model
