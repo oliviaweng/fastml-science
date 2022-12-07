@@ -26,7 +26,7 @@ cernbox: https://cernbox.cern.ch/index.php/s/YpAWu24aw6EaBk7
 The default model uses the telescope loss, we can train the model as such:
 
 ```
-python3 train.py -i data/nElinks_5/  -o ./output/ --epoch 96 --AEonly 1 --nELinks 5 --noHeader --models 8x8_c8_S2_tele
+python3 train.py -i data/nElinks_5/  -o ./output/ --epoch 96 --AEonly 1 --nELinks 5 --noHeader --models 8x8_c8_S2_tele --nrowsPerFile=4500000
 ```
 
 here:
@@ -36,6 +36,8 @@ here:
 - `--AEonly`: is an argument to only evaluate the AutoEncoder algorithm (instead of also the other algorithms such as BSC,STC,Threshold..). This is usually an option that we want to include in this stage
 - `--nELinks`: this is the number of active elinks for the input dataset (in this case 5 for the signal allocation algorithm.) Find more about the number of elinks and allocation [here](https://github.com/cmantill/ECONAutoencoderStudy/blob/master/fragments/README.MD#number-of-elinks).
 - `--noHeader`: this argument is needed only for the shuffled dataset since it has no header. Other datasets (default `data/nElinks_5`) will contain headers.
+- `--nrowsPerFile`: Load only this number of rows per file. Make sure to load all the rows for a complete evaluation.
+
 
 Other possible arguments are:
 - `--loss`: if there is a default loss function to use. We generalize want to use `telescopeMSE8x8` that is defined [here](https://github.com/fastmachinelearning/fastml-science/blob/master/telescope.py#L168-L170) and called [here](https://github.com/fastmachinelearning/fastml-science/blob/master/networks.py#L4). So we usually want to leave this argument empty.
@@ -50,7 +52,6 @@ Other possible arguments are:
 - `--maxVal`: Clip outputs to maxVal
 - `--rescaleInputToMax`: Rescale the input images so the maximum deposit is 1.
 - `--rescaleOutputToMax`: Rescale the output images to match the initial sum of charge.
-- `--nrowsPerFile`: Load only this number of rows per file
 - `--occReweight`: Train with per-event weight on TC occupancy
 - `--maskPartials`: Mask partial modules in the input files
 - `--maskEnergies`: Mask input charges with energy fractions <= 0.05 (or some other value defined in train.py)
