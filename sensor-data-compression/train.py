@@ -658,8 +658,8 @@ def main(args):
         'metrics'     : {'EMD': emd_multiproc},
         "occ_nbins"   :12,
         "occ_range"   :(0,24),
-	"occ_bins"    : [0,2,5,10,15],
-	"chg_nbins"   :20,
+	    "occ_bins"    : [0,2,5,10,15],
+	    "chg_nbins"   :20,
         "chg_range"   :(0,200),
         "chglog_nbins":20,
         "chglog_range":(0,2.5),
@@ -697,7 +697,6 @@ def main(args):
     #Putting back physics columns below once training is done
     Nphys = round(len(phys_values)*0.2)
     phys_val_input = phys_values[:Nphys]
-    phys_val_input=phys_val_input
     
     # train each model
     for model in models:
