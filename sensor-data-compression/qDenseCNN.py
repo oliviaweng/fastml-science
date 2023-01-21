@@ -261,6 +261,7 @@ class qDenseCNN(denseCNN):
         if printSummary:
             self.decoder.summary()
 
+        self.inputs = inputs
         self.autoencoder = Model(inputs, self.decoder(self.encoder(inputs)), name='autoencoder')
         if printSummary:
             self.autoencoder.summary()

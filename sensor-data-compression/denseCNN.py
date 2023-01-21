@@ -103,7 +103,7 @@ class denseCNN:
         loss   = K.mean(K.square(y_true - y_pred)*K.maximum(y_pred,y_true),axis=(-1))
         return loss
             
-    def init(self,printSummary=True):
+    def init(self, printSummary=True):
         encoded_dim = self.pams['encoded_dim']
 
         CNN_layer_nodes   = self.pams['CNN_layer_nodes']
