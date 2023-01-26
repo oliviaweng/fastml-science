@@ -197,6 +197,8 @@ def main(args):
 
     aux_arrs = {"occupancy_1MT": occupancy_1MT}
 
+    # TODO: Make sure evaluate_model() outputs plots to the output directory
+
     _, _ = evaluate_model(model_info, charges, aux_arrs, eval_dict, args)
 
 
