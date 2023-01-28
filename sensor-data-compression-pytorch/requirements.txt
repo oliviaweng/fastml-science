@@ -1,0 +1,17 @@
+torchinfo
+scipy>=0.14
+matplotlib
+numpy
+pandas
+tensorboard
+pytorch-lightning
+gpustat
+numba
+pillow
+opencv-python
+cupy-cuda11x
+compilers
+timm
+jupyter
+pot
+mplhep

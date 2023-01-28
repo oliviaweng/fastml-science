@@ -1,0 +1,18 @@
+version: '3.3'
+services:
+    autoencoder:
+        ports:
+            - '6006:6006'
+        container_name: autoencoder
+        privileged: true
+        volumes:
+            - '/dev:/dev'
+            - '$PWD:/app/autoencoder-pytorch'
+        image: autoencoder
+        deploy:
+          resources:
+            reservations:
+              devices:
+                - driver: nvidia
+                  count: all
+                  capabilities: [gpu]
