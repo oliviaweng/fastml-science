@@ -1,4 +1,5 @@
 import torch
+import numpy as np
 import torch.nn as nn
 import pytorch_lightning as pl
 
@@ -30,35 +31,50 @@ Trainable params: 2,144
 Non-trainable params: 0
 """
 
+
 class AutoEncoder(pl.LightningModule):
     """
     XDR AutoEncoder class
     """
+
     def __init__(self) -> None:
         super().__init__()
 
+        self.encoded_dim = 16
+        self.shape = (4, 4, 3)
+
         self.encoder = nn.Sequential(
-            nn.Conv2d(1, 8, kernel_size=3, stride=2, padding=1),
+            nn.Conv2d(3, 8, kernel_size=3, stride=2, padding=1),
             nn.ReLU(),
             nn.Flatten(),
-            nn.Linear(128, 16),
+            nn.Linear(128, self.encoded_dim),
         )
 
         self.decoder = nn.Sequential(
-            nn.Linear(16, 128),
+            nn.Linear(self.encoded_dim, 48),
             nn.ReLU(),
-            nn.Unflatten(1, (8, 8, 8)),
-            nn.ConvTranspose2d(8, 1, kernel_size=3, stride=2, padding=1, output_padding=1),
+            nn.Unflatten(1, self.shape),
+            nn.ConvTranspose2d(
+                self.shape[2], 8, kernel_size=3, stride=2, padding=1, output_padding=1
+            ),
+            nn.ConvTranspose2d(
+                8, 3, kernel_size=3, stride=2, padding=1, output_padding=1
+            ),
             nn.Sigmoid(),
         )
         self.loss = telescopeMSE8x8
-    
+
     def map_to_calq(self, x):
         """
         Map the input/output of the autoencoder into CALQs orders
         """
         return x.reshape(len(x), 48)
 
+    def predict(self, x):
+        decoded_Q = self(x)
+        encoded_Q = self.encoder(x)
+        encoded_Q = np.reshape(encoded_Q, (len(encoded_Q), self.encoded_dim, 1))
+        return x, decoded_Q, encoded_Q
 
     # Pytorch Lightning specific methods
     def forward(self, x):
@@ -71,24 +87,37 @@ class AutoEncoder(pl.LightningModule):
     def training_step(self, batch, batch_idx):
         x, y = batch
         x_hat = self(x)
-        loss = self.loss(x_hat, x)
-        self.log('train_loss', loss)
-        return loss 
-    
+        loss = self.loss(x, x_hat)
+        self.log("train_loss", loss)
+        return loss
+
     def validation_step(self, batch, batch_idx):
         x, y = batch
         x_hat = self(x)
-        loss = self.loss(x_hat, x)
-        self.log('val_loss', loss)
-        return loss
-    
-    def test_step(self, batch, batch_idx):
-        x, y = batch
-        x_hat = self(x)
-        loss = self.loss(x_hat, x)
-        self.log('test_loss', loss)
+        loss = self.loss(x, x_hat)
+        self.log("val_loss", loss)
         return loss
 
+    def test_step(self, batch, batch_idx):
+        """
+        TODO: Instead compute the EMD between the input and output
+        """
+        x, y = batch
+        input_Q, cnn_deQ, cnn_enQ = self.predict(x)
+        input_calQ = self.map_to_calq(input_Q)
+        output_calQ_fr = self.map_to_calq(cnn_deQ)
+        print(f"input_Q.shape: {input_Q.shape}")
+        print(f"input_calQ.shape: {input_calQ.shape}")
+        print("Restore normalization")
+        # TODO: Start here
+
+
+
+        loss = self.loss(x, cnn_deQ)
+        self.log("test_loss", loss)
+
+
+        return loss
 
 
 """
