@@ -100,7 +100,8 @@ def main(args):
     model = model_setup(model_info, args.odir)
 
     # split in training/validation datasets
-    shaped_data = model.prepInput(normdata)
+    shaped_data = model.prepInput(normdata)   
+
     if args.evalOnly:
         print("Eval only")
         val_input = shaped_data

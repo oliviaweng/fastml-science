@@ -4,6 +4,29 @@ import numpy as np
 import pandas as pd
 import pytorch_lightning as pl
 
+from utils_pt import normalize
+
+ARRANGE = torch.tensor([
+    28,29,30,31,0,4,8,12,
+    24,25,26,27,1,5,9,13,
+    20,21,22,23,2,6,10,14,
+    16,17,18,19,3,7,11,15,
+    47,43,39,35,35,34,33,32,
+    46,42,38,34,39,38,37,36,
+    45,41,37,33,43,42,41,40,
+    44,40,36,32,47,46,45,44
+])
+
+ARRANGE_MASK = torch.tensor([
+    1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,
+    1,1,1,1,0,0,0,0,
+    1,1,1,1,0,0,0,0,
+    1,1,1,1,0,0,0,0,
+    1,1,1,1,0,0,0,0,
+])
 
 class AutoEncoderDataModule(pl.LightningDataModule):
     def __init__(self, data_dir, num_workers=8) -> None:
@@ -25,6 +48,7 @@ class AutoEncoderDataModule(pl.LightningDataModule):
         parser = parent_parser.add_argument_group("Dataset")
         parser.add_argument("--data_dir", type=str)
         parser.add_argument("--num_workers", type=int, default=8)
+        return parent_parser
 
     def mask_data(self, data):
         """
@@ -32,48 +56,12 @@ class AutoEncoderDataModule(pl.LightningDataModule):
         """
         return data[data[self.calq_cols].sum(axis=1) != 0]
 
-    def normalize(self, data, sumlog2=True):
-        """
-        Normalize data by dividing by the sum of the log2 of the occupancy
-        """
-        maxes = []
-        sums = []
-        sums_log2 = []
-        for i in range(len(data)):
-            maxes.append(data[i].max())
-            sums.append(data[i].sum())
-            sums_log2.append(2 ** (np.floor(np.log2(data[i].sum()))))
-            if sumlog2:
-                data[i] = 1.0 * data[i] / (sums_log2[-1] if sums_log2[-1] else 1.0)
-            else:
-                data[i] = 1.0 * data[i] / (data[i].sum() if data[i].sum() else 1.0)
-        sums_arr = np.array(sums_log2) if sumlog2 else np.array(sums)
-        return (
-            data,
-            np.array(maxes),
-            sums_arr,
-        )
-
-    def unnormalize(self, norm_data, max_vals, sumlog2=True):
-        for i in range(len(norm_data)):
-            if sumlog2:
-                sumlog2 = 2 ** (np.floor(np.log2(norm_data[i].sum())))
-                norm_data[i] = (
-                    norm_data[i] * max_vals[i] / (sumlog2 if sumlog2 else 1.0)
-                )
-            else:
-                norm_data[i] = (
-                    norm_data[i]
-                    * max_vals[i]
-                    / (norm_data[i].sum() if norm_data[i].sum() else 1.0)
-                )
-        return norm_data
-
     def load_data(self):
         """
         Read and concat all csv files in the data directory into a single
-        dataframe and save it as a pickle file
+        dataframe
         """
+        print(f"Reading files {os.listdir(self.data_dir)}")
         data = pd.concat(
             [
                 pd.read_csv(os.path.join(self.data_dir, file))
@@ -82,21 +70,24 @@ class AutoEncoderDataModule(pl.LightningDataModule):
         )
         data = self.mask_data(data)
         data = data[self.calq_cols].astype("float64")
-        data.to_pickle(os.path.join(self.data_dir, "data.pkl"))
+        # data.to_pickle(os.path.join(self.data_dir, "data.pkl"))
         print(f"Input data shape: {data.shape}")
 
         return data.values
 
-    def prep_input(self, norm_data, shape=(4, 4, 3)):
+    def prep_input(self, norm_data, shape=(1, 8, 8)):
         """
         Prepare the input data for the model
         """
-        shaped_data = norm_data.reshape(len(norm_data), shape[0], shape[1], shape[2])
+        input_data = norm_data[:, ARRANGE]
+        input_data[:, ARRANGE_MASK == 0] = 0 # zero out repeated entries
+        shaped_data = input_data.reshape(len(input_data), shape[0], shape[1], shape[2])
+        print(f"Prepped shaped data shape: {shaped_data.shape}")
         return shaped_data
 
     def prepare_data(self):
         data = self.load_data()
-        self.norm_data, self.max_data, self.sum_data = self.normalize(data.copy())
+        self.norm_data, self.max_data, self.sum_data = normalize(data.copy())
         self.max_data = self.max_data / 35.0  # normalize to units of transverse MIPs
         self.sum_data = self.sum_data / 35.0  # normalize to units of transverse MIPs
         self.shaped_data = self.prep_input(self.norm_data)
@@ -135,4 +126,8 @@ class AutoEncoderDataModule(pl.LightningDataModule):
         """
         return self.val_dataloader()
 
-    # TODO: Add getter methods for val_max and val_sum
+    def get_val_max(self):
+        return self.val_max
+    
+    def get_val_sum(self):
+        return self.val_sum

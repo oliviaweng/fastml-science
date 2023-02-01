@@ -37,7 +37,7 @@ while for a SC shifted one TC to the right the weight is 2*1/4+2*1/2=1.5
 
 # combine neighbor cells in 2x2 grids, record weights
 # multilpy weights by 0.25 for now to account for effective increase in cells from 12 (sum weights now 48 not 12)
-SCmask_48_36 = np.array(
+SCmask_48_36 = torch.tensor(
     [
         [0, 1, 4, 5, 0.25 * 1.5],  # 2x2 supercells that perfectly tile the sensor
         [2, 3, 6, 7, 0.25 * 1.0 + 1.0 / 12],  # 4 TC indices for 1 supercell (+) weight
@@ -77,17 +77,15 @@ SCmask_48_36 = np.array(
         [18, 19, 39, 35, 0.25 * 1.0 + 1.0 / 6],
     ]
 )
-Remap_48_36 = np.zeros((48, 36))
+Remap_48_36 = torch.zeros((48, 36))
 for isc, sc in enumerate(SCmask_48_36):
     for tc in sc[:4]:
         Remap_48_36[int(tc), isc] = 1
 
-torch_remap_48_36 = torch.tensor(Remap_48_36, dtype=torch.float32)
 Weights_48_36 = SCmask_48_36[:, 4]
-torch_weights_48_36 = torch.tensor(Weights_48_36, dtype=torch.float32)
 
 # keep simplified 12 x 3 mapping for now
-SCmask_48_12 = np.array(
+SCmask_48_12 = torch.tensor(
     [
         [0, 1, 4, 5],
         [2, 3, 6, 7],
@@ -104,16 +102,14 @@ SCmask_48_12 = np.array(
     ]
 )
 
-Remap_48_12 = np.zeros((48, 12))
+Remap_48_12 = torch.zeros((48, 12))
 for isc, sc in enumerate(SCmask_48_12):
     for tc in sc:
         Remap_48_12[int(tc), isc] = 1
 
-torch_remap_48_12 = torch.Tensor(Remap_48_12, detype=torch.float32)
-Remap_12_3 = np.zeros((12, 3))
+Remap_12_3 = torch.zeros((12, 3))
 for i in range(12):
     Remap_12_3[i, int(i / 4)] = 1
-torch_remap_12_3 = torch.Tensor(Remap_12_3, dtype=torch.float32)
 
 
 def telescopeMSE2(y_true, y_pred):
@@ -127,20 +123,20 @@ def telescopeMSE2(y_true, y_pred):
     )
 
     # map TCs to 2x2 supercells and compute MSE
-    y_pred_36 = torch.matmul(y_pred_rs, torch_remap_48_36)
-    y_true_36 = torch.matmul(y_true_rs, torch_remap_48_36)
+    y_pred_36 = torch.matmul(y_pred_rs, Remap_48_36)
+    y_true_36 = torch.matmul(y_true_rs, Remap_48_36)
     loss_tc2 = torch.mean(
         torch.square(y_true_36 - y_pred_36)
         * torch.max(y_pred_36, y_true_36)
-        * torch_weights_48_36,
+        * Weights_48_36,
         axis=-1,
     )
 
     # map 2x2 supercells to 4x4 supercells and compute MSE
-    y_pred_12 = torch.matmul(y_pred_36, torch_remap_48_12)
-    y_true_12 = torch.matmul(y_true_36, torch_remap_48_12)
-    y_pred_3 = torch.matmul(y_pred_12, torch_remap_12_3)
-    y_true_3 = torch.matmul(y_true_12, torch_remap_12_3)
+    y_pred_12 = torch.matmul(y_pred_36, Remap_48_12)
+    y_true_12 = torch.matmul(y_true_36, Remap_48_12)
+    y_pred_3 = torch.matmul(y_pred_12, Remap_12_3)
+    y_true_3 = torch.matmul(y_true_12, Remap_12_3)
     loss_tc3 = torch.mean(
         torch.square(y_true_3 - y_pred_3) * torch.max(y_pred_3, y_true_3), axis=-1
     )
@@ -198,7 +194,7 @@ remap_8x8 = [
     40,
     32,
 ]
-remap_8x8_matrix = np.zeros(48 * 64, dtype=np.float32).reshape((64, 48))
+remap_8x8_matrix = torch.zeros(48 * 64, dtype=torch.float32).reshape((64, 48))
 
 for i in range(48):
     remap_8x8_matrix[remap_8x8[i], i] = 1
