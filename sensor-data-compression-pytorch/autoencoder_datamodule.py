@@ -29,9 +29,10 @@ ARRANGE_MASK = torch.tensor([
 ])
 
 class AutoEncoderDataModule(pl.LightningDataModule):
-    def __init__(self, data_dir, num_workers=8) -> None:
+    def __init__(self, data_dir, batch_size=500, num_workers=8) -> None:
         super().__init__()
         self.data_dir = data_dir
+        self.batch_size = batch_size
         self.num_workers = num_workers
         self.calq_cols = [f"CALQ_{i}" for i in range(48)]
         self.norm_data = None
@@ -69,7 +70,7 @@ class AutoEncoderDataModule(pl.LightningDataModule):
             ]
         )
         data = self.mask_data(data)
-        data = data[self.calq_cols].astype("float64")
+        data = data[self.calq_cols].astype("float32")
         # data.to_pickle(os.path.join(self.data_dir, "data.pkl"))
         print(f"Input data shape: {data.shape}")
 
@@ -91,6 +92,7 @@ class AutoEncoderDataModule(pl.LightningDataModule):
         self.max_data = self.max_data / 35.0  # normalize to units of transverse MIPs
         self.sum_data = self.sum_data / 35.0  # normalize to units of transverse MIPs
         self.shaped_data = self.prep_input(self.norm_data)
+        # TODO: pickle the shaped data. Start here.
 
     def train_dataloader(self):
         """

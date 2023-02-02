@@ -20,8 +20,7 @@ def main(args):
     # 1 INIT LIGHTNING MODEL
     # ------------------------
     model = AutoEncoder(data_module.get_val_sum())
-    torchinfo.summary(model, input_size=(1, 8, 8))
-    return
+    torchinfo.summary(model, input_size=(1, 1, 8, 8))
 
     tb_logger = pl_loggers.TensorBoardLogger(args.save_dir, name=args.experiment_name)
 
@@ -33,7 +32,7 @@ def main(args):
         mode="min",
         dirpath=os.path.join(args.save_dir, args.experiment_name),
         filename=f"{args.experiment_name}"
-        "_epoch={epoch:02d}_loss={Val/Loss:.3f}",
+        "_epoch={epoch:02d}_loss={val_loss:.3f}",
         auto_insert_metric_name=False,
     )
 

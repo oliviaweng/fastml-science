@@ -81,12 +81,13 @@ class AutoEncoder(pl.LightningModule):
         self.decoder = nn.Sequential(
             nn.Linear(self.encoded_dim, 128),
             nn.ReLU(),
-            nn.Unflatten(1, self.shape),
+            nn.Unflatten(1, (8, 4, 4)),
             nn.ConvTranspose2d(
-                self.shape[2], 8, kernel_size=3, stride=2, padding=1, output_padding=1
+                8, 8, kernel_size=3, stride=2, padding=1, output_padding=1
             ),
+            nn.ReLU(),
             nn.ConvTranspose2d(
-                8, self.shape[0], kernel_size=3, stride=2, padding=1, output_padding=1
+                8, self.shape[0], kernel_size=3, stride=1, padding=1,
             ),
             nn.Sigmoid(),
         )
@@ -113,14 +114,14 @@ class AutoEncoder(pl.LightningModule):
         return optimizer
 
     def training_step(self, batch, batch_idx):
-        x, y = batch
+        x = batch
         x_hat = self(x)
         loss = self.loss(x, x_hat)
         self.log("train_loss", loss, on_epoch=True, prog_bar=True)
         return loss
 
     def validation_step(self, batch, batch_idx):
-        x, y = batch
+        x = batch
         x_hat = self(x)
         loss = self.loss(x, x_hat)
         self.log("val_loss", loss, on_epoch=True, prog_bar=True)
@@ -130,7 +131,7 @@ class AutoEncoder(pl.LightningModule):
         """
         TODO: Instead compute the EMD between the input and output
         """
-        x, y = batch
+        x = batch
         input_Q, cnn_deQ, cnn_enQ = self.predict(x)
         input_calQ = self.map_to_calq(input_Q)
         output_calQ_fr = self.map_to_calq(cnn_deQ)

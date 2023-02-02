@@ -112,14 +112,23 @@ for i in range(12):
     Remap_12_3[i, int(i / 4)] = 1
 
 
+Remap_48_36 = Remap_48_36.cuda()
+Remap_48_12 = Remap_48_12.cuda()
+Remap_12_3 = Remap_12_3.cuda()
+Weights_48_36 = Weights_48_36.cuda()
+
 def telescopeMSE2(y_true, y_pred):
     y_true = y_true.to(dtype=y_pred.dtype)
 
     # TC-level MSE
+    print(f"Before reshape y_pred.shape: {y_pred.shape}")
+    print(f"Before reshape y_true.shape: {y_true.shape}")
     y_pred_rs = torch.reshape(y_pred, (-1, 48))
     y_true_rs = torch.reshape(y_true, (-1, 48))
+    print(f"y_pred_rs.shape: {y_pred_rs.shape}")
+    print(f"y_true_rs.shape: {y_true_rs.shape}")
     loss_tc1 = torch.mean(
-        torch.square(y_true_rs - y_pred_rs) * torch.max(y_pred_rs, y_true_rs), axis=-1
+        torch.square(y_true_rs - y_pred_rs) * torch.maximum(y_pred_rs, y_true_rs), dim=-1
     )
 
     # map TCs to 2x2 supercells and compute MSE
@@ -127,21 +136,21 @@ def telescopeMSE2(y_true, y_pred):
     y_true_36 = torch.matmul(y_true_rs, Remap_48_36)
     loss_tc2 = torch.mean(
         torch.square(y_true_36 - y_pred_36)
-        * torch.max(y_pred_36, y_true_36)
+        * torch.maximum(y_pred_36, y_true_36)
         * Weights_48_36,
-        axis=-1,
+        dim=-1,
     )
 
     # map 2x2 supercells to 4x4 supercells and compute MSE
-    y_pred_12 = torch.matmul(y_pred_36, Remap_48_12)
-    y_true_12 = torch.matmul(y_true_36, Remap_48_12)
+    y_pred_12 = torch.matmul(y_pred_rs, Remap_48_12)
+    y_true_12 = torch.matmul(y_true_rs, Remap_48_12)
     y_pred_3 = torch.matmul(y_pred_12, Remap_12_3)
     y_true_3 = torch.matmul(y_true_12, Remap_12_3)
     loss_tc3 = torch.mean(
-        torch.square(y_true_3 - y_pred_3) * torch.max(y_pred_3, y_true_3), axis=-1
+        torch.square(y_true_3 - y_pred_3) * torch.maximum(y_pred_3, y_true_3), dim=-1
     )
 
-    return 4 * loss_tc1 + 2 * loss_tc2 + loss_tc3
+    return 4 * loss_tc1.mean() + 2 * loss_tc2.mean() + loss_tc3.mean()
 
 
 remap_8x8 = [
@@ -199,6 +208,7 @@ remap_8x8_matrix = torch.zeros(48 * 64, dtype=torch.float32).reshape((64, 48))
 for i in range(48):
     remap_8x8_matrix[remap_8x8[i], i] = 1
 
+remap_8x8_matrix = remap_8x8_matrix.cuda()
 
 def telescopeMSE8x8(y_true, y_pred):
     return telescopeMSE2(
