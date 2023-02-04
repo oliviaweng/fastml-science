@@ -1,3 +1,5 @@
+import ot
+import torch
 import numpy as np
 
 def normalize(data, sumlog2=True):
@@ -25,7 +27,7 @@ def normalize(data, sumlog2=True):
 def unnormalize(norm_data, max_vals, sumlog2=True):
     for i in range(len(norm_data)):
         if sumlog2:
-            sumlog2 = 2 ** (np.floor(np.log2(norm_data[i].sum())))
+            sumlog2 = 2 ** (torch.floor(torch.log2(norm_data[i].sum())))
             norm_data[i] = (
                 norm_data[i] * max_vals[i] / (sumlog2 if sumlog2 else 1.0)
             )
@@ -36,3 +38,20 @@ def unnormalize(norm_data, max_vals, sumlog2=True):
                 / (norm_data[i].sum() if norm_data[i].sum() else 1.0)
             )
     return norm_data
+
+def emd(x, y, hex_metric, threshold=-1):
+    if (x.sum() == 0):
+        return -1.0
+    if (y.sum() == 0):
+        return -0.5
+    x = (1.0 / x.sum() if x.sum() else 1.0) * x.flatten()
+    y = (1.0 / y.sum() if y.sum() else 1.0) * y.flatten()
+
+    if threshold > 0:
+        # only keep entries above 2%, e.g.
+        x = torch.where(x > threshold, x, 0)
+        y = torch.where(y > threshold, y, 0)
+        x = 1.0 * x / x.sum()
+        y = 1.0 * y / y.sum()
+
+    return ot.emd2(x, y, hex_metric)

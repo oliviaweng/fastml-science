@@ -111,22 +111,12 @@ Remap_12_3 = torch.zeros((12, 3))
 for i in range(12):
     Remap_12_3[i, int(i / 4)] = 1
 
-
-Remap_48_36 = Remap_48_36.cuda()
-Remap_48_12 = Remap_48_12.cuda()
-Remap_12_3 = Remap_12_3.cuda()
-Weights_48_36 = Weights_48_36.cuda()
-
 def telescopeMSE2(y_true, y_pred):
     y_true = y_true.to(dtype=y_pred.dtype)
 
     # TC-level MSE
-    print(f"Before reshape y_pred.shape: {y_pred.shape}")
-    print(f"Before reshape y_true.shape: {y_true.shape}")
     y_pred_rs = torch.reshape(y_pred, (-1, 48))
     y_true_rs = torch.reshape(y_true, (-1, 48))
-    print(f"y_pred_rs.shape: {y_pred_rs.shape}")
-    print(f"y_true_rs.shape: {y_true_rs.shape}")
     loss_tc1 = torch.mean(
         torch.square(y_true_rs - y_pred_rs) * torch.maximum(y_pred_rs, y_true_rs), dim=-1
     )
@@ -208,7 +198,13 @@ remap_8x8_matrix = torch.zeros(48 * 64, dtype=torch.float32).reshape((64, 48))
 for i in range(48):
     remap_8x8_matrix[remap_8x8[i], i] = 1
 
-remap_8x8_matrix = remap_8x8_matrix.cuda()
+def move_constants_to_gpu():
+    global remap_8x8_matrix, Remap_48_36, Remap_48_12, Remap_12_3, Weights_48_36
+    remap_8x8_matrix = remap_8x8_matrix.cuda()
+    Remap_48_36 = Remap_48_36.cuda()
+    Remap_48_12 = Remap_48_12.cuda()
+    Remap_12_3 = Remap_12_3.cuda()
+    Weights_48_36 = Weights_48_36.cuda()
 
 def telescopeMSE8x8(y_true, y_pred):
     return telescopeMSE2(

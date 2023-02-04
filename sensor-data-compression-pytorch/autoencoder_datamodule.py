@@ -29,26 +29,28 @@ ARRANGE_MASK = torch.tensor([
 ])
 
 class AutoEncoderDataModule(pl.LightningDataModule):
-    def __init__(self, data_dir, batch_size=500, num_workers=8) -> None:
+    def __init__(self, data_file, data_dir=None, batch_size=500, num_workers=8) -> None:
         super().__init__()
         self.data_dir = data_dir
+        self.data_file = data_file
         self.batch_size = batch_size
         self.num_workers = num_workers
         self.calq_cols = [f"CALQ_{i}" for i in range(48)]
-        self.norm_data = None
-        self.max_data = None
-        self.sum_data = None
         self.valid_split = 0.2
         self.val_max = None
         self.val_sum = None
-
-        self.prepare_data()
+        self.max_data = None
+        self.sum_dat = None 
+        self.train_data = None 
+        self.val_data = None
 
     @staticmethod
     def add_argparse_args(parent_parser):
         parser = parent_parser.add_argument_group("Dataset")
-        parser.add_argument("--data_dir", type=str)
+        parser.add_argument("--data_dir", type=str, default=None)
+        parser.add_argument("--data_file", type=str, default="data.npy")
         parser.add_argument("--num_workers", type=int, default=8)
+        parser.add_argument("--batch_size", type=int, default=500)
         return parent_parser
 
     def mask_data(self, data):
@@ -57,7 +59,7 @@ class AutoEncoderDataModule(pl.LightningDataModule):
         """
         return data[data[self.calq_cols].sum(axis=1) != 0]
 
-    def load_data(self):
+    def load_data_dir(self):
         """
         Read and concat all csv files in the data directory into a single
         dataframe
@@ -71,10 +73,9 @@ class AutoEncoderDataModule(pl.LightningDataModule):
         )
         data = self.mask_data(data)
         data = data[self.calq_cols].astype("float32")
-        # data.to_pickle(os.path.join(self.data_dir, "data.pkl"))
         print(f"Input data shape: {data.shape}")
 
-        return data.values
+        return data
 
     def prep_input(self, norm_data, shape=(1, 8, 8)):
         """
@@ -86,24 +87,47 @@ class AutoEncoderDataModule(pl.LightningDataModule):
         print(f"Prepped shaped data shape: {shaped_data.shape}")
         return shaped_data
 
-    def prepare_data(self):
-        data = self.load_data()
-        self.norm_data, self.max_data, self.sum_data = normalize(data.copy())
-        self.max_data = self.max_data / 35.0  # normalize to units of transverse MIPs
-        self.sum_data = self.sum_data / 35.0  # normalize to units of transverse MIPs
-        self.shaped_data = self.prep_input(self.norm_data)
-        # TODO: pickle the shaped data. Start here.
+    def get_val_max_and_sum(self):
+        shaped_data, max_data, sum_data = self.process_data(save=False)
+        max_data = max_data / 35.0  # normalize to units of transverse MIPs
+        sum_data = sum_data / 35.0  # normalize to units of transverse MIPs
+        val_index = np.arange(int(len(shaped_data) * self.valid_split))
+        self.val_max = max_data[val_index]
+        self.val_sum = sum_data[val_index]
+        return self.val_max, self.val_sum
+    
+    def process_data(self, save=True):
+        """
+        Only need to run once to prepare the data and pickle it
+        """
+        data = self.load_data_dir()
+        norm_data, max_data, sum_data = normalize(data.values.copy())
+        shaped_data = self.prep_input(norm_data)
+        if save:
+            np.save(self.data_file, shaped_data)
+        return shaped_data, max_data, sum_data
+
+    # PyTorch Lightning specific methods
+    def setup(self, stage):
+        """
+        Load data from provided npy data_file
+        """
+        shaped_data = np.load(self.data_file)
+        print(f"Loaded shaped data shape: {shaped_data.shape}")
+
+        self.train_data = shaped_data[
+            int(len(shaped_data) * self.valid_split) :
+        ]
+        self.val_data = shaped_data[
+            : int(len(shaped_data) * self.valid_split)
+        ]
 
     def train_dataloader(self):
         """
         Return the training dataloader
         """
-        train_data = self.shaped_data[
-            int(len(self.shaped_data) * self.valid_split) :
-        ]
-
         return torch.utils.data.DataLoader(
-            train_data, batch_size=500, shuffle=True, num_workers=self.num_workers
+            self.train_data, batch_size=500, shuffle=True, num_workers=self.num_workers
         )
 
     def val_dataloader(self):
@@ -111,15 +135,8 @@ class AutoEncoderDataModule(pl.LightningDataModule):
         Return the validation dataloader
         """
         # Take the first valid_split% of the data as validation data
-        val_data = self.shaped_data[
-            : int(len(self.shaped_data) * self.valid_split)
-        ]
-        val_index = np.arange(int(len(self.shaped_data) * self.valid_split))
-        self.val_max = self.max_data[val_index]
-        self.val_sum = self.sum_data[val_index]
-
         return torch.utils.data.DataLoader(
-            val_data, batch_size=500, shuffle=False, num_workers=self.num_workers
+            self.val_data, batch_size=500, shuffle=False, num_workers=self.num_workers
         )
 
     def test_dataloader(self):
@@ -128,8 +145,4 @@ class AutoEncoderDataModule(pl.LightningDataModule):
         """
         return self.val_dataloader()
 
-    def get_val_max(self):
-        return self.val_max
     
-    def get_val_sum(self):
-        return self.val_sum
