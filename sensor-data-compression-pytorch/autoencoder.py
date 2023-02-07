@@ -3,10 +3,12 @@ import time
 import torch
 import torch.nn as nn
 import pytorch_lightning as pl
+import multiprocessing
+import itertools
 
 from telescope_pt import telescopeMSE8x8, move_constants_to_gpu
 from autoencoder_datamodule import ARRANGE, ARRANGE_MASK
-from utils_pt import unnormalize, emd
+
 
 """
 Model: "encoder"
@@ -81,7 +83,6 @@ class AutoEncoder(pl.LightningModule):
         self.shape = (1, 8, 8) # PyTorch defaults to (C, H, W)
         self.val_sum = None
         self.accelerator = accelerator
-        self.hex_metric = self.get_hex_metric()
 
         self.encoder = nn.Sequential(
             nn.Conv2d(1, 8, kernel_size=3, stride=2, padding=1),
@@ -145,29 +146,6 @@ class AutoEncoder(pl.LightningModule):
         encoded_Q = torch.reshape(encoded_Q, (len(encoded_Q), self.encoded_dim, 1))
         return decoded_Q, encoded_Q
 
-    # EMD constants
-    def get_hex_metric(self):
-        hexCoords = torch.tensor([
-            [0.0, 0.0], [0.0, -2.4168015], [0.0, -4.833603], [0.0, -7.2504044],
-            [2.09301, -1.2083969], [2.09301, -3.6251984], [2.09301, -6.042], [2.09301, -8.458794],
-            [4.18602, -2.4168015], [4.18602, -4.833603], [4.18602, -7.2504044], [4.18602, -9.667198],
-            [6.27903, -3.6251984], [6.27903, -6.042], [6.27903, -8.458794], [6.27903, -10.875603],
-            [-8.37204, -10.271393], [-6.27903, -9.063004], [-4.18602, -7.854599], [-2.0930138, -6.6461945],
-            [-8.37204, -7.854599], [-6.27903, -6.6461945], [-4.18602, -5.4377975], [-2.0930138, -4.229393],
-            [-8.37204, -5.4377975], [-6.27903, -4.229393], [-4.18602, -3.020996], [-2.0930138, -1.8125992],
-            [-8.37204, -3.020996], [-6.27903, -1.8125992], [-4.18602, -0.6042023], [-2.0930138, 0.6042023],
-            [4.7092705, -12.386101], [2.6162605, -11.177696], [0.5232506, -9.969299], [-1.5697594, -8.760895],
-            [2.6162605, -13.594498], [0.5232506, -12.386101], [-1.5697594, -11.177696], [-3.6627693, -9.969299],
-            [0.5232506, -14.802895], [-1.5697594, -13.594498], [-3.6627693, -12.386101], [-5.7557793, -11.177696],
-            [-1.5697594, -16.0113], [-3.6627693, -14.802895], [-5.7557793, -13.594498], [-7.848793, -12.386101]
-        ])
-        #normalize so that distance between small cells (there are 4 per TC) is 1
-        oneHexCell = 0.5 * 2.4168015
-        hexCoords = hexCoords / oneHexCell
-        # pairwise distances
-        hex_metric = ot.dist(hexCoords, hexCoords, 'euclidean')
-        return hex_metric
-
     # Pytorch Lightning specific methods
     def forward(self, x):
         return self.decoder(self.encoder(x))
@@ -189,29 +167,4 @@ class AutoEncoder(pl.LightningModule):
         loss = self.loss(x, x_hat)
         self.log("val_loss", loss, on_epoch=True, prog_bar=True)
         return loss
-
-    def test_step(self, batch, batch_idx):
-        """
-        TODO: Instead compute the EMD between the input and output
-        """
-        x = batch
-        cnn_deQ, cnn_enQ = self.predict(x)
-        input_calQ = self.map_to_calq(x)
-        output_calQ_fr = self.map_to_calq(cnn_deQ)
-        # Compute EMD
-        input_calQ = torch.stack(
-            [input_calQ[i] * self.val_sum[i] for i in range(len(input_calQ))]
-        )  # shape = (batch_size, 48)
-        output_calQ = unnormalize(torch.clone(output_calQ_fr), self.val_sum)  # ae_out
-        return (input_calQ, output_calQ)
-    
-    def test_epoch_end(self, outputs):
-        input_calQ = torch.cat([output[0] for output in outputs])
-        output_calQ = torch.cat([output[1] for output in outputs])
-        start_time = time.time()
-        emd_list = [emd(input_calQ[i], output_calQ[i], self.hex_metric) for i in range(len(input_calQ))]
-        print(f"EMD computation time: {time.time() - start_time}")
-        average_emd = torch.mean(torch.tensor(emd_list))
-        print(f"Average EMD: {average_emd}")
-        self.log("average_emd", average_emd)
 

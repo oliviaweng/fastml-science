@@ -57,7 +57,7 @@ class AutoEncoderDataModule(pl.LightningDataModule):
         """
         Mask rows where occupancy is zero
         """
-        return data[data[self.calq_cols].sum(axis=1) != 0]
+        return data[data[self.calq_cols].astype("float32").sum(axis=1) != 0]
 
     def load_data_dir(self):
         """
