@@ -554,6 +554,134 @@ def evaluate_model(model,charges,aux_arrs,eval_dict,args):
 
     return plots, summary_by_model
 
+
+def exp_file_write(file_path, input_str, open_mode="a"):
+    with open(file_path, open_mode) as f:
+        f.write(input_str)
+
+def evaluate_model_experiment(model,charges,aux_arrs,eval_dict,args, exp_file_fps):
+    efd_fp, efr_fp = exp_file_fps 
+    # input arrays
+    input_Q         = charges['input_Q']
+    input_Q_abs     = charges['input_Q_abs']
+    input_calQ      = charges['input_calQ']
+    output_calQ     = charges['output_calQ']
+    output_calQ_fr  = charges['output_calQ_fr']
+    cnn_deQ         = charges['cnn_deQ']
+    cnn_enQ         = charges['cnn_enQ']
+    val_sum         = charges['val_sum']
+    val_max         = charges['val_max']
+
+    ae_out      = output_calQ
+    ae_out_frac = normalize(output_calQ.copy())
+
+    occupancy_1MT = aux_arrs['occupancy_1MT']
+
+    # visualize 2D activations
+    if not model['isQK']:
+        conv2d  = None
+    else:
+        conv2d = tf.keras.models.Model(
+            inputs =model['m_autoCNNen'].inputs,
+            outputs=model['m_autoCNNen'].get_layer("conv2d_0_m").output
+        )
+
+    occ_nbins = eval_dict['occ_nbins']
+    occ_range = eval_dict['occ_range']
+    occ_bins = eval_dict['occ_bins']
+    
+    chg_nbins = eval_dict['chg_nbins']
+    chg_range = eval_dict['chg_range']
+    chglog_nbins = eval_dict['chglog_nbins']
+    chglog_range = eval_dict['chglog_range']
+    chg_bins = eval_dict['chg_bins']
+    
+    occTitle = eval_dict['occTitle']
+    logMaxTitle = eval_dict['logMaxTitle']
+    logTotTitle = eval_dict['logTotTitle']
+    
+    longMetric = {'cross_corr':'cross correlation',
+                  'SSD':'sum of squared differences',
+                  'EMD':'earth movers distance',
+                  'dMean':'difference in energy-weighted mean',
+                  'dRMS':'difference in energy-weighted RMS',
+                  'zero_frac':'zero fraction',}
+
+    _logger.info("Running non-AE algorithms")
+    if args.AEonly:
+        alg_outs = {'ae' : ae_out}
+    else:
+        thr_lo_Q = np.where(input_Q_abs>1.35,input_Q_abs,0) # 1.35 transverse MIPs
+        stc_Q = make_supercells(input_Q_abs, stc16=True)
+        nBC={2:4, 3:6, 4:9, 5:14} #4, 6, 9, 14 (for 2,3,4,5 e-links)
+        bc_Q = best_choice(input_Q_abs, nBC[args.nElinks])
+        alg_outs = {
+            'ae' : ae_out,
+            'stc': stc_Q,
+            #'bc': bc_Q,
+            #'thr_lo': thr_lo_Q, 
+        }
+
+    model_name = model['name']
+    plots={}
+    summary_by_model = {
+        'name':model_name,
+        'en_pams' : model['m_autoCNNen'].count_params(),
+        'en_flops' : get_flops_from_model(model['m_autoCNNen']),
+        'tot_pams': model['m_autoCNN'].count_params(),
+    }
+
+    if (not args.skipPlot): plot_hist(np.log10(val_sum.flatten()),
+                                      "sumQ_validation",xtitle=logTotTitle,ytitle="Entries",
+                                      stats=True,logy=True,nbins=chglog_nbins,lims = chglog_range)
+    if (not args.skipPlot): plot_hist([np.log10(val_max.flatten())],
+                                      "maxQ_validation",xtitle=logMaxTitle,ytitle="Entries",
+                                      stats=True,logy=True,nbins=chglog_nbins,lims = chglog_range)
+
+    if (not args.skipPlot):
+        from utils import graph
+        for ilayer in range(0,len(model['m_autoCNNen'].layers)):
+            label = model['m_autoCNNen'].layers[ilayer].name
+            output,bins = np.histogram(graph.get_layer_output(model['m_autoCNNen'],ilayer,input_Q).flatten(),50)
+            plots['hist_output_%s'%ilayer] = output,bins,label
+
+    # compute metric for each algorithm
+    for algname, alg_out in alg_outs.items():
+        # event displays
+        # if(not args.skipPlot):
+        #     Nevents = 8
+        #     index = np.random.choice(input_Q.shape[0], Nevents, replace=False)
+        #     visualize_displays(
+        #         index, 
+        #         input_Q, 
+        #         input_calQ, 
+        #         alg_out, 
+        #         (cnn_enQ if algname=='ae' else np.array([])),
+        #         (conv2d if algname=='ae' else None), 
+        #         name=algname
+        #     )
+
+        for mname, metric in eval_dict['metrics'].items():
+            name = mname+"_"+algname
+
+            # Try multiprocessing
+            start = time.time()
+
+            with Pool() as pool:
+                vals = pool.starmap(metric, zip(input_calQ, alg_out))
+            vals = np.array(vals)
+
+
+            # vals = np.array([metric(input_calQ[i],alg_out[i]) for i in range(0,len(input_Q_abs))])
+
+            exp_file_write(efd_fp, f'EMD compute time: {time.time() - start} seconds')
+            exp_file_write(efd_fp,f"emd_values = [\n")
+            for v in vals:
+                exp_file_write(efd_fp,f"\t{v},\n")
+            exp_file_write(efd_fp,f"]\n")
+
+            return vals
+
 def compare_models(models,perf_dict,eval_dict,args):
     algnames = eval_dict['algnames']
     metrics = eval_dict['metrics']
