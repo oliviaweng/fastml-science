@@ -6,6 +6,7 @@ import pytorch_lightning as pl
 import multiprocessing
 import itertools
 
+from collections import OrderedDict
 from telescope_pt import telescopeMSE8x8, move_constants_to_gpu
 from autoencoder_datamodule import ARRANGE, ARRANGE_MASK
 
@@ -60,16 +61,75 @@ Non-trainable params: 0
 """
 
 
-CALQ_MASK = torch.tensor([
-    1,1,1,1,1,1,1,1,
-    1,1,1,1,1,1,1,1,
-    1,1,1,1,1,1,1,1,
-    1,1,1,1,1,1,1,1,
-    1,1,1,1,0,0,0,0,
-    1,1,1,1,0,0,0,0,
-    1,1,1,1,0,0,0,0,
-    1,1,1,1,0,0,0,0,
-])
+CALQ_MASK = torch.tensor(
+    [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+    ]
+)
+
 
 class AutoEncoder(pl.LightningModule):
     """
@@ -80,30 +140,44 @@ class AutoEncoder(pl.LightningModule):
         super().__init__()
 
         self.encoded_dim = 16
-        self.shape = (1, 8, 8) # PyTorch defaults to (C, H, W)
+        self.shape = (1, 8, 8)  # PyTorch defaults to (C, H, W)
         self.val_sum = None
         self.accelerator = accelerator
 
         self.encoder = nn.Sequential(
-            nn.Conv2d(1, 8, kernel_size=3, stride=2, padding=1),
-            nn.ReLU(),
-            nn.Flatten(),
-            nn.Linear(128, self.encoded_dim),
+            OrderedDict(
+                [
+                    ("conv", nn.Conv2d(1, 8, kernel_size=3, stride=2, padding=1)),
+                    ("relu", nn.ReLU()),
+                    ("flatten", nn.Flatten()),
+                    ("enc_dense", nn.Linear(128, self.encoded_dim)),
+                ]
+            )
         )
 
-        self.decoder = nn.Sequential(
-            nn.Linear(self.encoded_dim, 128),
-            nn.ReLU(),
-            nn.Unflatten(1, (8, 4, 4)),
-            nn.ConvTranspose2d(
-                8, 8, kernel_size=3, stride=2, padding=1, output_padding=1
+        self.decoder = nn.Sequential(OrderedDict([
+            ("dec_dense", nn.Linear(self.encoded_dim, 128)),
+            ("relu1", nn.ReLU()),
+            ("unflatten", nn.Unflatten(1, (8, 4, 4))),
+            (
+                "convtrans2d1",
+                nn.ConvTranspose2d(
+                    8, 8, kernel_size=3, stride=2, padding=1, output_padding=1
+                ),
             ),
-            nn.ReLU(),
-            nn.ConvTranspose2d(
-                8, self.shape[0], kernel_size=3, stride=1, padding=1,
+            ("relu2", nn.ReLU()),
+            (
+                "convtrans2d2",
+                nn.ConvTranspose2d(
+                    8,
+                    self.shape[0],
+                    kernel_size=3,
+                    stride=1,
+                    padding=1,
+                ),
             ),
-            nn.Sigmoid(),
-        )
+            ("sigmoid", nn.Sigmoid()),
+        ]))
         self.loss = telescopeMSE8x8
         if accelerator == "gpu":
             print("Moved constants to gpu")
@@ -114,13 +188,15 @@ class AutoEncoder(pl.LightningModule):
         Invert the arrange mask
         """
         remap = []
-        hashmap = {} # cell : index mapping
-        found_duplicate_charge = len(ARRANGE[ARRANGE_MASK == 1]) > len(torch.unique(ARRANGE[ARRANGE_MASK == 1]))
+        hashmap = {}  # cell : index mapping
+        found_duplicate_charge = len(ARRANGE[ARRANGE_MASK == 1]) > len(
+            torch.unique(ARRANGE[ARRANGE_MASK == 1])
+        )
         for i in range(len(ARRANGE)):
             if ARRANGE_MASK[i] == 1:
                 if found_duplicate_charge:
                     if CALQ_MASK[i] == 1:
-                        hashmap[int(ARRANGE[i])] = i 
+                        hashmap[int(ARRANGE[i])] = i
                 else:
                     hashmap[int(ARRANGE[i])] = i
         for i in range(len(torch.unique(ARRANGE))):
@@ -167,4 +243,3 @@ class AutoEncoder(pl.LightningModule):
         loss = self.loss(x, x_hat)
         self.log("val_loss", loss, on_epoch=True, prog_bar=True)
         return loss
-

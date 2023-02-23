@@ -111,6 +111,7 @@ Remap_12_3 = torch.zeros((12, 3))
 for i in range(12):
     Remap_12_3[i, int(i / 4)] = 1
 
+
 def telescopeMSE2(y_true, y_pred):
     y_true = y_true.to(dtype=y_pred.dtype)
 
@@ -118,7 +119,8 @@ def telescopeMSE2(y_true, y_pred):
     y_pred_rs = torch.reshape(y_pred, (-1, 48))
     y_true_rs = torch.reshape(y_true, (-1, 48))
     loss_tc1 = torch.mean(
-        torch.square(y_true_rs - y_pred_rs) * torch.maximum(y_pred_rs, y_true_rs), dim=-1
+        torch.square(y_true_rs - y_pred_rs) * torch.maximum(y_pred_rs, y_true_rs),
+        dim=-1,
     )
 
     # map TCs to 2x2 supercells and compute MSE
@@ -198,6 +200,7 @@ remap_8x8_matrix = torch.zeros(48 * 64, dtype=torch.float32).reshape((64, 48))
 for i in range(48):
     remap_8x8_matrix[remap_8x8[i], i] = 1
 
+
 def move_constants_to_gpu():
     global remap_8x8_matrix, Remap_48_36, Remap_48_12, Remap_12_3, Weights_48_36
     remap_8x8_matrix = remap_8x8_matrix.cuda()
@@ -206,7 +209,9 @@ def move_constants_to_gpu():
     Remap_12_3 = Remap_12_3.cuda()
     Weights_48_36 = Weights_48_36.cuda()
 
+
 def telescopeMSE8x8(y_true, y_pred):
+    y_true = y_true.to(dtype=y_pred.dtype)
     return telescopeMSE2(
         torch.matmul(torch.reshape(y_true, (-1, 64)), remap_8x8_matrix),
         torch.matmul(torch.reshape(y_pred, (-1, 64)), remap_8x8_matrix),

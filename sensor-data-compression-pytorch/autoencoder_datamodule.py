@@ -6,27 +6,144 @@ import pytorch_lightning as pl
 
 from utils_pt import normalize
 
-ARRANGE = torch.tensor([
-    28,29,30,31,0,4,8,12,
-    24,25,26,27,1,5,9,13,
-    20,21,22,23,2,6,10,14,
-    16,17,18,19,3,7,11,15,
-    47,43,39,35,35,34,33,32,
-    46,42,38,34,39,38,37,36,
-    45,41,37,33,43,42,41,40,
-    44,40,36,32,47,46,45,44
-])
+ARRANGE = torch.tensor(
+    [
+        28,
+        29,
+        30,
+        31,
+        0,
+        4,
+        8,
+        12,
+        24,
+        25,
+        26,
+        27,
+        1,
+        5,
+        9,
+        13,
+        20,
+        21,
+        22,
+        23,
+        2,
+        6,
+        10,
+        14,
+        16,
+        17,
+        18,
+        19,
+        3,
+        7,
+        11,
+        15,
+        47,
+        43,
+        39,
+        35,
+        35,
+        34,
+        33,
+        32,
+        46,
+        42,
+        38,
+        34,
+        39,
+        38,
+        37,
+        36,
+        45,
+        41,
+        37,
+        33,
+        43,
+        42,
+        41,
+        40,
+        44,
+        40,
+        36,
+        32,
+        47,
+        46,
+        45,
+        44,
+    ]
+)
 
-ARRANGE_MASK = torch.tensor([
-    1,1,1,1,1,1,1,1,
-    1,1,1,1,1,1,1,1,
-    1,1,1,1,1,1,1,1,
-    1,1,1,1,1,1,1,1,
-    1,1,1,1,0,0,0,0,
-    1,1,1,1,0,0,0,0,
-    1,1,1,1,0,0,0,0,
-    1,1,1,1,0,0,0,0,
-])
+ARRANGE_MASK = torch.tensor(
+    [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+    ]
+)
+
 
 class AutoEncoderDataModule(pl.LightningDataModule):
     def __init__(self, data_file, data_dir=None, batch_size=500, num_workers=8) -> None:
@@ -40,8 +157,8 @@ class AutoEncoderDataModule(pl.LightningDataModule):
         self.val_max = None
         self.val_sum = None
         self.max_data = None
-        self.sum_dat = None 
-        self.train_data = None 
+        self.sum_dat = None
+        self.train_data = None
         self.val_data = None
 
     @staticmethod
@@ -82,7 +199,7 @@ class AutoEncoderDataModule(pl.LightningDataModule):
         Prepare the input data for the model
         """
         input_data = norm_data[:, ARRANGE]
-        input_data[:, ARRANGE_MASK == 0] = 0 # zero out repeated entries
+        input_data[:, ARRANGE_MASK == 0] = 0  # zero out repeated entries
         shaped_data = input_data.reshape(len(input_data), shape[0], shape[1], shape[2])
         print(f"Prepped shaped data shape: {shaped_data.shape}")
         return shaped_data
@@ -95,7 +212,7 @@ class AutoEncoderDataModule(pl.LightningDataModule):
         self.val_max = max_data[val_index]
         self.val_sum = sum_data[val_index]
         return self.val_max, self.val_sum
-    
+
     def process_data(self, save=True):
         """
         Only need to run once to prepare the data and pickle it
@@ -114,13 +231,10 @@ class AutoEncoderDataModule(pl.LightningDataModule):
         """
         shaped_data = np.load(self.data_file)
         print(f"Loaded shaped data shape: {shaped_data.shape}")
+        print(f"Loaded shaped data datatype: {shaped_data.dtype}")
 
-        self.train_data = shaped_data[
-            int(len(shaped_data) * self.valid_split) :
-        ]
-        self.val_data = shaped_data[
-            : int(len(shaped_data) * self.valid_split)
-        ]
+        self.train_data = shaped_data[int(len(shaped_data) * self.valid_split) :]
+        self.val_data = shaped_data[: int(len(shaped_data) * self.valid_split)]
 
     def train_dataloader(self):
         """
@@ -144,5 +258,3 @@ class AutoEncoderDataModule(pl.LightningDataModule):
         Return the test dataloader
         """
         return self.val_dataloader()
-
-    

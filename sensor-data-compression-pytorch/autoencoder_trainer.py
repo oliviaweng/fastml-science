@@ -13,9 +13,12 @@ from autoencoder import AutoEncoder
 from autoencoder_datamodule import AutoEncoderDataModule
 from utils_pt import unnormalize, emd
 
-# TODO: Write our own testing loop instead of using the trainer.test() method so
-# that we can multithread EMD computation on the CPU
+
 def test_model(model, test_loader):
+    """
+    Our own testing loop instead of using the trainer.test() method so that we
+    can multithread EMD computation on the CPU
+    """
     model.eval()
     input_calQ_list = []
     output_calQ_list = []
@@ -28,15 +31,13 @@ def test_model(model, test_loader):
             input_calQ = torch.stack(
                 [input_calQ[i] * model.val_sum[i] for i in range(len(input_calQ))]
             )  # shape = (batch_size, 48)
-            output_calQ = unnormalize(torch.clone(output_calQ_fr), model.val_sum)  # ae_out
+            output_calQ = unnormalize(
+                torch.clone(output_calQ_fr), model.val_sum
+            )  # ae_out
             input_calQ_list.append(input_calQ)
             output_calQ_list.append(output_calQ)
-    input_calQ = np.concatenate(
-        [i_calQ.cpu() for i_calQ in input_calQ_list], axis=0
-    )
-    output_calQ = np.concatenate(
-        [o_calQ.cpu() for o_calQ in output_calQ_list], axis=0
-    )
+    input_calQ = np.concatenate([i_calQ.cpu() for i_calQ in input_calQ_list], axis=0)
+    output_calQ = np.concatenate([o_calQ.cpu() for o_calQ in output_calQ_list], axis=0)
     start_time = time.time()
     with multiprocessing.Pool() as pool:
         emd_list = pool.starmap(emd, zip(input_calQ, output_calQ))
@@ -62,10 +63,7 @@ def main(args):
     model = AutoEncoder(accelerator=args.accelerator)
     torchinfo.summary(model, input_size=(1, 1, 8, 8))  # (B, C, H, W)
 
-
-    tb_logger = pl_loggers.TensorBoardLogger(
-        args.save_dir, name=args.experiment_name
-    )
+    tb_logger = pl_loggers.TensorBoardLogger(args.save_dir, name=args.experiment_name)
 
     # Save top-3 checkpoints based on Val/Loss
     top3_checkpoint_callback = ModelCheckpoint(
