@@ -179,9 +179,9 @@ class AutoEncoder(pl.LightningModule):
             ("sigmoid", nn.Sigmoid()),
         ]))
         self.loss = telescopeMSE8x8
-        if accelerator == "gpu":
-            print("Moved constants to gpu")
-            move_constants_to_gpu()
+        # if accelerator == "gpu":
+        #     print("Moved constants to gpu")
+        #     move_constants_to_gpu()
 
     def invert_arrange(self):
         """

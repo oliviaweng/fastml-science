@@ -180,7 +180,6 @@ def main(args):
     print("##############################################")
     print(mean_traces)
     print("##############################################")
-    return
 
     log_df = pd.DataFrame(data=log_dict)
     write_mode = "a" if os.path.exists(args.logfile) else "w"
