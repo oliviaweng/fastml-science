@@ -81,58 +81,6 @@ def hessian(model, hessian_input, file_tag):
             # print(torch.nonzero(t))
     print(f"Hessian type: {type(hess)}")
     print(f"Hessian len: {len(hess)}")
-
-    # parameters = weight_parameters(model)
-    # loss = loss_wrt_weights(model, single_input, single_input, parameters)
-    # print(f"Loss = {loss}")
-    # hess_api = functorch.hessian(loss_wrt_weights, argnums=3)
-    # hess = hess_api(model, single_input, single_input, parameters)
-    # print(f"Hessian len: {len(hess)}")
-    # for h in hess:
-    #     print(len(h))
-    #     for t in h:
-            # print(t)
-            # print(torch.nonzero(t))
-            # TODO: datatype = int64. This is a problem. make sure inputs are float
-    # print(f"Hessian trace = {np.trace(hess.cpu().detach().numpy()).sum()}")
-    # print(f"hess = {hess}")
-
-    # hessian_input = hessian_input.cuda()
-    # model_output = model(hessian_input)
-    # loss = model.loss(hessian_input, model_output)
-    # params = get_parameters_with_grad(model)
-    # for i, p in enumerate(params):
-    #     print(f"layer {i} shape =  {p.shape}")
-    # gradients = torch.autograd.grad(loss, params, retain_graph=True, create_graph=True)
-    # print(f"Num gradients = {len(gradients)}")
-    # print(f"Gradients[0] shape: {gradients[0].shape}")
-    # print(f"Gradients[1] shape: {gradients[1].shape}")
-    # print(f"Gradients[2] shape: {gradients[2].shape}")
-    # hessian = torch.zeros_like(gradients[0])
-    # for i in range(gradients[0].size(0)):
-    #     layer_start = time.time()
-    #     for j in range(gradients[0].size(1)):
-    #         hessian[i, j] = torch.autograd.grad(gradients[0][i][j], params, grad_outputs=torch.ones_like(gradients[0][i][j]), retain_graph=True)[0][i, j]
-    #     # Save the Hessian matrix for each layer as pickle
-    #     print(f"Hessian {i} shape: {hessian[i].shape}")
-    #     # print(hessian[i][0])
-    #     torch.save(hessian[i], f"./hessians/{file_tag}_layer{i}.pt")
-    #     print(f"Time to compute Hessian for layer {i}: {time.time() - layer_start}")
-    # print(f"Hessian shape: {hessian.shape}")
-    # print(f"Time to compute full Hessian: {time.time() - start}")
-
-
-    # for name, params in model.named_parameters():
-    #     if "weight" in name:
-    #         layer_start = time.time()
-    #         print(name)
-    #         hessian = torch.autograd.functional.hessian(
-    #             model.loss, parameters, create_graph=True
-    #         )
-    #         print(hessian.shape)
-    #         print(hessian[0])
-    #         torch.save(hessian, f"./hessians/{file_tag}_{name}.pt")
-    #         print(f"Time to compute {name} Hessian: {time.time() - layer_start}")
     end = time.time()
     print(f"Time to compute Hessian: {end - start}")
 
@@ -144,9 +92,8 @@ def main(args):
     hessian_input = next(iter(data_module.val_dataloader()))
     print(f"Hessian input shape: {hessian_input.shape}")
 
-    model = AutoEncoder(accelerator="cpu")
+    model = AutoEncoder(accelerator="cpu").load_from_checkpoint(args.checkpoint)
     # model = model.cuda()
-    model.load_from_checkpoint(args.checkpoint)
     model.eval()
     hessian(model, hessian_input, args.file_tag)
 

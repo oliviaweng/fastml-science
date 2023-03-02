@@ -31,6 +31,8 @@ import matplotlib.pyplot as plt
 from pyhessian import hessian
 from autoencoder_datamodule import AutoEncoderDataModule
 from autoencoder import AutoEncoder
+from autoencoder_trainer import test_model
+
 
 ##
 import matplotlib as mpl
@@ -109,7 +111,7 @@ def main(args):
                 break
 
     # get model
-    model = AutoEncoder()
+    model = AutoEncoder.load_from_checkpoint(args.checkpoint)
 
     if args.cuda:
         model = model.cuda()
@@ -124,12 +126,18 @@ def main(args):
     if args.checkpoint == "":
         raise Exception("please choose the trained model")
 
-    model.load_from_checkpoint(args.checkpoint)
+
+    # Compute EMD
+    # Need val_sum to compute EMD
+    _, val_sum = data_module.get_val_max_and_sum()
+    model.set_val_sum(val_sum)
+    data_module.setup("test")
+    _ = test_model(model, data_module.test_dataloader())
 
     ######################################################
     # Begin the computation
     ######################################################
-    layers = ["conv", "enc_dense", "dec_dense", "convtrans2d1", "convtrans2d2"]  # Autoencoder
+    # layers = ["conv", "enc_dense", "dec_dense", "convtrans2d1", "convtrans2d2"]  # Autoencoder
     # layers = ["dense_1","dense_2","dense_3","dense_4"]  # jettagger
 
     # turn model to eval mode
@@ -138,7 +146,7 @@ def main(args):
         hessian_comp = hessian(
             model,
             criterion,
-            layers,
+            # layers,
             data=hessian_dataloader,
             cuda=args.cuda,
         )
@@ -146,7 +154,7 @@ def main(args):
         hessian_comp = hessian(
             model,
             criterion,
-            layers,
+            # layers,
             dataloader=hessian_dataloader,
             cuda=args.cuda,
         )
@@ -159,9 +167,9 @@ def main(args):
         top_eigenvector,
         eigenvalueL,
         eigenvectorL,
-    ) = hessian_comp.eigenvalues()
+    ) = hessian_comp.eigenvalues(top_n=1)
     trace, traceL = hessian_comp.trace()
-    density_eigen, density_weight = hessian_comp.density()
+    # density_eigen, density_weight = hessian_comp.density()
 
 
     log_dict = {}
@@ -172,10 +180,15 @@ def main(args):
         mean_traces.append(mean_trace)
         log_dict[f"mean_trace_{trace_vhv}"] = [mean_trace]
     
-    print("\n***Top Eigenvalues: ", top_eigenvalues)
+    print("\n***Top Eigenvalues per Layer: ", eigenvalueL)
+    for layer in eigenvectorL:
+        print("\n***Top Eigenvectors per Layer: ", layer)
+        for top_eigenvs in eigenvectorL[layer]:
+            for eigen_v in top_eigenvs:
+                print("\n***eigenvector shape = ", eigen_v.shape)
     print("\n***Avg Trace: ", np.mean(trace))
-    print("\n***Avg Eigenvalue density: ", np.mean(density_eigen))
-    print("\n***Avg Weight Density: ", np.mean(density_weight))
+    # print("\n***Avg Eigenvalue density: ", np.mean(density_eigen))
+    # print("\n***Avg Weight Density: ", np.mean(density_weight))
 
     print("##############################################")
     print(mean_traces)
@@ -188,7 +201,7 @@ def main(args):
     )
 
 
-    plt.figure(figsize=(12, 12))
+    plt.figure(figsize=(18, 12))
     plt.plot(mean_traces, "o-")
     plt.xlabel("Layers")
     plt.ylabel("Average Hessian Trace")

@@ -97,6 +97,8 @@ def main(args):
     # 4 EVALUTE MODEL
     # ------------------------
     if args.train or args.evaluate:
+        if args.checkpoint:
+            model = AutoEncoder.load_from_checkpoint(args.checkpoint)
         # Need val_sum to compute EMD
         _, val_sum = data_module.get_val_max_and_sum()
         model.set_val_sum(val_sum)
@@ -120,6 +122,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--accelerator", type=str, choices=["cpu", "gpu", "auto"], default="gpu"
     )
+    parser.add_argument("--checkpoint", type=str, default="", help="model checkpoint")
     parser.add_argument("--train", action="store_true", default=False)
     parser.add_argument("--evaluate", action="store_true", default=False)
 

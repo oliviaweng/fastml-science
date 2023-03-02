@@ -15,4 +15,3 @@ timm
 jupyter
 pot
 mplhep
--e git+https://github.com/oliviaweng/PyHessian.git#egg=pyhessian
