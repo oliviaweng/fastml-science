@@ -129,10 +129,10 @@ def main(args):
 
     # Compute EMD
     # Need val_sum to compute EMD
-    _, val_sum = data_module.get_val_max_and_sum()
-    model.set_val_sum(val_sum)
-    data_module.setup("test")
-    _ = test_model(model, data_module.test_dataloader())
+    # _, val_sum = data_module.get_val_max_and_sum()
+    # model.set_val_sum(val_sum)
+    # data_module.setup("test")
+    # _ = test_model(model, data_module.test_dataloader())
 
     ######################################################
     # Begin the computation
