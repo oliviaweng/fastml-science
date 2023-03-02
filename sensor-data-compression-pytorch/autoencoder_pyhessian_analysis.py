@@ -137,16 +137,12 @@ def main(args):
     ######################################################
     # Begin the computation
     ######################################################
-    # layers = ["conv", "enc_dense", "dec_dense", "convtrans2d1", "convtrans2d2"]  # Autoencoder
-    # layers = ["dense_1","dense_2","dense_3","dense_4"]  # jettagger
-
     # turn model to eval mode
     model.eval()
     if batch_num == 1:
         hessian_comp = hessian(
             model,
             criterion,
-            # layers,
             data=hessian_dataloader,
             cuda=args.cuda,
         )
@@ -154,7 +150,6 @@ def main(args):
         hessian_comp = hessian(
             model,
             criterion,
-            # layers,
             dataloader=hessian_dataloader,
             cuda=args.cuda,
         )
