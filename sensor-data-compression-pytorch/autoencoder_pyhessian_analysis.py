@@ -181,6 +181,7 @@ def main(args):
         for top_eigenvs in eigenvectorL[layer]:
             for eigen_v in top_eigenvs:
                 print("\n***eigenvector shape = ", eigen_v.shape)
+                print("\n***eigenvector sort = ", torch.sort(torch.flatten(eigen_v))[-1])
     print("\n***Avg Trace: ", np.mean(trace))
     # print("\n***Avg Eigenvalue density: ", np.mean(density_eigen))
     # print("\n***Avg Weight Density: ", np.mean(density_weight))

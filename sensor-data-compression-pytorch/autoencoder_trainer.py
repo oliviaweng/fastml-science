@@ -2,10 +2,11 @@ import os
 import time
 from tqdm import tqdm
 import torch
+import qtorch
 import torchinfo
 import numpy as np
 import multiprocessing
-import pytorch_lightning as pl
+import pytorch_lightning as pl 
 from pytorch_lightning import loggers as pl_loggers
 from pytorch_lightning.callbacks import ModelCheckpoint
 from argparse import ArgumentParser
@@ -60,7 +61,10 @@ def main(args):
     # ------------------------
     # 1 INIT LIGHTNING MODEL
     # ------------------------
-    model = AutoEncoder(accelerator=args.accelerator)
+    model = AutoEncoder(accelerator=args.accelerator, quantize=args.quantize)
+
+
+
     torchinfo.summary(model, input_size=(1, 1, 8, 8))  # (B, C, H, W)
 
     tb_logger = pl_loggers.TensorBoardLogger(args.save_dir, name=args.experiment_name)
@@ -125,6 +129,12 @@ if __name__ == "__main__":
     parser.add_argument("--checkpoint", type=str, default="", help="model checkpoint")
     parser.add_argument("--train", action="store_true", default=False)
     parser.add_argument("--evaluate", action="store_true", default=False)
+    parser.add_argument(
+        "--quantize", 
+        action="store_true", 
+        default=False, 
+        help="quantize model to 6-bit fixed point (1 signed bit, 1 integer bit, 4 fractional bits)"
+    )
 
     # Add dataset-specific args
     parser = AutoEncoderDataModule.add_argparse_args(parser)
