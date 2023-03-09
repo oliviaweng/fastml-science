@@ -20,51 +20,12 @@ python3 sampling_faulty_eval_experiment.py \
 	--noHeader \
 	--pretrained-model $PRETRAINED_MODEL \
 	--eval-ber 0 \
-	--log-file $LOGFILE
-
-# echo "BER = 1e-4"
-# python3 sampling_faulty_eval_experiment.py \
-# 	-i $DATASET \
-# 	-o ${OUTPUT_DIR}/ber0 \
-# 	--AEonly 1 \
-# 	--nELinks 5 \
-# 	--models 8x8_c8_S2_tele_fqK \
-# 	--nrowsPerFile=4500000 \
-# 	--noHeader \
-# 	--pretrained-model $PRETRAINED_MODEL \
-# 	--eval-ber 1e-4 \
-# 	--log-file $LOGFILE
-
-# for i in ${BIG_BERS[@]}; do
-# 	for t in `seq 1 ${TRIALS}`; do
-# 		echo "BER=${i} Trial ${t}"
-# 		python3 train.py \
-# 		-i $DATASET \
-# 		-o ${OUTPUT_DIR}/ber${i} \
-# 		--AEonly 1 \
-# 		--nELinks 5 \
-# 		--models 8x8_c8_S2_tele_fqK \
-# 		--nrowsPerFile=4500000 \
-# 		--noHeader \
-# 		--pretrained-model $PRETRAINED_MODEL \
-# 		--eval-ber $i \
-# 		--log-file $LOGFILE
-# 	done
-# done
-
-# for j in `seq 1 ${MIN_BER_EXP}`; do
-# 	for t in `seq 1 ${TRIALS}`; do
-# 		echo "BER=${j} Trial ${t}"
-# 		python3 train.py \
-# 		-i $DATASET \
-# 		-o ${OUTPUT_DIR}/ber$BER_PREFIX${j} \
-# 		--AEonly 1 \
-# 		--nELinks 5 \
-# 		--models 8x8_c8_S2_tele_fqK \
-# 		--nrowsPerFile=4500000 \
-# 		--noHeader \
-# 		--pretrained-model $PRETRAINED_MODEL \
-# 		--eval-ber $BER_PREFIX${j} \
-# 		--log-file $LOGFILE
-# 	done
-# done
+	--log-file $LOGFILE \
+	--efd_fp "./test_efd.log" \
+	--efr_fp "./test_efr.log" \
+	--efx_overwrite 1 \
+	--use_custom_bfr 1 \
+	--bfr_start 0 \
+	--bfr_end   2 \
+	--bfr_step  1 \
+	--num_val_inputs 2

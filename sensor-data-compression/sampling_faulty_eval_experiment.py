@@ -9,6 +9,8 @@ from denseCNN import denseCNN
 from fkeras.fmodel import FModel
 from tensorflow.keras.models import Model
 
+import tensorflow as tf
+
 from utils.metrics import emd_multiproc
 from train import (
     load_data,
@@ -66,12 +68,19 @@ def exp_file_write(file_path, input_str, open_mode="a"):
         f.write(input_str)
 
 def main(args):
-    efd_fp = "./efd.log"
-    efr_fp = "./efr.log"
-    exp_file_write(efd_fp, "", "w")
-    exp_file_write(efr_fp, "", "w")   
-    # exp_file_debug  = open("./exp_file_debug.log", "w")
-    # exp_file_result = open("./exp_file_result.log", "w")
+    #S: Running eagerly is essential. Without eager execution mode,
+    ### the fkeras.utils functions (e.g., gen_mask_tensor) only get
+    ### get evaluated once and then subsequent "calls" reuse the 
+    ### same value from the initial call (which manifest as the
+    ### same fault(s) being injected over and over again)
+    tf.config.run_functions_eagerly(True)
+    # tf.data.experimental.enable_debug_mode()
+
+    efd_fp = args.efd_fp #"./efd_val_inputs_0-31_with_eager_exec_cleaning.log"
+    efr_fp = args.efr_fp #"./efr_val_inputs_0-31_with_eager_exec_cleaning.log"
+    if args.efx_overwrite:
+        exp_file_write(efd_fp, "", "w")
+        exp_file_write(efr_fp, "", "w")   
     print(args)
     if "nElinks_%s" % args.nElinks not in args.inputFile:
         raise RuntimeError(
@@ -137,126 +146,128 @@ def main(args):
 
     if model_info["ws"] == "":
         raise RuntimeError("No weights provided to preload into the model!")
-
-    # Evaluate the model
-    fmodel = FModel(m_autoCNNen, args.eval_ber)
-    fmodel.random_select_model_param_bitflip()
     
-    ################
-    #NEW_CODE_START#
-    #exp_file_write(efd_fp, f"fmodel.num_model_param_bits: {fmodel.num_model_param_bits}\n")
-    # pre_exit_procedure([exp_file_debug, exp_file_result])
-    fmodel.set_model_param_ber(0.0)
-    for val_i in range(val_input.shape[0]):
-        curr_val_input = val_input[val_i:val_i+1]
-        #exp_file_write(efd_fp, f"'curr_val_input' type : {type(curr_val_input)} v.s. {type(val_input[0])}\n")
-        #exp_file_write(efd_fp, f"'curr_val_input' shape: {curr_val_input.shape} v.s. {val_input[0].shape}\n")
-        # pre_exit_procedure([exp_file_debug, exp_file_result])
+    #S: Instantiate the FKeras model to be used
+    fmodel = FModel(m_autoCNNen, 0.0)
+    print(fmodel.layer_bit_ranges)
 
-        for bit_i in range(fmodel.num_model_param_bits):
-            fmodel.explicit_select_model_param_bitflip([bit_i])
-            #exp_file_write(efd_fp, f"(val_i, bit_i): ({val_i},{bit_i})\n")
+    #S: Configure how many validation inputs will be used
+    curr_val_input = val_input
+    if 0 < args.num_val_inputs < val_input.shape[0]:
+        curr_val_input = val_input[:args.num_val_inputs]
+    else:
+        raise RuntimeError("Improper configuration for 'num_val_inputs'")
 
-    #NEW_CODE_END###
-    ################
+    #S: Configure which bits will be flipped
+    # bit_flip_range_step = (0,2, 1)
+    bit_flip_range_step = (0,fmodel.num_model_param_bits, 1)
+    if (args.use_custom_bfr == 1): 
+        bfr_start_ok = (0 <= args.bfr_start) and (args.bfr_start<= fmodel.num_model_param_bits)
+        bfr_end_ok   = (0 <= args.bfr_end  ) and (args.bfr_end  <= fmodel.num_model_param_bits)
+        bfr_ok = bfr_start_ok and bfr_end_ok
+        if bfr_ok:
+            bit_flip_range_step = (args.bfr_start, args.bfr_end, args.bfr_step)
+        else:
+            raise RuntimeError("Improper configuration for bit flipping range")
 
-            model.encoder = fmodel.model
+    #S: Begin the single fault injection (bit flipping) campaign
+    for bit_i in range(*bit_flip_range_step):
 
-            f_autoencoder = Model(
-                model.inputs, model.decoder(fmodel.model(model.inputs)), name="autoencoder"
-            )
-            model.autoencoder = f_autoencoder
-            model_info["m_autoCNN"] = f_autoencoder
-            model_info["m_autoCNNen"] = fmodel.model
+        #S: Flip the desired bit in the model 
+        fmodel.explicit_select_model_param_bitflip([bit_i])
 
-            cnn_enQ = fmodel.model.predict(curr_val_input)
-            cnn_deQ = model.decoder.predict(cnn_enQ)
-            cnn_enQ = np.reshape(cnn_enQ, (len(cnn_enQ), model.pams["encoded_dim"], 1))
-            input_Q = curr_val_input
-            # input_Q, cnn_deQ, cnn_enQ = model.predict(curr_val_input)
+        model.encoder = fmodel.model
 
-            ################
-            #NEW_CODE_START#
-            #exp_file_write(efd_fp, f"Eval Only: {args.evalOnly}\n")
-            #exp_file_write(efd_fp, f"'val_input' type : {type(val_input)}\n")
-            #exp_file_write(efd_fp, f"'val_input' shape: {val_input.shape}\n")
-            #exp_file_write(efd_fp, f"'cnn_enQ' type : {type(cnn_enQ)}\n")
-            #exp_file_write(efd_fp, f"'cnn_enQ' shape: {cnn_enQ.shape}\n")
-            #pre_exit_procedure([exp_file_debug, exp_file_result])
-            #NEW_CODE_END###
-            ################
+        f_autoencoder = Model(
+            model.inputs, model.decoder(fmodel.model(model.inputs)), name="autoencoder"
+        )
+        model.autoencoder = f_autoencoder
+        model_info["m_autoCNN"] = f_autoencoder
+        model_info["m_autoCNNen"] = fmodel.model
 
-            input_calQ = model.mapToCalQ(input_Q)  # shape = (N,48) in CALQ order
-            output_calQ_fr = model.mapToCalQ(cnn_deQ)  # shape = (N,48) in CALQ order
+        cnn_enQ = fmodel.model.predict(curr_val_input)
+        cnn_deQ = model.decoder.predict(cnn_enQ)
+        cnn_enQ = np.reshape(cnn_enQ, (len(cnn_enQ), model.pams["encoded_dim"], 1))
+        input_Q = curr_val_input
 
-            print("Restore normalization")
-            input_Q_abs = (
-                np.array(
-                    [
-                        input_Q[i] * (val_max[i] if args.rescaleInputToMax else val_sum[i])
-                        for i in range(0, len(input_Q))
-                    ]
-                )
-                * 35.0
-            )  # restore abs input in CALQ unit
-            input_calQ = np.array(
+        #I: Useful for debugging
+        #exp_file_write(efd_fp, f"Eval Only: {args.evalOnly}\n")
+        #exp_file_write(efd_fp, f"'val_input' type : {type(val_input)}\n")
+        #exp_file_write(efd_fp, f"'val_input' shape: {val_input.shape}\n")
+        #exp_file_write(efd_fp, f"'cnn_enQ' type : {type(cnn_enQ)}\n")
+        #exp_file_write(efd_fp, f"'cnn_enQ' shape: {cnn_enQ.shape}\n")
+        #pre_exit_procedure([exp_file_debug, exp_file_result])
+
+        input_calQ = model.mapToCalQ(input_Q)  # shape = (N,48) in CALQ order
+        output_calQ_fr = model.mapToCalQ(cnn_deQ)  # shape = (N,48) in CALQ order
+
+        print("Restore normalization")
+        input_Q_abs = (
+            np.array(
                 [
-                    input_calQ[i] * (val_max[i] if args.rescaleInputToMax else val_sum[i])
-                    for i in range(0, len(input_calQ))
+                    input_Q[i] * (val_max[i] if args.rescaleInputToMax else val_sum[i])
+                    for i in range(0, len(input_Q))
                 ]
-            )  # shape = (N,48) in CALQ order
-            output_calQ = unnormalize(
-                output_calQ_fr.copy(),
-                val_max if args.rescaleOutputToMax else val_sum,
-                rescaleOutputToMax=args.rescaleOutputToMax,
             )
+            * 35.0
+        )  # restore abs input in CALQ unit
+        input_calQ = np.array(
+            [
+                input_calQ[i] * (val_max[i] if args.rescaleInputToMax else val_sum[i])
+                for i in range(0, len(input_calQ))
+            ]
+        )  # shape = (N,48) in CALQ order
+        output_calQ = unnormalize(
+            output_calQ_fr.copy(),
+            val_max if args.rescaleOutputToMax else val_sum,
+            rescaleOutputToMax=args.rescaleOutputToMax,
+        )
 
-            occupancy_1MT = np.count_nonzero(input_calQ.reshape(len(input_Q), 48) > 1.0, axis=1)
+        occupancy_1MT = np.count_nonzero(input_calQ.reshape(len(input_Q), 48) > 1.0, axis=1)
 
-            eval_dict = {
-                # compare to other algorithms
-                "algnames": ["ae", "stc", "thr_lo", "thr_hi", "bc"],
-                # 'metrics'     :{'EMD': emd},
-                "metrics": {"EMD": emd_multiproc},
-                "occ_nbins": 12,
-                "occ_range": (0, 24),
-                "occ_bins": [0, 2, 5, 10, 15],
-                "chg_nbins": 20,
-                "chg_range": (0, 200),
-                "chglog_nbins": 20,
-                "chglog_range": (0, 2.5),
-                "chg_bins": [0, 2, 5, 10, 50],
-                "occTitle": r"occupancy [1 MIP$_{\mathrm{T}}$ TCs]",
-                "logMaxTitle": r"log10(Max TC charge/MIP$_{\mathrm{T}}$)",
-                "logTotTitle": r"log10(Sum of TC charges/MIP$_{\mathrm{T}}$)",
-            }
+        eval_dict = {
+            # compare to other algorithms
+            "algnames": ["ae", "stc", "thr_lo", "thr_hi", "bc"],
+            # 'metrics'     :{'EMD': emd},
+            "metrics": {"EMD": emd_multiproc},
+            "occ_nbins": 12,
+            "occ_range": (0, 24),
+            "occ_bins": [0, 2, 5, 10, 15],
+            "chg_nbins": 20,
+            "chg_range": (0, 200),
+            "chglog_nbins": 20,
+            "chglog_range": (0, 2.5),
+            "chg_bins": [0, 2, 5, 10, 50],
+            "occTitle": r"occupancy [1 MIP$_{\mathrm{T}}$ TCs]",
+            "logMaxTitle": r"log10(Max TC charge/MIP$_{\mathrm{T}}$)",
+            "logTotTitle": r"log10(Sum of TC charges/MIP$_{\mathrm{T}}$)",
+        }
 
-            charges = {
-                "input_Q": input_Q,
-                "input_Q_abs": input_Q_abs,
-                "input_calQ": input_calQ,  # shape = (N,48) (in abs Q)   (in CALQ 1-48 order)
-                "output_calQ": output_calQ,  # shape = (N,48) (in abs Q)   (in CALQ 1-48 order)
-                "output_calQ_fr": output_calQ_fr,  # shape = (N,48) (in Q fr)   (in CALQ 1-48 order)
-                "cnn_deQ": cnn_deQ,
-                "cnn_enQ": cnn_enQ,
-                "val_sum": val_sum,
-                "val_max": val_max,
-            }
+        charges = {
+            "input_Q": input_Q,
+            "input_Q_abs": input_Q_abs,
+            "input_calQ": input_calQ,  # shape = (N,48) (in abs Q)   (in CALQ 1-48 order)
+            "output_calQ": output_calQ,  # shape = (N,48) (in abs Q)   (in CALQ 1-48 order)
+            "output_calQ_fr": output_calQ_fr,  # shape = (N,48) (in Q fr)   (in CALQ 1-48 order)
+            "cnn_deQ": cnn_deQ,
+            "cnn_enQ": cnn_enQ,
+            "val_sum": val_sum,
+            "val_max": val_max,
+        }
 
-            aux_arrs = {"occupancy_1MT": occupancy_1MT}
+        aux_arrs = {"occupancy_1MT": occupancy_1MT}
 
-            # TODO: Make sure evaluate_model() outputs plots to the output directory
-
-            # _, _ = evaluate_model(model_info, charges, aux_arrs, eval_dict, args)
-            
-            ################
-            #NEW_CODE_START#
-            emd_vals = evaluate_model_experiment(model_info, charges, aux_arrs, eval_dict, args, [efd_fp, efr_fp])
-            #exp_file_write(efd_fp, f"(val_i, bit_i): ({val_i},{bit_i}) | emd_vals = {emd_vals}\n")
-            exp_file_write(efr_fp, f"(val_i, bit_i): ({val_i},{bit_i}) | emd_val = {Decimal.from_float(emd_vals[0])}\n")
-            # pre_exit_procedure([exp_file_debug, exp_file_result])
-            #NEW_CODE_END###
-            ################
+        
+        #S: Evaluate the model and write results to result file 
+        emd_vals = evaluate_model_experiment(model_info, charges, aux_arrs, eval_dict, args, [efd_fp, efr_fp])
+        exp_file_write(efr_fp, f"(val_i, bit_i) | emd_val\n")
+        for val_i, val in enumerate(emd_vals):
+            exp_file_write(efr_fp, f"({val_i},{bit_i}) | {Decimal.from_float(val)}\n")
+        
+        #I: Useful for debugging
+        # for fmodel_layer in fmodel.model.layers:
+        #     if fmodel_layer.__class__.__name__ in ["FQDense", "FQConv2D"]:
+        #         print(f"Model flbrs = {fmodel_layer.flbrs}")
 
 
 if __name__ == "__main__":
@@ -390,5 +401,57 @@ if __name__ == "__main__":
     parser.add_argument(
         "--log-file", type=Path, default="log.txt", help="path to log file"
     )
+    
+    #I: Arguments for bit flipping experiment
+    parser.add_argument(
+        "--efd_fp",
+        type=str,
+        default="./efd.log",
+        help="File path for experiment file with debugging data",
+    )
+    parser.add_argument(
+        "--efr_fp",
+        type=str,
+        default="./efr.log",
+        help="File path for experiment file with result data",
+    )
+    parser.add_argument(
+        "--efx_overwrite",
+        type=int,
+        default=0,
+        help="If '0', efd_fp and efr_fp are appended to with data; If '1', efd_fp and efr_fp are overwritten with data",
+    )
+    parser.add_argument(
+        "--use_custom_bfr",
+        type=int,
+        default=0,
+        help="If '0', all bits (of supported layers) will be flipped. If '1', all bits in the range (--bfr_start, --bfr_end, --bfr_step) will be flipped",
+    )
+    parser.add_argument(
+        "--bfr_start",
+        type=int,
+        default=0,
+        help="Bit flipping range start. Note: bit index starts at 0.",
+    )
+    parser.add_argument(
+        "--bfr_end",
+        type=int,
+        default=2,
+        help="Bit flipping range end (exclusive). Note: bit index starts at 0.",
+    )
+    parser.add_argument(
+        "--bfr_step",
+        type=int,
+        default=1,
+        help="Bit flipping range step size.",
+    )
+    parser.add_argument(
+        "--num_val_inputs",
+        type=int,
+        default=2,
+        help="Number of validation inputs to use for evaluating the faulty models",
+    )
+
+    # args.bfr_start, args.bfr_end, args.bfr_step
     args = parser.parse_args()
     main(args)
