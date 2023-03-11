@@ -624,12 +624,12 @@ def evaluate_model_experiment(model,charges,aux_arrs,eval_dict,args, exp_file_fp
 
     model_name = model['name']
     plots={}
-    summary_by_model = {
-        'name':model_name,
-        'en_pams' : model['m_autoCNNen'].count_params(),
-        'en_flops' : get_flops_from_model(model['m_autoCNNen']),
-        'tot_pams': model['m_autoCNN'].count_params(),
-    }
+    # summary_by_model = {
+    #     'name':model_name,
+    #     'en_pams' : model['m_autoCNNen'].count_params(),
+    #     'en_flops' : get_flops_from_model(model['m_autoCNNen']),
+    #     'tot_pams': model['m_autoCNN'].count_params(),
+    # }
 
     if (not args.skipPlot): plot_hist(np.log10(val_sum.flatten()),
                                       "sumQ_validation",xtitle=logTotTitle,ytitle="Entries",

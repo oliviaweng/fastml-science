@@ -169,3 +169,8 @@ def telescopeMSE8x8(y_true,y_pred):
     return telescopeMSE2(tf.matmul(K.reshape(y_true,(-1,64)),remap_8x8_matrix),
                          tf.matmul(K.reshape(y_pred,(-1,64)),remap_8x8_matrix))
 
+
+def telescopeMSE8x8_for_FKeras(y_pred,y_true):
+    return telescopeMSE2(tf.matmul(K.reshape(y_true,(-1,64)),remap_8x8_matrix),
+                         tf.matmul(K.reshape(y_pred,(-1,64)),remap_8x8_matrix))
+

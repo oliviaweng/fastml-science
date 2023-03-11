@@ -21,11 +21,11 @@ python3 sampling_faulty_eval_experiment.py \
 	--pretrained-model $PRETRAINED_MODEL \
 	--eval-ber 0 \
 	--log-file $LOGFILE \
-	--efd_fp "./test_efd.log" \
-	--efr_fp "./test_efr.log" \
+	--efd_fp "./efd_emd_hesstrace_0-31_debug2.log" \
+	--efr_fp "./efr_emd_hesstrace_0-31_debug2.log" \
 	--efx_overwrite 1 \
 	--use_custom_bfr 1 \
 	--bfr_start 0 \
-	--bfr_end   2 \
+	--bfr_end   360 \
 	--bfr_step  1 \
-	--num_val_inputs 2
+	--num_val_inputs 32
