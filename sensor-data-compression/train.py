@@ -631,19 +631,19 @@ def evaluate_model_experiment(model,charges,aux_arrs,eval_dict,args, exp_file_fp
     #     'tot_pams': model['m_autoCNN'].count_params(),
     # }
 
-    if (not args.skipPlot): plot_hist(np.log10(val_sum.flatten()),
-                                      "sumQ_validation",xtitle=logTotTitle,ytitle="Entries",
-                                      stats=True,logy=True,nbins=chglog_nbins,lims = chglog_range)
-    if (not args.skipPlot): plot_hist([np.log10(val_max.flatten())],
-                                      "maxQ_validation",xtitle=logMaxTitle,ytitle="Entries",
-                                      stats=True,logy=True,nbins=chglog_nbins,lims = chglog_range)
+    # if (not args.skipPlot): plot_hist(np.log10(val_sum.flatten()),
+    #                                   "sumQ_validation",xtitle=logTotTitle,ytitle="Entries",
+    #                                   stats=True,logy=True,nbins=chglog_nbins,lims = chglog_range)
+    # if (not args.skipPlot): plot_hist([np.log10(val_max.flatten())],
+    #                                   "maxQ_validation",xtitle=logMaxTitle,ytitle="Entries",
+    #                                   stats=True,logy=True,nbins=chglog_nbins,lims = chglog_range)
 
-    if (not args.skipPlot):
-        from utils import graph
-        for ilayer in range(0,len(model['m_autoCNNen'].layers)):
-            label = model['m_autoCNNen'].layers[ilayer].name
-            output,bins = np.histogram(graph.get_layer_output(model['m_autoCNNen'],ilayer,input_Q).flatten(),50)
-            plots['hist_output_%s'%ilayer] = output,bins,label
+    # if (not args.skipPlot):
+    #     from utils import graph
+    #     for ilayer in range(0,len(model['m_autoCNNen'].layers)):
+    #         label = model['m_autoCNNen'].layers[ilayer].name
+    #         output,bins = np.histogram(graph.get_layer_output(model['m_autoCNNen'],ilayer,input_Q).flatten(),50)
+    #         plots['hist_output_%s'%ilayer] = output,bins,label
 
     # compute metric for each algorithm
     for algname, alg_out in alg_outs.items():
