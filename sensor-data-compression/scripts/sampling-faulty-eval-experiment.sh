@@ -21,8 +21,8 @@ python3 sampling_faulty_eval_experiment.py \
 	--pretrained-model $PRETRAINED_MODEL \
 	--eval-ber 0 \
 	--log-file $LOGFILE \
-	--efd_fp "./efd_emd_hesstrace_0-31_debug2.log" \
-	--efr_fp "./efr_emd_hesstrace_0-31_debug2.log" \
+	--efd_fp "./efd_emd_hesstrace_0-31.log" \
+	--efr_fp "./efr_emd_hesstrace_0-31.log" \
 	--efx_overwrite 1 \
 	--use_custom_bfr 1 \
 	--bfr_start 0 \
