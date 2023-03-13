@@ -270,7 +270,7 @@ def main(args):
         #######################
         hess_start = time.time()
         hess = HessianMetrics(f_autoencoder, telescopeMSE8x8_for_FKeras, curr_val_input, curr_val_input)
-        hess_trace_dict = hess.trace_hack(max_iter=300)
+        hess_trace_dict = hess.trace_hack(max_iter=500)
         exp_file_write(efd_fp, f'Hessian trace compute time: {time.time() - hess_start} seconds\n')
         exp_file_write(efd_fp,  "hess_trace_dict = {\n")
         for k, v in hess_trace_dict.items():
