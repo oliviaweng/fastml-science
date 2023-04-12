@@ -24,6 +24,7 @@ from utils.logger import _logger
 from utils.plot import plot_loss, plot_hist, visualize_displays, plot_profile, overlay_plots
 from emd_v_eta import plot_eta
 
+import sys
 import time
 from multiprocessing import Process, Pool, Array
 
@@ -852,6 +853,8 @@ def main(args):
             train_ind = val_ind[:0]
         else:
             val_input, train_input, val_ind, train_ind = split(shaped_data)
+
+        # np.save('hgcal22data-signal-driven-ttbar-v11-val-input.npy', val_input)
             
         m_autoCNN , m_autoCNNen = m.get_models()
         model['m_autoCNN'] = m_autoCNN

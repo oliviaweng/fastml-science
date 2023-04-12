@@ -165,7 +165,22 @@ networks_by_name = [
          'nBits_weight': {'total':  5, 'integer': 1, 'keep_negative':1}, # sign bit not included
         },
     },
-
+    {'name':'8x8_c8_S2_tele_qK_6bit',
+     'label':'8x8_c[8]_S2_tele',
+     'arr_key':'8x8',
+     'isQK':True,
+     'params':{
+         'shape':(8,8,1),
+         'loss':telescopeMSE8x8,
+         'CNN_layer_nodes':[8],
+         'CNN_kernel_size':[3],
+         'CNN_strides':[(2,2)],
+         'nBits_input': {'total': 11, 'integer': 3, 'keep_negative':1},
+         'nBits_encod': {'total':  9, 'integer': 1,'keep_negative':0}, # 0 to 2 range, 8 bit decimal 
+         'nBits_accum': {'total': 12, 'integer': 3, 'keep_negative':1},
+         'nBits_weight': {'total':  6, 'integer': 1, 'keep_negative':1}, # sign bit stolen from fractional bits
+        },
+    },
     {'name':'8x8_c8_S2_qK',
      'label':'8x8_c[8]_S2',
      'arr_key':'8x8',
