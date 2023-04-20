@@ -130,9 +130,14 @@ def main(args):
         raise RuntimeError("Improper configuration for 'num_val_inputs'")
 
     # Evaluate the model
+    print("Computing Hessian Metrics...")
     hess_start = time.time()
     hess = HessianMetrics(m_autoCNN, telescopeMSE8x8_for_FKeras, curr_val_input, curr_val_input)
-    layer_eigenvalues, layer_eigenvectors = hess.top_k_eigenvalues_hack(max_iter=100)
+    # hess_trace_dict = hess.trace_hack(max_iter=500)
+    # print(f'Hessian trace: {hess_trace_dict}')
+    # print(f"Hessian trace compute time: {time.time() - hess_start} seconds\n")
+    # hess_start = time.time()
+    layer_eigenvalues, layer_eigenvectors = hess.top_k_eigenvalues_hack(k=10,max_iter=500)
     for layer in layer_eigenvalues:
         print(f'Layer {layer} top eigenvalue: {layer_eigenvalues[layer]}')
     for layer in layer_eigenvectors:
@@ -141,6 +146,8 @@ def main(args):
             for vi in layer_eigenvectors[layer][i]:
                 print(f'{vi.shape}')
     print(f'Hessian eigenvalue compute time: {time.time() - hess_start} seconds\n')
+    # sensitivity_ranking = hess.sensitivity_ranking(layer_eigenvectors)
+    # print(f'Sensitivity ranking:\n{sensitivity_ranking}')
 
 
 if __name__ == "__main__":
