@@ -1,0 +1,35 @@
+1: {'conv2d_0_m': 5.7901816, 'encoded_vector': 2.0963495, 'de_dense_final': 20.46396, 'conv2D_t_0': 31.058273, 'conv2d_t_final': 55.657585}
+2: {'conv2d_0_m': 3.859438, 'encoded_vector': 0.69445026, 'de_dense_final': 2.7817688, 'conv2D_t_0': 9.8672, 'conv2d_t_final': 9.0444975}
+3: {'conv2d_0_m': 0.90119576, 'encoded_vector': 1.7685473, 'de_dense_final': 10.304195, 'conv2D_t_0': 11.321885, 'conv2d_t_final': 8.916261}
+4: {'conv2d_0_m': 5.18106, 'encoded_vector': 0.91279906, 'de_dense_final': 14.445405, 'conv2D_t_0': 25.787624, 'conv2d_t_final': 17.807255}
+5: {'conv2d_0_m': 1.4686894, 'encoded_vector': 0.91820997, 'de_dense_final': 60.46521, 'conv2D_t_0': 159.1832, 'conv2d_t_final': 80.85872}
+6: {'conv2d_0_m': 1.8283278, 'encoded_vector': 1.080182, 'de_dense_final': 7.300376, 'conv2D_t_0': 13.267944, 'conv2d_t_final': 5.9533687}
+7: {'conv2d_0_m': 0.81992906, 'encoded_vector': 0.2913769, 'de_dense_final': 4.6091895, 'conv2D_t_0': 15.501432, 'conv2d_t_final': 14.989394}
+8: {'conv2d_0_m': -4.982624, 'encoded_vector': -9.221068, 'de_dense_final': 18.710857, 'conv2D_t_0': 93.29588, 'conv2d_t_final': 85.302025}
+9: {'conv2d_0_m': 1.0331541, 'encoded_vector': 1.9230821, 'de_dense_final': 20.44288, 'conv2D_t_0': 21.378479, 'conv2d_t_final': 24.266718}
+10: {'conv2d_0_m': 0.7373265, 'encoded_vector': 1.1840928, 'de_dense_final': 5.6586666, 'conv2D_t_0': 7.5203304, 'conv2d_t_final': 7.157354}
+11: {'conv2d_0_m': -2.8918571, 'encoded_vector': -2.5368185, 'de_dense_final': 1.6568877, 'conv2D_t_0': 32.9979, 'conv2d_t_final': 46.039165}
+12: {'conv2d_0_m': 1.1606302, 'encoded_vector': 2.7050335, 'de_dense_final': 16.311844, 'conv2D_t_0': 29.331524, 'conv2d_t_final': 36.924686}
+13: {'conv2d_0_m': -0.3373737, 'encoded_vector': -0.100481845, 'de_dense_final': 9.693762, 'conv2D_t_0': 62.18037, 'conv2d_t_final': 33.19038}
+14: {'conv2d_0_m': 2.1944664, 'encoded_vector': 1.5056452, 'de_dense_final': 7.2544837, 'conv2D_t_0': 27.50521, 'conv2d_t_final': 23.368223}
+15: {'conv2d_0_m': 12.407516, 'encoded_vector': 5.5051565, 'de_dense_final': 73.526794, 'conv2D_t_0': 56.41545, 'conv2d_t_final': 35.146454}
+16: {'conv2d_0_m': 1.1521648, 'encoded_vector': 0.26283082, 'de_dense_final': 5.8467674, 'conv2D_t_0': 8.962896, 'conv2d_t_final': 21.186928}
+17: {'conv2d_0_m': 1.4081994, 'encoded_vector': 2.5155783, 'de_dense_final': 26.925426, 'conv2D_t_0': 18.879599, 'conv2d_t_final': 27.817331}
+18: {'conv2d_0_m': 3.5855687, 'encoded_vector': 5.419478, 'de_dense_final': 22.515142, 'conv2D_t_0': 38.699745, 'conv2d_t_final': 39.837975}
+19: {'conv2d_0_m': 5.481283, 'encoded_vector': 2.0954182, 'de_dense_final': 12.481037, 'conv2D_t_0': 19.32695, 'conv2d_t_final': 16.9463}
+20: {'conv2d_0_m': 0.356416, 'encoded_vector': 0.360395, 'de_dense_final': 1.4567131, 'conv2D_t_0': 3.4933162, 'conv2d_t_final': 4.818944}
+21: {'conv2d_0_m': 0.6512107, 'encoded_vector': 0.67909086, 'de_dense_final': 4.972327, 'conv2D_t_0': 4.456364, 'conv2d_t_final': 7.0359373}
+22: {'conv2d_0_m': 2.1655967, 'encoded_vector': 1.0572951, 'de_dense_final': 2.4178889, 'conv2D_t_0': 9.654425, 'conv2d_t_final': 7.65773}
+23: {'conv2d_0_m': 4.186491, 'encoded_vector': 0.7958922, 'de_dense_final': 25.150848, 'conv2D_t_0': 22.736223, 'conv2d_t_final': 10.416142}
+24: {'conv2d_0_m': 0.60368425, 'encoded_vector': 2.8595557, 'de_dense_final': 13.037009, 'conv2D_t_0': 12.452204, 'conv2d_t_final': 10.569132}
+25: {'conv2d_0_m': 0.08846468, 'encoded_vector': 0.2573823, 'de_dense_final': 9.830581, 'conv2D_t_0': 8.540783, 'conv2d_t_final': 15.948165}
+26: {'conv2d_0_m': 2.2745464, 'encoded_vector': -0.12746489, 'de_dense_final': 1.0997745, 'conv2D_t_0': 12.849598, 'conv2d_t_final': 10.274271}
+27: {'conv2d_0_m': 0.8345106, 'encoded_vector': 0.24063803, 'de_dense_final': 7.1778903, 'conv2D_t_0': 17.31081, 'conv2d_t_final': 28.778843}
+28: {'conv2d_0_m': 0.6109143, 'encoded_vector': 0.6104846, 'de_dense_final': 6.1052346, 'conv2D_t_0': 10.780347, 'conv2d_t_final': 5.844651}
+29: {'conv2d_0_m': 6.82225, 'encoded_vector': -3.0866253, 'de_dense_final': -2.1448767, 'conv2D_t_0': 27.072208, 'conv2d_t_final': 38.372337}
+30: {'conv2d_0_m': 5.8026423, 'encoded_vector': 3.2228258, 'de_dense_final': 19.779932, 'conv2D_t_0': 43.590908, 'conv2d_t_final': 52.096638}
+31: {'conv2d_0_m': 3.387216, 'encoded_vector': 1.15679, 'de_dense_final': 22.289879, 'conv2D_t_0': 52.38406, 'conv2d_t_final': 48.54883}
+32: {'conv2d_0_m': 0.25473014, 'encoded_vector': 0.29025522, 'de_dense_final': 11.545902, 'conv2D_t_0': 24.114323, 'conv2d_t_final': 14.205385}
+
+---- BATCH SIZE 32 ----
+32: {'conv2d_0_m': 69.090706, 'encoded_vector': 32.25822, 'de_dense_final': 439.9799, 'conv2D_t_0': 864.996, 'conv2d_t_final': 963.0991}

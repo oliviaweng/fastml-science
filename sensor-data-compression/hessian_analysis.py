@@ -1,5 +1,6 @@
 import os
 import time
+import json
 import argparse
 import numpy as np
 from pathlib import Path
@@ -22,6 +23,10 @@ from train import (
     unnormalize,
 )
 
+
+def exp_file_write(file_path, input_str, open_mode="a"):
+    with open(file_path, open_mode) as f:
+        f.write(input_str)
 
 def normalize_data(data_values):
     # normalize input charge data rescaleInputToMax: normalizes charges to
@@ -126,6 +131,8 @@ def main(args):
     curr_val_input = val_input
     if 0 < args.num_val_inputs < val_input.shape[0]:
         curr_val_input = val_input[:args.num_val_inputs]
+        # For debugging
+        # curr_val_input = val_input[args.num_val_inputs:args.num_val_inputs+1]
     else:
         raise RuntimeError("Improper configuration for 'num_val_inputs'")
 
@@ -133,19 +140,26 @@ def main(args):
     print("Computing Hessian Metrics...")
     hess_start = time.time()
     hess = HessianMetrics(m_autoCNN, telescopeMSE8x8_for_FKeras, curr_val_input, curr_val_input)
-    # hess_trace_dict = hess.trace_hack(max_iter=500)
-    # print(f'Hessian trace: {hess_trace_dict}')
-    # print(f"Hessian trace compute time: {time.time() - hess_start} seconds\n")
+    hess_trace_dict = hess.trace_hack(max_iter=500)
+    print(f'Hessian trace: {hess_trace_dict}')
+    print(f"Hessian trace compute time: {time.time() - hess_start} seconds\n")
+
+    exp_file_write(
+        os.path.join(args.odir, "hessian_trace_debug.txt"), 
+        f"{args.num_val_inputs}: {hess_trace_dict}\n"
+    )
+        
+
     # hess_start = time.time()
-    layer_eigenvalues, layer_eigenvectors = hess.top_k_eigenvalues_hack(k=10,max_iter=500)
-    for layer in layer_eigenvalues:
-        print(f'Layer {layer} top eigenvalue: {layer_eigenvalues[layer]}')
-    for layer in layer_eigenvectors:
-        for i in range(len(layer_eigenvectors[layer])):
-            print(f'Layer {layer} top {i+1} eigenvector shapes:')
-            for vi in layer_eigenvectors[layer][i]:
-                print(f'{vi.shape}')
-    print(f'Hessian eigenvalue compute time: {time.time() - hess_start} seconds\n')
+    # layer_eigenvalues, layer_eigenvectors = hess.top_k_eigenvalues_hack(k=10,max_iter=500)
+    # for layer in layer_eigenvalues:
+    #     print(f'Layer {layer} top eigenvalue: {layer_eigenvalues[layer]}')
+    # for layer in layer_eigenvectors:
+    #     for i in range(len(layer_eigenvectors[layer])):
+    #         print(f'Layer {layer} top {i+1} eigenvector shapes:')
+    #         for vi in layer_eigenvectors[layer][i]:
+    #             print(f'{vi.shape}')
+    # print(f'Hessian eigenvalue compute time: {time.time() - hess_start} seconds\n')
     # sensitivity_ranking = hess.sensitivity_ranking(layer_eigenvectors)
     # print(f'Sensitivity ranking:\n{sensitivity_ranking}')
 
