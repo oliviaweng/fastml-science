@@ -173,6 +173,20 @@ def main(args):
                 os.path.join(args.odir, f"sensitivity_ranking_layer_{layer}.txt"),
                 f"{sensitivity_ranking[layer][i][0]}, {abs(sensitivity_ranking[layer][i][1])}\n"
             )
+    grad_start = time.time()
+    grad_ranking = hess.gradient_ranking()
+    for layer in grad_ranking:
+        exp_file_write(
+            os.path.join(args.odir, f"gradient_ranking_layer_{layer}.txt"),
+            f"Gradient ranking for layer {layer} (param idx, rank)\n",
+            open_mode="w"
+        )
+        for i in range(len(grad_ranking[layer])):
+            exp_file_write(
+                os.path.join(args.odir, f"gradient_ranking_layer_{layer}.txt"),
+                f"{grad_ranking[layer][i][0]}, {abs(grad_ranking[layer][i][1])}\n"
+            )
+    print(f'Gradient compute time: {time.time() - grad_start} seconds\n')
 
 
 if __name__ == "__main__":
