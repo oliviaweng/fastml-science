@@ -151,7 +151,8 @@ def main(args):
         
 
     # hess_start = time.time()
-    layer_eigenvalues, layer_eigenvectors = hess.top_k_eigenvalues_hack(k=1, max_iter=500)
+    top_k = 8
+    layer_eigenvalues, layer_eigenvectors = hess.top_k_eigenvalues_hack(k=top_k, max_iter=500)
     for layer in layer_eigenvalues:
         print(f'Layer {layer} top eigenvalue: {layer_eigenvalues[layer]}')
     for layer in layer_eigenvectors:
@@ -160,33 +161,38 @@ def main(args):
             for vi in layer_eigenvectors[layer][i]:
                 print(f'{vi.shape}')
     print(f'Hessian eigenvalue compute time: {time.time() - hess_start} seconds\n')
-    sensitivity_ranking = hess.sensitivity_ranking(layer_eigenvectors)
-    # print(f'Sensitivity ranking:\n{sensitivity_ranking}')
+    sensitivity_ranking = hess.sensitivity_ranking(layer_eigenvectors, k=top_k)
     for layer in sensitivity_ranking:
         exp_file_write(
-            os.path.join(args.odir, f"sensitivity_ranking_layer_{layer}.txt"),
+            os.path.join(args.odir, f"top{top_k}_hess_ranking_layer_{layer}.txt"),
             f"Hessian ranking for layer {layer} (param idx, rank)\n",
             open_mode="w"
         )
         for i in range(len(sensitivity_ranking[layer])):
             exp_file_write(
-                os.path.join(args.odir, f"sensitivity_ranking_layer_{layer}.txt"),
+                os.path.join(args.odir, f"top{top_k}_hess_ranking_layer_{layer}.txt"),
                 f"{sensitivity_ranking[layer][i][0]}, {abs(sensitivity_ranking[layer][i][1])}\n"
             )
-    grad_start = time.time()
-    grad_ranking = hess.gradient_ranking()
-    for layer in grad_ranking:
-        exp_file_write(
-            os.path.join(args.odir, f"gradient_ranking_layer_{layer}.txt"),
-            f"Gradient ranking for layer {layer} (param idx, rank)\n",
-            open_mode="w"
-        )
-        for i in range(len(grad_ranking[layer])):
-            exp_file_write(
-                os.path.join(args.odir, f"gradient_ranking_layer_{layer}.txt"),
-                f"{grad_ranking[layer][i][0]}, {abs(grad_ranking[layer][i][1])}\n"
-            )
-    print(f'Gradient compute time: {time.time() - grad_start} seconds\n')
+#     grad_start = time.time()
+#     grad_ranking, gradients = hess.gradient_ranking()
+#     for layer in grad_ranking:
+#         exp_file_write(
+#             os.path.join(args.odir, f"gradient_ranking_layer_{layer}.txt"),
+#             f"Gradient ranking for layer {layer} (param idx, rank)\n",
+#             open_mode="w"
+#         )
+#         for i in range(len(grad_ranking[layer])):
+#             exp_file_write(
+#                 os.path.join(args.odir, f"gradient_ranking_layer_{layer}.txt"),
+#                 f"{grad_ranking[layer][i][0]}, {abs(grad_ranking[layer][i][1])}\n"
+#             )
+#     print(f'Gradient compute time: {time.time() - grad_start} seconds\n')
+#     # Compute L2 distance between gradient and Hessian eigenvectors
+#     for layer in layer_eigenvectors:
+#         print(f"eigenvector shape: {layer_eigenvectors[layer][0][0].shape}")
+#         print(f"gradient shape: {gradients[layer].shape}")
+#         print(f'Layer {layer} L2 norm(hessian - gradient) = {np.linalg.norm(layer_eigenvectors[layer][0][0] - gradients[layer])}')
+ 
 
 
 if __name__ == "__main__":
