@@ -40,6 +40,11 @@ You only need to build the image once. If you kill the instance and want to spin
 docker-compose up -d
 ```
 
+Access your docker container by running:
+```
+docker exec -it autoencoder bash
+```
+
 ## Process the data
 The dataset requires a bit of preprocessing, which is pretty slow. To pre-process the data and save it, run
 ```
