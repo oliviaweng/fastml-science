@@ -30,6 +30,11 @@ from train import (
 
 from decimal import Decimal
 
+import pickle
+import codecs
+import platform
+print(f"Python version is: {platform.python_version()}")
+
 def normalize_data(data_values):
     # normalize input charge data rescaleInputToMax: normalizes charges to
     # maximum charge in module sumlog2 (default): normalizes charges to
@@ -93,7 +98,26 @@ def main(args):
         )
 
     # load data
+    ld_data_time_s = time.time()
     data_values, phys_values = load_data(args)
+    print(f"Time to load data: {time.time() - ld_data_time_s}")
+    
+    ## Save a pickled/serialized representation of the data instances
+    # obj = (data_values, phys_values)
+    # pickled_obj = codecs.encode(pickle.dumps(obj), "base64").decode()
+    # with open("pickled--data_values--phys_values--EoL_dataset.pkl", "w") as f:
+    #     f.write(pickled_obj)
+    
+    ## Load the data instances using the pickle string
+    ld_data_time_s = time.time()
+    pickled_obj = "" 
+    with open("pickled--data_values--phys_values--EoL_dataset.pkl", "r") as f:
+        pickled_obj = f.read()
+    data_values, phys_values = pickle.loads(codecs.decode(pickled_obj.encode(), "base64"))
+    print(f"Time to load data: {time.time() - ld_data_time_s}")
+    exit()
+
+
     normdata, maxdata, sumdata = normalize_data(data_values)
     maxdata = maxdata / 35.0  # normalize to units of transverse MIPs
     sumdata = sumdata / 35.0  # normalize to units of transverse MIPs
