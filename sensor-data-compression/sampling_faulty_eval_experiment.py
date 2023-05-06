@@ -213,9 +213,12 @@ def main(args):
         model_info["m_autoCNN"] = f_autoencoder
         model_info["m_autoCNNen"] = fmodel.model
 
-        cnn_enQ = fmodel.model.predict(curr_val_input)
-        cnn_deQ = model.decoder.predict(cnn_enQ)
-        cnn_enQ = np.reshape(cnn_enQ, (len(cnn_enQ), model.pams["encoded_dim"], 1))
+        # cnn_enQ = fmodel.model.predict(curr_val_input, batch_size=128)
+        # cnn_deQ = model.decoder.predict(cnn_enQ)
+        # cnn_enQ = np.reshape(cnn_enQ, (len(cnn_enQ), model.pams["encoded_dim"], 1))
+
+        cnn_enQ = None
+        cnn_deQ = f_autoencoder.predict(curr_val_input, batch_size=512)
         input_Q = curr_val_input
 
         #I: Useful for debugging
