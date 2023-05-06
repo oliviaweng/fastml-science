@@ -676,10 +676,10 @@ def evaluate_model_experiment(model,charges,aux_arrs,eval_dict,args, exp_file_fp
             # vals = np.array([metric(input_calQ[i],alg_out[i]) for i in range(0,len(input_Q_abs))])
 
             exp_file_write(efd_fp, f'EMD compute time: {time.time() - start} seconds\n')
-            exp_file_write(efd_fp,f"emd_values = [\n")
-            for v in vals:
-                exp_file_write(efd_fp,f"\t{v},\n")
-            exp_file_write(efd_fp,f"]\n")
+            # exp_file_write(efd_fp,f"emd_values = [\n")
+            # for v in vals:
+            #     exp_file_write(efd_fp,f"\t{v},\n")
+            # exp_file_write(efd_fp,f"]\n")
 
             return vals
 

@@ -36,5 +36,5 @@ python3 sampling_faulty_eval_experiment.py \
         --bfr_start $i \
         --bfr_end   $((i+1)) \
         --bfr_step  1 \
-        --num_val_inputs 32
+        --num_val_inputs 800000
 done
