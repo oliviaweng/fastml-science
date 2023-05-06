@@ -23,7 +23,7 @@ python3 sampling_faulty_eval_experiment.py \
         -o ${OUTPUT_DIR}/ber0 \
         --AEonly 1 \
         --nELinks 5 \
-        --models 8x8_c8_S2_tele_fqK \
+        --models 8x8_c8_S2_tele_fqK_6bit \
         --nrowsPerFile=4500000 \
         --noHeader \
         --pretrained-model $PRETRAINED_MODEL \
