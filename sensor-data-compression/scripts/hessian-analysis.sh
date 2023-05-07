@@ -16,5 +16,5 @@ python3 hessian_analysis.py \
 	--nrowsPerFile=4500000 \
 	--noHeader \
 	--pretrained-model $PRETRAINED_MODEL \
-	--num_val_inputs 32
+	--num_val_inputs 100
 # done

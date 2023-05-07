@@ -33,3 +33,7 @@
 
 ---- BATCH SIZE 32 ----
 32: {'conv2d_0_m': 69.090706, 'encoded_vector': 32.25822, 'de_dense_final': 439.9799, 'conv2D_t_0': 864.996, 'conv2d_t_final': 963.0991}
+32: {'conv2d_0_m': 69.090706, 'encoded_vector': 32.25822, 'de_dense_final': 439.9799, 'conv2D_t_0': 864.996, 'conv2d_t_final': 963.0991}
+32: {'conv2d_0_m': 69.090706, 'encoded_vector': 32.25822, 'de_dense_final': 439.9799, 'conv2D_t_0': 864.99603, 'conv2d_t_final': 963.0991}
+100: {'conv2d_0_m': 70.68767, 'encoded_vector': 32.3452, 'de_dense_final': 455.2462, 'conv2D_t_0': 1027.0172, 'conv2d_t_final': 802.30756}
+100: {'conv2d_0_m': 70.68769, 'encoded_vector': 32.34522, 'de_dense_final': 455.24628, 'conv2D_t_0': 1027.0175, 'conv2d_t_final': 802.3077}
