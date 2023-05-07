@@ -139,40 +139,51 @@ def main(args):
     # Evaluate the model
     print("Computing Hessian Metrics...")
     hess_start = time.time()
-    hess = HessianMetrics(m_autoCNN, telescopeMSE8x8_for_FKeras, curr_val_input, curr_val_input)
-    # hess_trace_dict = hess.trace_hack(max_iter=500)
-    # print(f'Hessian trace: {hess_trace_dict}')
-    # print(f"Hessian trace compute time: {time.time() - hess_start} seconds\n")
+    hess = HessianMetrics(m_autoCNN, telescopeMSE8x8_for_FKeras, curr_val_input, curr_val_input, batch_size=32)
+    hess_trace_dict = hess.trace_hack(max_iter=500)
+    print(f'Hessian trace: {hess_trace_dict}')
+    print(f"Hessian trace compute time: {time.time() - hess_start} seconds\n")
 
-    # exp_file_write(
-    #     os.path.join(args.odir, "hessian_trace_debug.txt"), 
-    #     f"{args.num_val_inputs}: {hess_trace_dict}\n"
-    # )
+    exp_file_write(
+        os.path.join(args.odir, "hessian_trace_debug.txt"), 
+        f"{args.num_val_inputs}: {hess_trace_dict}\n"
+    )
         
 
     # hess_start = time.time()
-    top_k = 8
-    layer_eigenvalues, layer_eigenvectors = hess.top_k_eigenvalues_hack(k=top_k, max_iter=500)
-    for layer in layer_eigenvalues:
-        print(f'Layer {layer} top eigenvalue: {layer_eigenvalues[layer]}')
-    for layer in layer_eigenvectors:
-        for i in range(len(layer_eigenvectors[layer])):
-            print(f'Layer {layer} top {i+1} eigenvector shapes:')
-            for vi in layer_eigenvectors[layer][i]:
-                print(f'{vi.shape}')
-    print(f'Hessian eigenvalue compute time: {time.time() - hess_start} seconds\n')
-    sensitivity_ranking = hess.sensitivity_ranking(layer_eigenvectors, k=top_k)
-    for layer in sensitivity_ranking:
-        exp_file_write(
-            os.path.join(args.odir, f"top{top_k}_hess_ranking_layer_{layer}.txt"),
-            f"Hessian ranking for layer {layer} (param idx, rank)\n",
-            open_mode="w"
-        )
-        for i in range(len(sensitivity_ranking[layer])):
-            exp_file_write(
-                os.path.join(args.odir, f"top{top_k}_hess_ranking_layer_{layer}.txt"),
-                f"{sensitivity_ranking[layer][i][0]}, {abs(sensitivity_ranking[layer][i][1])}\n"
-            )
+    top_k = 1
+    # Hessian model-wide sensitivity ranking
+    # NOTE: Still fixing top_k_eigenvalues_hack to work model-wide
+    # eigenvalues, eigenvectors = hess.top_k_eigenvalues_hack(k=top_k, max_iter=500)
+    # for i in range(len(eigenvectors)):
+    #     for j in range(len(eigenvectors[i])):
+    #         print(f'Top {i+1} eigenvector shape: {eigenvectors[i][j].shape}')
+    #         print(f"Top {i+1} eigenvalue: {eigenvalues[i]}")
+    # print(f'Hessian eigenvalue compute time: {time.time() - hess_start} seconds\n')
+
+    # Hessian layer-wise sensitivity ranking
+    # layer_eigenvalues, layer_eigenvectors = hess.layer_top_k_eigenvalues_hack(k=top_k, max_iter=500)
+    # for layer in layer_eigenvalues:
+        # print(f'Layer {layer} top eigenvalue: {layer_eigenvalues[layer]}')
+    # for layer in layer_eigenvectors:
+        # for i in range(len(layer_eigenvectors[layer])):
+            # print(f'Layer {layer} top {i+1} eigenvector shapes:')
+            # for vi in layer_eigenvectors[layer][i]:
+                # print(f'{vi.shape}')
+    # print(f'Hessian eigenvalue compute time: {time.time() - hess_start} seconds\n')
+    # sensitivity_ranking = hess.sensitivity_ranking(layer_eigenvectors, layer_eigenvalues, k=top_k)
+    # for layer in sensitivity_ranking:
+    #     exp_file_write(
+    #         os.path.join(args.odir, f"top{top_k}_hess_eigenval_ranking_layer_{layer}.txt"),
+    #         f"Hessian ranking (weighted sum * eigenvalue) for layer {layer} (param idx, rank)\n",
+    #         open_mode="w"
+    #     )
+    #     for i in range(len(sensitivity_ranking[layer])):
+    #         exp_file_write(
+    #             os.path.join(args.odir, f"top{top_k}_hess_eigenval_ranking_layer_{layer}.txt"),
+    #             f"{sensitivity_ranking[layer][i][0]}, {abs(sensitivity_ranking[layer][i][1])}\n"
+    #         )
+# Gradient ranking
 #     grad_start = time.time()
 #     grad_ranking, gradients = hess.gradient_ranking()
 #     for layer in grad_ranking:
