@@ -623,28 +623,28 @@ def evaluate_model_experiment(model,charges,aux_arrs,eval_dict,args, exp_file_fp
             #'thr_lo': thr_lo_Q, 
         }
 
-    model_name = model['name']
-    plots={}
-    # summary_by_model = {
-    #     'name':model_name,
-    #     'en_pams' : model['m_autoCNNen'].count_params(),
-    #     'en_flops' : get_flops_from_model(model['m_autoCNNen']),
-    #     'tot_pams': model['m_autoCNN'].count_params(),
-    # }
+    # model_name = model['name']
+    # plots={}
+    # # summary_by_model = {
+    # #     'name':model_name,
+    # #     'en_pams' : model['m_autoCNNen'].count_params(),
+    # #     'en_flops' : get_flops_from_model(model['m_autoCNNen']),
+    # #     'tot_pams': model['m_autoCNN'].count_params(),
+    # # }
 
-    if (not args.skipPlot): plot_hist(np.log10(val_sum.flatten()),
-                                      "sumQ_validation",xtitle=logTotTitle,ytitle="Entries",
-                                      stats=True,logy=True,nbins=chglog_nbins,lims = chglog_range)
-    if (not args.skipPlot): plot_hist([np.log10(val_max.flatten())],
-                                      "maxQ_validation",xtitle=logMaxTitle,ytitle="Entries",
-                                      stats=True,logy=True,nbins=chglog_nbins,lims = chglog_range)
+    # if (not args.skipPlot): plot_hist(np.log10(val_sum.flatten()),
+    #                                   "sumQ_validation",xtitle=logTotTitle,ytitle="Entries",
+    #                                   stats=True,logy=True,nbins=chglog_nbins,lims = chglog_range)
+    # if (not args.skipPlot): plot_hist([np.log10(val_max.flatten())],
+    #                                   "maxQ_validation",xtitle=logMaxTitle,ytitle="Entries",
+    #                                   stats=True,logy=True,nbins=chglog_nbins,lims = chglog_range)
 
-    if (not args.skipPlot):
-        from utils import graph
-        for ilayer in range(0,len(model['m_autoCNNen'].layers)):
-            label = model['m_autoCNNen'].layers[ilayer].name
-            output,bins = np.histogram(graph.get_layer_output(model['m_autoCNNen'],ilayer,input_Q).flatten(),50)
-            plots['hist_output_%s'%ilayer] = output,bins,label
+    # if (not args.skipPlot):
+    #     from utils import graph
+    #     for ilayer in range(0,len(model['m_autoCNNen'].layers)):
+    #         label = model['m_autoCNNen'].layers[ilayer].name
+    #         output,bins = np.histogram(graph.get_layer_output(model['m_autoCNNen'],ilayer,input_Q).flatten(),50)
+    #         plots['hist_output_%s'%ilayer] = output,bins,label
 
     # compute metric for each algorithm
     for algname, alg_out in alg_outs.items():
@@ -666,6 +666,7 @@ def evaluate_model_experiment(model,charges,aux_arrs,eval_dict,args, exp_file_fp
             name = mname+"_"+algname
 
             # Try multiprocessing
+            print("!!!!!!!!!!!EMD Computation about to begin!!!!!!!")
             start = time.time()
 
             with Pool() as pool:
@@ -676,10 +677,10 @@ def evaluate_model_experiment(model,charges,aux_arrs,eval_dict,args, exp_file_fp
             # vals = np.array([metric(input_calQ[i],alg_out[i]) for i in range(0,len(input_Q_abs))])
 
             exp_file_write(efd_fp, f'EMD compute time: {time.time() - start} seconds\n')
-            exp_file_write(efd_fp,f"emd_values = [\n")
-            for v in vals:
-                exp_file_write(efd_fp,f"\t{v},\n")
-            exp_file_write(efd_fp,f"]\n")
+            # exp_file_write(efd_fp,f"emd_values = [\n")
+            # for v in vals:
+            #     exp_file_write(efd_fp,f"\t{v},\n")
+            # exp_file_write(efd_fp,f"]\n")
 
             return vals
 
