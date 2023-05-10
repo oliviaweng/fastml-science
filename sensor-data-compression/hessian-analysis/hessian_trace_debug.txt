@@ -31,9 +31,203 @@
 31: {'conv2d_0_m': 3.387216, 'encoded_vector': 1.15679, 'de_dense_final': 22.289879, 'conv2D_t_0': 52.38406, 'conv2d_t_final': 48.54883}
 32: {'conv2d_0_m': 0.25473014, 'encoded_vector': 0.29025522, 'de_dense_final': 11.545902, 'conv2D_t_0': 24.114323, 'conv2d_t_final': 14.205385}
 
----- BATCH SIZE 32 ----
+---- BATCH SIZE 32: Hessian Trace ----
+
+
 32: {'conv2d_0_m': 69.090706, 'encoded_vector': 32.25822, 'de_dense_final': 439.9799, 'conv2D_t_0': 864.996, 'conv2d_t_final': 963.0991}
+Num val inputs 32 compute time: 11.25725507736206
+64: {'conv2d_0_m': 72.8768, 'encoded_vector': 30.64667, 'de_dense_final': 466.07623, 'conv2D_t_0': 729.2326, 'conv2d_t_final': 1190.2732}
+Num val inputs 64 compute time: 12.009228706359863
+128: {'conv2d_0_m': 76.2078, 'encoded_vector': 31.71984, 'de_dense_final': 406.3184, 'conv2D_t_0': 804.48004, 'conv2d_t_final': 1034.8501}
+Num val inputs 128 compute time: 23.308382272720337
+256: {'conv2d_0_m': 86.09558, 'encoded_vector': 40.17771, 'de_dense_final': 441.32452, 'conv2D_t_0': 806.7266, 'conv2d_t_final': 991.1761}
+Num val inputs 256 compute time: 51.63873291015625
+512: {'conv2d_0_m': 90.94877, 'encoded_vector': 31.37957, 'de_dense_final': 368.60217, 'conv2D_t_0': 776.206, 'conv2d_t_final': 796.8425}
+Num val inputs 512 compute time: 58.446654319763184
+1024: {'conv2d_0_m': 95.12916, 'encoded_vector': 30.580267, 'de_dense_final': 430.4169, 'conv2D_t_0': 1110.6095, 'conv2d_t_final': 1016.46063}
+Num val inputs 1024 compute time: 92.59729743003845
+2048: {'conv2d_0_m': 108.11524, 'encoded_vector': 20.68196, 'de_dense_final': 393.5154, 'conv2D_t_0': 783.9367, 'conv2d_t_final': 832.146}
+Num val inputs 2048 compute time: 266.2740194797516
+4096: {'conv2d_0_m': 123.6279, 'encoded_vector': 17.113949, 'de_dense_final': 230.0102, 'conv2D_t_0': 737.5518, 'conv2d_t_final': 823.02295}
+Num val inputs 4096 compute time: 664.6262147426605
+8192: {'conv2d_0_m': 131.11607, 'encoded_vector': 10.304097, 'de_dense_final': 237.29408, 'conv2D_t_0': 657.2485, 'conv2d_t_final': 677.2025}
+Num val inputs 8192 compute time: 1368.7553148269653
+
+---- BATCH SIZE min(512, num_inputs): Hessian Trace ----
+
+
 32: {'conv2d_0_m': 69.090706, 'encoded_vector': 32.25822, 'de_dense_final': 439.9799, 'conv2D_t_0': 864.996, 'conv2d_t_final': 963.0991}
-32: {'conv2d_0_m': 69.090706, 'encoded_vector': 32.25822, 'de_dense_final': 439.9799, 'conv2D_t_0': 864.99603, 'conv2d_t_final': 963.0991}
-100: {'conv2d_0_m': 70.68767, 'encoded_vector': 32.3452, 'de_dense_final': 455.2462, 'conv2D_t_0': 1027.0172, 'conv2d_t_final': 802.30756}
-100: {'conv2d_0_m': 70.68769, 'encoded_vector': 32.34522, 'de_dense_final': 455.24628, 'conv2D_t_0': 1027.0175, 'conv2d_t_final': 802.3077}
+Num val inputs 32 compute time: 11.20386028289795
+64: {'conv2d_0_m': 145.75357, 'encoded_vector': 61.29329, 'de_dense_final': 932.15234, 'conv2D_t_0': 1458.4652, 'conv2d_t_final': 2380.546}
+Num val inputs 64 compute time: 6.565769910812378
+128: {'conv2d_0_m': 304.83115, 'encoded_vector': 126.879295, 'de_dense_final': 1625.2734, 'conv2D_t_0': 3217.9192, 'conv2d_t_final': 4139.3994}
+Num val inputs 128 compute time: 6.656343936920166
+256: {'conv2d_0_m': 688.76465, 'encoded_vector': 321.4217, 'de_dense_final': 3530.5962, 'conv2D_t_0': 6453.813, 'conv2d_t_final': 7929.4087}
+Num val inputs 256 compute time: 7.648843765258789
+512: {'conv2d_0_m': 1455.1803, 'encoded_vector': 502.07312, 'de_dense_final': 5897.635, 'conv2D_t_0': 12419.296, 'conv2d_t_final': 12749.481}
+Num val inputs 512 compute time: 4.485187768936157
+1024: {'conv2d_0_m': 1522.0668, 'encoded_vector': 489.28427, 'de_dense_final': 6886.6704, 'conv2D_t_0': 17769.752, 'conv2d_t_final': 16263.369}
+Num val inputs 1024 compute time: 6.670598268508911
+2048: {'conv2d_0_m': 1729.8438, 'encoded_vector': 330.91135, 'de_dense_final': 6296.2466, 'conv2D_t_0': 12542.989, 'conv2d_t_final': 13314.336}
+Num val inputs 2048 compute time: 17.768254041671753
+4096: {'conv2d_0_m': 1978.0464, 'encoded_vector': 273.82318, 'de_dense_final': 3680.163, 'conv2D_t_0': 11800.829, 'conv2d_t_final': 13168.368}
+Num val inputs 4096 compute time: 42.89868879318237
+
+--- updated trace implementation ---
+32: 113.69931030273438
+Num val inputs 32 compute time: 1.2688326835632324
+32: 113.69931030273438
+Num val inputs 32 compute time: 1.253854513168335
+64: 235.84957885742188
+Num val inputs 64 compute time: 1.1808593273162842
+128: 450.9157409667969
+Num val inputs 128 compute time: 2.330995559692383
+256: 1055.7138671875
+Num val inputs 256 compute time: 2.1175732612609863
+512: 1972.595703125
+Num val inputs 512 compute time: 1.1801867485046387
+1024: 2078.450439453125
+Num val inputs 1024 compute time: 1.496840000152588
+2048: 2191.6767578125
+Num val inputs 2048 compute time: 2.462280035018921
+4096: 2397.247314453125
+Num val inputs 4096 compute time: 2.0989558696746826
+8192: 2322.4306640625
+Num val inputs 8192 compute time: 6.547733783721924
+
+
+--- batch size 32 ---
+32: 113.6993179321289
+Num val inputs 32 compute time: 1.2843079566955566
+64: 117.9247817993164
+Num val inputs 64 compute time: 1.8302931785583496
+128: 112.72896575927734
+Num val inputs 128 compute time: 7.348346471786499
+256: 131.9641876220703
+Num val inputs 256 compute time: 12.471707582473755
+512: 123.28719329833984
+Num val inputs 512 compute time: 9.946525812149048
+1024: 129.90313720703125
+Num val inputs 1024 compute time: 16.665446281433105
+2048: 136.97979736328125
+Num val inputs 2048 compute time: 31.4272518157959
+4096: 149.8279571533203
+Num val inputs 4096 compute time: 25.934310913085938
+8192: 145.15191650390625
+Num val inputs 8192 compute time: 94.38394927978516
+
+-- convergence guaranteed batch size 32 ---
+32: 113.6993179321289
+Num val inputs 32 compute time: 1.2901136875152588
+64: 117.92484283447266
+Num val inputs 64 compute time: 1.8540596961975098
+128: 112.72896575927734
+Num val inputs 128 compute time: 7.433142423629761
+256: 131.9641876220703
+Num val inputs 256 compute time: 12.383743524551392
+512: 123.2872314453125
+Num val inputs 512 compute time: 10.330677270889282
+1024: 129.9031524658203
+Num val inputs 1024 compute time: 16.571383237838745
+2048: 136.9798126220703
+Num val inputs 2048 compute time: 32.4873628616333
+4096: 149.8279571533203
+Num val inputs 4096 compute time: 25.973362684249878
+8192: 145.15191650390625
+Num val inputs 8192 compute time: 91.42000007629395
+16384: 141.871337890625
+Num val inputs 16384 compute time: 508.82901430130005
+32768: 144.88760375976562
+Num val inputs 32768 compute time: 368.1401560306549
+65536: 144.4302520751953
+Num val inputs 65536 compute time: 761.4024457931519
+131072: 144.52508544921875
+Num val inputs 131072 compute time: 1490.0439529418945
+
+
+-- convergence guaranteed batch size 512 ---
+
+512: 1972.595703125
+Num val inputs 512 compute time: 1.12900972366333
+512: 1972.595703125
+Num val inputs 512 compute time: 1.1194026470184326
+1024: 2078.450439453125
+Num val inputs 1024 compute time: 1.5225138664245605
+2048: 2191.6767578125
+Num val inputs 2048 compute time: 2.512075901031494
+4096: 2397.247314453125
+Num val inputs 4096 compute time: 2.055262565612793
+8192: 2322.4306640625
+Num val inputs 8192 compute time: 6.237780809402466
+16384: 2269.941162109375
+Num val inputs 16384 compute time: 32.43227672576904
+32768: 2318.20166015625
+Num val inputs 32768 compute time: 24.253916263580322
+
+-- convergence guaranteed batch size 512 (6-bit model)---
+512: 1800.0565185546875
+Num val inputs 512 compute time: 1.335902214050293
+1024: 1968.024658203125
+Num val inputs 1024 compute time: 3.266178607940674
+2048: 2116.45849609375
+Num val inputs 2048 compute time: 2.604954957962036
+4096: 2438.82177734375
+Num val inputs 4096 compute time: 8.321300029754639
+8192: 2922.69140625
+Num val inputs 8192 compute time: 18.214576482772827
+16384: 3022.62890625
+Num val inputs 16384 compute time: 37.81205201148987
+32768: 2795.933349609375
+Num val inputs 32768 compute time: 61.84707045555115
+65536: 3041.2294921875
+Num val inputs 65536 compute time: 153.0838770866394
+131072: 3011.457275390625
+Num val inputs 131072 compute time: 351.6936094760895
+262144: 3005.475341796875
+Num val inputs 262144 compute time: 603.3567888736725
+524288: 3064.924560546875
+Num val inputs 524288 compute time: 1453.251435995102
+800000: 3056.502197265625
+Num val inputs 800000 compute time: 2167.9074363708496
+
+-- convergence guaranteed batch size 32 (6-bit model)---
+32: 115.05538940429688
+Num val inputs 32 compute time: 0.8755881786346436
+64: 220.31790161132812
+Num val inputs 64 compute time: 1.45804762840271
+128: 525.7991943359375
+Num val inputs 128 compute time: 0.7961621284484863
+256: 975.0759887695312
+Num val inputs 256 compute time: 1.9900717735290527
+32: 115.0553970336914
+Num val inputs 32 compute time: 0.8586215972900391
+64: 110.158935546875
+Num val inputs 64 compute time: 2.3420021533966064
+128: 131.44979858398438
+Num val inputs 128 compute time: 1.8305771350860596
+256: 121.8844985961914
+Num val inputs 256 compute time: 11.405596494674683
+512: 112.50354766845703
+Num val inputs 512 compute time: 12.618996858596802
+1024: 123.00154113769531
+Num val inputs 1024 compute time: 42.1073522567749
+2048: 132.27865600585938
+Num val inputs 2048 compute time: 34.11176609992981
+4096: 152.42637634277344
+Num val inputs 4096 compute time: 120.93130850791931
+8192: 182.668212890625
+Num val inputs 8192 compute time: 279.5901026725769
+16384: 188.91427612304688
+Num val inputs 16384 compute time: 605.0482866764069
+32768: 174.74583435058594
+Num val inputs 32768 compute time: 982.8734004497528
+65536: 190.0768280029297
+Num val inputs 65536 compute time: 2367.11811375618
+131072: 188.21603393554688
+Num val inputs 131072 compute time: 5496.943545818329
+262144: 187.84210205078125
+Num val inputs 262144 compute time: 9517.21851015091
+524288: 191.5577392578125
+Num val inputs 524288 compute time: 22803.066448926926
+
+

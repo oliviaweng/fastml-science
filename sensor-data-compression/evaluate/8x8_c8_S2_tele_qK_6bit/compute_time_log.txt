@@ -1,0 +1,1 @@
+EMD compute time: 10.406609773635864 seconds
