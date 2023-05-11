@@ -162,14 +162,14 @@ def main(args):
         
 
     # hess_start = time.time()
-    top_k = 24
+    top_k = 50
     # Hessian model-wide sensitivity ranking
     eigenvalues, eigenvectors = hess.top_k_eigenvalues_hack(k=top_k, max_iter=500)
     print("Eigenvectors")
     for i in range(len(eigenvalues)):
         print(f"Top {i+1} eigenvalue: {eigenvalues[i]}")
     print(f'Hessian eigenvalue compute time: {time.time() - hess_start} seconds\n')
-    eigenvalues = None
+    # eigenvalues = None
     param_ranking, param_scores = hess.hessian_ranking(
         eigenvectors, eigenvalues=eigenvalues, k=top_k
     )
@@ -184,6 +184,9 @@ def main(args):
             f"{param_ranking[i]}, {param_scores[i]}\n",
             open_mode="a"
         )
+
+
+
     # Hessian layer-wise sensitivity ranking
     # layer_eigenvalues, layer_eigenvectors = hess.layer_top_k_eigenvalues_hack(k=top_k, max_iter=500)
     # for layer in layer_eigenvalues:
