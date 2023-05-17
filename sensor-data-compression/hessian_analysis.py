@@ -162,7 +162,8 @@ def main(args):
         
 
     # hess_start = time.time()
-    top_k = 50
+    top_k = 8
+    strategy = "max"
     # Hessian model-wide sensitivity ranking
     eigenvalues, eigenvectors = hess.top_k_eigenvalues_hack(k=top_k, max_iter=500)
     print("Eigenvectors")
@@ -171,16 +172,17 @@ def main(args):
     print(f'Hessian eigenvalue compute time: {time.time() - hess_start} seconds\n')
     # eigenvalues = None
     param_ranking, param_scores = hess.hessian_ranking(
-        eigenvectors, eigenvalues=eigenvalues, k=top_k
+        eigenvectors, eigenvalues=eigenvalues, k=top_k, strategy=strategy
     )
+    ranking_file = os.path.join(args.odir, f"top{top_k}_hess_max_eigenval_ranking.txt")
     exp_file_write(
-       os.path.join(args.odir, f"top{top_k}_hess_eigenval_ranking.txt"),
-       f"Hessian ranking (weighted sum * eigenvalue) for model (param idx, rank)\n",
+      ranking_file,
+       f"Hessian ranking (max sum eigenvector components) for model (param idx, rank)\n",
        open_mode="w"
     )
     for i in range(len(param_ranking)):
         exp_file_write(
-            os.path.join(args.odir, f"top{top_k}_hess_eigenval_ranking.txt"),
+            ranking_file,
             f"{param_ranking[i]}, {param_scores[i]}\n",
             open_mode="a"
         )
