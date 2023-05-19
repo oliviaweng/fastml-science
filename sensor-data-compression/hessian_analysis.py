@@ -146,7 +146,7 @@ def main(args):
         curr_val_input,
         batch_size=512
     )
-    # hess_trace = hess.trace_hack(max_iter=500)
+    hess_trace = hess.trace_hack(max_iter=500)
     # trace_time = time.time() - hess_start
     # print(f'Hessian trace: {hess_trace}')
     # print(f"Hessian trace compute time: {trace_time} seconds\n")
@@ -161,9 +161,10 @@ def main(args):
     # )
         
 
-    # hess_start = time.time()
+    hess_start = time.time()
     top_k = 8
-    strategy = "max"
+    BIT_WIDTH = 5
+    strategy = "sum"
     # Hessian model-wide sensitivity ranking
     eigenvalues, eigenvectors = hess.top_k_eigenvalues_hack(k=top_k, max_iter=500)
     print("Eigenvectors")
@@ -171,19 +172,23 @@ def main(args):
         print(f"Top {i+1} eigenvalue: {eigenvalues[i]}")
     print(f'Hessian eigenvalue compute time: {time.time() - hess_start} seconds\n')
     # eigenvalues = None
+    rank_start_time = time.time()
     param_ranking, param_scores = hess.hessian_ranking(
         eigenvectors, eigenvalues=eigenvalues, k=top_k, strategy=strategy
     )
-    ranking_file = os.path.join(args.odir, f"top{top_k}_hess_max_eigenval_ranking.txt")
+    # bitwise_rank, bitwise_scores = hess.rank_bits(param_scores, 5) # add m = 5 bits (doesn't work; TODO: delete)
+    bitwise_rank = hess.convert_param_ranking_to_msb_bit_ranking(param_ranking, BIT_WIDTH)
+
+    ranking_file = os.path.join(args.odir, f"top{top_k}_hess_sum_eigenval_msb_bit_ranking.txt")
     exp_file_write(
       ranking_file,
-       f"Hessian ranking (max sum eigenvector components) for model (param idx, rank)\n",
+       f"Hessian ranking (msb sum eigenvector components) for model (bit idx)\n",
        open_mode="w"
     )
-    for i in range(len(param_ranking)):
+    for i in range(len(bitwise_rank)):
         exp_file_write(
             ranking_file,
-            f"{param_ranking[i]}, {param_scores[i]}\n",
+            f"{bitwise_rank[i]}\n",
             open_mode="a"
         )
 

@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow.keras.optimizers as opt
 
-from telescope import telescopeMSE443,telescopeMSE663,telescopeMSE8x8
+from telescope import telescopeMSE443,telescopeMSE663,telescopeMSE8x8, telescopeMSE8x8_for_FKeras
 
 from emdloss import get_emd_loss
 
@@ -138,7 +138,7 @@ networks_by_name = [
      'isQK':True,
      'params':{
          'shape':(8,8,1),
-         'loss': telescopeMSE8x8,
+         'loss': telescopeMSE8x8_for_FKeras,
          'CNN_layer_nodes':[8],
          'CNN_kernel_size':[3],
          'CNN_strides':[(2,2)],
@@ -171,7 +171,7 @@ networks_by_name = [
      'isQK':True,
      'params':{
         'shape':(8,8,1),
-        'loss':telescopeMSE8x8,
+        'loss':telescopeMSE8x8_for_FKeras,
         'CNN_layer_nodes':[8],
         'CNN_kernel_size':[3],
         'CNN_strides':[(2,2)],
