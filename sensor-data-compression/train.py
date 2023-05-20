@@ -377,13 +377,13 @@ def evaluate_model(model,charges,aux_arrs,eval_dict,args):
     occupancy_1MT = aux_arrs['occupancy_1MT']
 
     # visualize 2D activations
-    if not model['isQK']:
-        conv2d  = None
-    else:
-        conv2d = tf.keras.models.Model(
-            inputs =model['m_autoCNNen'].inputs,
-            outputs=model['m_autoCNNen'].get_layer("conv2d_0_m").output
-        )
+    # if not model['isQK']:
+    #     conv2d  = None
+    # else:
+    #     conv2d = tf.keras.models.Model(
+    #         inputs =model['m_autoCNNen'].inputs,
+    #         outputs=model['m_autoCNNen'].get_layer("conv2d_0_m").output
+    #     )
 
     occ_nbins = eval_dict['occ_nbins']
     occ_range = eval_dict['occ_range']
@@ -421,44 +421,44 @@ def evaluate_model(model,charges,aux_arrs,eval_dict,args):
             #'thr_lo': thr_lo_Q, 
         }
 
-    model_name = model['name']
-    plots={}
-    summary_by_model = {
-        'name':model_name,
-        'en_pams' : model['m_autoCNNen'].count_params(),
-        'en_flops' : get_flops_from_model(model['m_autoCNNen']),
-        'tot_pams': model['m_autoCNN'].count_params(),
-    }
+    # model_name = model['name']
+    # plots={}
+    # summary_by_model = {
+    #     'name':model_name,
+    #     'en_pams' : model['m_autoCNNen'].count_params(),
+    #     'en_flops' : get_flops_from_model(model['m_autoCNNen']),
+    #     'tot_pams': model['m_autoCNN'].count_params(),
+    # }
 
-    if (not args.skipPlot): plot_hist(np.log10(val_sum.flatten()),
-                                      "sumQ_validation",xtitle=logTotTitle,ytitle="Entries",
-                                      stats=True,logy=True,nbins=chglog_nbins,lims = chglog_range)
-    if (not args.skipPlot): plot_hist([np.log10(val_max.flatten())],
-                                      "maxQ_validation",xtitle=logMaxTitle,ytitle="Entries",
-                                      stats=True,logy=True,nbins=chglog_nbins,lims = chglog_range)
+    # if (not args.skipPlot): plot_hist(np.log10(val_sum.flatten()),
+    #                                   "sumQ_validation",xtitle=logTotTitle,ytitle="Entries",
+    #                                   stats=True,logy=True,nbins=chglog_nbins,lims = chglog_range)
+    # if (not args.skipPlot): plot_hist([np.log10(val_max.flatten())],
+    #                                   "maxQ_validation",xtitle=logMaxTitle,ytitle="Entries",
+    #                                   stats=True,logy=True,nbins=chglog_nbins,lims = chglog_range)
 
-    if (not args.skipPlot):
-        from utils import graph
-        for ilayer in range(0,len(model['m_autoCNNen'].layers)):
-            label = model['m_autoCNNen'].layers[ilayer].name
-            output,bins = np.histogram(graph.get_layer_output(model['m_autoCNNen'],ilayer,input_Q).flatten(),50)
-            plots['hist_output_%s'%ilayer] = output,bins,label
+    # if (not args.skipPlot):
+    #     from utils import graph
+    #     for ilayer in range(0,len(model['m_autoCNNen'].layers)):
+    #         label = model['m_autoCNNen'].layers[ilayer].name
+    #         output,bins = np.histogram(graph.get_layer_output(model['m_autoCNNen'],ilayer,input_Q).flatten(),50)
+    #         plots['hist_output_%s'%ilayer] = output,bins,label
 
     # compute metric for each algorithm
     for algname, alg_out in alg_outs.items():
         # event displays
-        if(not args.skipPlot):
-            Nevents = 8
-            index = np.random.choice(input_Q.shape[0], Nevents, replace=False)
-            visualize_displays(
-                index, 
-                input_Q, 
-                input_calQ, 
-                alg_out, 
-                (cnn_enQ if algname=='ae' else np.array([])),
-                (conv2d if algname=='ae' else None), 
-                name=algname
-            )
+        # if(not args.skipPlot):
+        #     Nevents = 8
+        #     index = np.random.choice(input_Q.shape[0], Nevents, replace=False)
+        #     visualize_displays(
+        #         index, 
+        #         input_Q, 
+        #         input_calQ, 
+        #         alg_out, 
+        #         (cnn_enQ if algname=='ae' else np.array([])),
+        #         (conv2d if algname=='ae' else None), 
+        #         name=algname
+        #     )
 
         for mname, metric in eval_dict['metrics'].items():
             name = mname+"_"+algname
@@ -478,82 +478,82 @@ def evaluate_model(model,charges,aux_arrs,eval_dict,args):
             print(f"Eval ber {args.eval_ber} avg metric: {name} = {np.mean(vals)}")
             log_ber_metric(args.eval_ber, name, np.mean(vals), args.log_file)
 
-            model[name] = np.round(np.mean(vals), 3)
-            model[name+'_err'] = np.round(np.std(vals), 3)
-            summary_by_model[name] = model[name]
-            summary_by_model[name+'_err'] = model[name+'_err']
+            # model[name] = np.round(np.mean(vals), 3)
+            # model[name+'_err'] = np.round(np.std(vals), 3)
+            # summary_by_model[name] = model[name]
+            # summary_by_model[name+'_err'] = model[name+'_err']
             
-            if(not args.skipPlot) and (not('zero_frac' in mname)):
-                plot_hist(vals,"hist_"+name,xtitle=longMetric[mname])
-                plot_hist(vals[vals>-1e-9],"hist_nonzero_"+name,xtitle=longMetric[mname])
-                plot_hist(np.where(vals>-1e-9,1,0),"hist_iszero_"+name,xtitle=longMetric[mname])
+            # if(not args.skipPlot) and (not('zero_frac' in mname)):
+            #     plot_hist(vals,"hist_"+name,xtitle=longMetric[mname])
+            #     plot_hist(vals[vals>-1e-9],"hist_nonzero_"+name,xtitle=longMetric[mname])
+            #     plot_hist(np.where(vals>-1e-9,1,0),"hist_iszero_"+name,xtitle=longMetric[mname])
 
-                # 1d profiles
-                plots["occ_"+name] = plot_profile(occupancy_1MT, vals,"profile_occ_"+name,
-                                                  nbins=occ_nbins, lims=occ_range,
-                                                  xtitle=occTitle,ytitle=longMetric[mname])
-                plots["chg_"+name] = plot_profile(np.log10(val_max), vals,"profile_maxQ_"+name,ytitle=longMetric[mname],
-                                                  nbins=chglog_nbins, lims=chglog_range,
-                                                  xtitle=logMaxTitle if args.rescaleInputToMax else logTotTitle)
+            #     # 1d profiles
+            #     plots["occ_"+name] = plot_profile(occupancy_1MT, vals,"profile_occ_"+name,
+            #                                       nbins=occ_nbins, lims=occ_range,
+            #                                       xtitle=occTitle,ytitle=longMetric[mname])
+            #     plots["chg_"+name] = plot_profile(np.log10(val_max), vals,"profile_maxQ_"+name,ytitle=longMetric[mname],
+            #                                       nbins=chglog_nbins, lims=chglog_range,
+            #                                       xtitle=logMaxTitle if args.rescaleInputToMax else logTotTitle)
 
-                # binned profiles in occupancy
-                for iocc, occ_lo in enumerate(occ_bins):
-                    occ_hi = 9e99 if iocc+1==len(occ_bins) else occ_bins[iocc+1]
-                    occ_hi_s = 'MAX' if iocc+1==len(occ_bins) else str(occ_hi)
-                    indices = (occupancy_1MT >= occ_lo) & (occupancy_1MT < occ_hi)
-                    pname = "chg_{}occ{}_{}".format(occ_lo,occ_hi_s,name)
-                    plots[pname] = plot_profile(np.log10(val_max[indices]), vals[indices],"profile_"+pname,
-                                                xtitle=logMaxTitle,
-                                                nbins=chglog_nbins, lims=chglog_range,
-                                                ytitle=longMetric[mname],
-                                                text="{} <= occupancy < {}".format(occ_lo,occ_hi_s,name))
+            #     # binned profiles in occupancy
+            #     for iocc, occ_lo in enumerate(occ_bins):
+            #         occ_hi = 9e99 if iocc+1==len(occ_bins) else occ_bins[iocc+1]
+            #         occ_hi_s = 'MAX' if iocc+1==len(occ_bins) else str(occ_hi)
+            #         indices = (occupancy_1MT >= occ_lo) & (occupancy_1MT < occ_hi)
+            #         pname = "chg_{}occ{}_{}".format(occ_lo,occ_hi_s,name)
+            #         plots[pname] = plot_profile(np.log10(val_max[indices]), vals[indices],"profile_"+pname,
+            #                                     xtitle=logMaxTitle,
+            #                                     nbins=chglog_nbins, lims=chglog_range,
+            #                                     ytitle=longMetric[mname],
+            #                                     text="{} <= occupancy < {}".format(occ_lo,occ_hi_s,name))
 
-                # binned profiles in charge
-                for ichg, chg_lo in enumerate(chg_bins):
-                    chg_hi = 9e99 if ichg+1==len(chg_bins) else chg_bins[ichg+1]
-                    chg_hi_s = 'MAX' if ichg+1==len(chg_bins) else str(chg_hi)
-                    indices = (val_max >= chg_lo) & (val_max < chg_hi)
-                    pname = "occ_{}chg{}_{}".format(chg_lo,chg_hi_s,name)
-                    plots[pname] = plot_profile(occupancy_1MT[indices], vals[indices],"profile_"+pname,
-                                                xtitle=occTitle,
-                                                ytitle=longMetric[mname],
-                                                nbins=occ_nbins, lims=occ_range,
-                                                text="{} <= Max Q < {}".format(chg_lo,chg_hi_s,name))
+            #     # binned profiles in charge
+            #     for ichg, chg_lo in enumerate(chg_bins):
+            #         chg_hi = 9e99 if ichg+1==len(chg_bins) else chg_bins[ichg+1]
+            #         chg_hi_s = 'MAX' if ichg+1==len(chg_bins) else str(chg_hi)
+            #         indices = (val_max >= chg_lo) & (val_max < chg_hi)
+            #         pname = "occ_{}chg{}_{}".format(chg_lo,chg_hi_s,name)
+            #         plots[pname] = plot_profile(occupancy_1MT[indices], vals[indices],"profile_"+pname,
+            #                                     xtitle=occTitle,
+            #                                     ytitle=longMetric[mname],
+            #                                     nbins=occ_nbins, lims=occ_range,
+            #                                     text="{} <= Max Q < {}".format(chg_lo,chg_hi_s,name))
                     
     # overlay different metrics
-    for mname in eval_dict['metrics']:
-        chgs=[]
-        occs=[]
-        if(not args.skipPlot):
-            for algname in alg_outs:
-                name = mname+"_"+algname
-                chgs += [(algname, plots["chg_"+mname+"_"+algname])]
-                occs += [(algname, plots["occ_"+mname+"_"+algname])]
-            xt = logMaxTitle if args.rescaleInputToMax else logTotTitle
-            overlay_plots(chgs,"overlay_chg_"+mname,xtitle=xt,ytitle=mname)
-            overlay_plots(occs,"overlay_occ_"+mname,xtitle=occTitle,ytitle=mname)
+    # for mname in eval_dict['metrics']:
+    #     chgs=[]
+    #     occs=[]
+    #     if(not args.skipPlot):
+    #         for algname in alg_outs:
+    #             name = mname+"_"+algname
+    #             chgs += [(algname, plots["chg_"+mname+"_"+algname])]
+    #             occs += [(algname, plots["occ_"+mname+"_"+algname])]
+    #         xt = logMaxTitle if args.rescaleInputToMax else logTotTitle
+    #         overlay_plots(chgs,"overlay_chg_"+mname,xtitle=xt,ytitle=mname)
+    #         overlay_plots(occs,"overlay_occ_"+mname,xtitle=occTitle,ytitle=mname)
 
-            # binned comparison
-            for iocc, occ_lo in enumerate(occ_bins):
-                occ_hi = 9e99 if iocc+1==len(occ_bins) else occ_bins[iocc+1]
-                occ_hi_s = 'MAX' if iocc+1==len(occ_bins) else str(occ_hi)
-                pname = "chg_{}occ{}_{}".format(occ_lo,occ_hi_s,name)
-                pname = "chg_{}occ{}".format(occ_lo,occ_hi_s)
-                chgs=[(algname, plots[pname+"_"+mname+"_"+algname]) for algname in alg_outs]
-                overlay_plots(chgs,"overlay_chg_{}_{}occ{}".format(mname,occ_lo,occ_hi_s),
-                              xtitle=logMaxTitle,ytitle=mname,
-                              text="{} <= occupancy < {}".format(occ_lo,occ_hi_s,name))
+    #         # binned comparison
+    #         for iocc, occ_lo in enumerate(occ_bins):
+    #             occ_hi = 9e99 if iocc+1==len(occ_bins) else occ_bins[iocc+1]
+    #             occ_hi_s = 'MAX' if iocc+1==len(occ_bins) else str(occ_hi)
+    #             pname = "chg_{}occ{}_{}".format(occ_lo,occ_hi_s,name)
+    #             pname = "chg_{}occ{}".format(occ_lo,occ_hi_s)
+    #             chgs=[(algname, plots[pname+"_"+mname+"_"+algname]) for algname in alg_outs]
+    #             overlay_plots(chgs,"overlay_chg_{}_{}occ{}".format(mname,occ_lo,occ_hi_s),
+    #                           xtitle=logMaxTitle,ytitle=mname,
+    #                           text="{} <= occupancy < {}".format(occ_lo,occ_hi_s,name))
 
-            for ichg, chg_lo in enumerate(chg_bins):
-                chg_hi = 9e99 if ichg+1==len(chg_bins) else chg_bins[ichg+1]
-                chg_hi_s = 'MAX' if ichg+1==len(chg_bins) else str(chg_hi)
-                pname = "occ_{}chg{}".format(chg_lo,chg_hi_s)
-                occs=[(algname, plots[pname+"_"+mname+"_"+algname]) for algname in alg_outs]
-                overlay_plots(occs,"overlay_occ_{}_{}chg{}".format(mname,chg_lo,chg_hi_s),
-                             xtitle=occTitle, ytitle=mname,
-                             text="{} <= Max Q < {}".format(chg_lo,chg_hi_s,name))
+    #         for ichg, chg_lo in enumerate(chg_bins):
+    #             chg_hi = 9e99 if ichg+1==len(chg_bins) else chg_bins[ichg+1]
+    #             chg_hi_s = 'MAX' if ichg+1==len(chg_bins) else str(chg_hi)
+    #             pname = "occ_{}chg{}".format(chg_lo,chg_hi_s)
+    #             occs=[(algname, plots[pname+"_"+mname+"_"+algname]) for algname in alg_outs]
+    #             overlay_plots(occs,"overlay_occ_{}_{}chg{}".format(mname,chg_lo,chg_hi_s),
+    #                          xtitle=occTitle, ytitle=mname,
+    #                          text="{} <= Max Q < {}".format(chg_lo,chg_hi_s,name))
 
-    return plots, summary_by_model
+    # return plots, summary_by_model
 
 
 def exp_file_write(file_path, input_str, open_mode="a"):
@@ -956,12 +956,13 @@ def main(args):
            'occupancy_1MT':occupancy_1MT
         }
         
-        perf_dict[model['label']] , model['summary_dict'] = evaluate_model(model,charges,aux_arrs,eval_dict,args)
+        # perf_dict[model['label']] , model['summary_dict'] = evaluate_model(model,charges,aux_arrs,eval_dict,args)
+        evaluate_model(model,charges,aux_arrs,eval_dict,args)
 
         os.chdir('../')
 
     # compare the relative performance of each model
-    compare_models(models,perf_dict,eval_dict,args)
+    # compare_models(models,perf_dict,eval_dict,args)
     
     os.chdir(orig_dir)
     

@@ -149,6 +149,46 @@ networks_by_name = [
          'is_fkeras': True, # This is an FKeras model
         },
     },
+    {'name':'run5-row21-big-econ',
+     'label':'run5-row21-big-econ',
+     'arr_key':'8x8',
+     'isQK':True,
+     'params': {
+        'shape': (8, 8, 1), 
+        'loss': telescopeMSE8x8_for_FKeras,
+        'CNN_layer_nodes':[32],
+        'CNN_kernel_size':[5],
+        'CNN_strides':[(2,2)],
+        'nBits_input': {'total': 10, 'integer': 3, 'keep_negative':1},
+        'nBits_encod': {'total':  16, 'integer': 6,'keep_negative':0}, # 0 to 2 range, 8 bit decimal 
+        'nBits_accum': {'total': 16, 'integer': 6, 'keep_negative':1},
+        'nBits_weight': {'total':  16, 'integer': 6, 'keep_negative':1}, # sign bit not included
+        'is_fkeras': True, # This is an FKeras model
+        'Dense_layer_nodes': [], 
+        'learning_rate': 0.028, 
+        'batch_size': 400
+        },
+    },
+    {'name':'run3-row27-small-econ',
+     'label':'run3-row27-small-econ',
+     'arr_key':'8x8',
+     'isQK':True,
+     'params': {
+        'shape': (8, 8, 1), 
+        'loss': telescopeMSE8x8_for_FKeras,
+        'CNN_layer_nodes':[],
+        'CNN_kernel_size':[3],
+        'CNN_strides':[],
+        'nBits_input': {'total': 10, 'integer': 3, 'keep_negative':1},
+        'nBits_encod': {'total':  16, 'integer': 6,'keep_negative':0}, # 0 to 2 range, 8 bit decimal 
+        'nBits_accum': {'total': 16, 'integer': 6, 'keep_negative':1},
+        'nBits_weight': {'total':  16, 'integer': 6, 'keep_negative':1}, # sign bit not included
+        'is_fkeras': True, # This is an FKeras model
+        'Dense_layer_nodes': [16], 
+        'learning_rate': 0.1, 
+        'batch_size': 400
+        },
+    },
     {'name':'8x8_c8_S2_tele_qK',
      'label':'8x8_c[8]_S2_tele',
      'arr_key':'8x8',

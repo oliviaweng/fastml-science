@@ -187,7 +187,7 @@ class qDenseCNN(denseCNN):
                     kernel_quantizer=dense_Qbits, 
                     bias_quantizer=dense_Qbits,
                     ber=self.ber,
-                )
+                )(x)
             else:
                 x = QDense(
                     n_nodes,  
