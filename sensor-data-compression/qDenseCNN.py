@@ -166,7 +166,10 @@ class qDenseCNN(denseCNN):
                     x = MaxPooling2D((2, 2), padding='same', name="mp_"+str(i))(x)
 
         shape = K.int_shape(x)
-        x = QActivation(qa_accum, name='accum1_qa')(x)
+
+        if CNN_layer_nodes:
+            x = QActivation(qa_accum, name='accum1_qa')(x)
+            
         x = Flatten(name="flatten")(x)
         
         # extended inputs fed forward to the dense layer
