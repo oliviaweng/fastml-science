@@ -579,13 +579,13 @@ def evaluate_model_experiment(model,charges,aux_arrs,eval_dict,args, exp_file_fp
     occupancy_1MT = aux_arrs['occupancy_1MT']
 
     # visualize 2D activations
-    if not model['isQK']:
-        conv2d  = None
-    else:
-        conv2d = tf.keras.models.Model(
-            inputs =model['m_autoCNNen'].inputs,
-            outputs=model['m_autoCNNen'].get_layer("conv2d_0_m").output
-        )
+    # if not model['isQK']:
+    #     conv2d  = None
+    # else:
+    #     conv2d = tf.keras.models.Model(
+    #         inputs =model['m_autoCNNen'].inputs,
+    #         outputs=model['m_autoCNNen'].get_layer("conv2d_0_m").output
+    #     )
 
     occ_nbins = eval_dict['occ_nbins']
     occ_range = eval_dict['occ_range']

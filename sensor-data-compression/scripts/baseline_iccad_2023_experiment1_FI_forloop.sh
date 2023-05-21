@@ -5,7 +5,8 @@ TRIALS=1
 DATASET=../../hgcal22data_signal_driven_ttbar_v11/nElinks_5/ # end of life data
 # PRETRAINED_MODEL=/home/olivia/xdr/econ-t/fastml-science/sensor-data-compression/training/fkeras-quantized-begin-of-life-all-data/8x8_c8_S2_tele_fqK/8x8_c8_S2_tele_fqK.hdf5
 # PRETRAINED_MODEL=/home/anmeza/GitHub/fastml-science/sensor-data-compression/training/fkeras-quantized-end-of-life/8x8_c8_S2_tele_fqK/8x8_c8_S2_tele_fqK.hdf5
-PRETRAINED_MODEL=/home/anmeza/GitHub/fastml-science/sensor-data-compression/training/fkeras-6bit-end-of-life/8x8_c8_S2_tele_fqK_6bit/8x8_c8_S2_tele_fqK_6bit.hdf5
+# PRETRAINED_MODEL=/home/anmeza/GitHub/fastml-science/sensor-data-compression/training/fkeras-6bit-end-of-life/8x8_c8_S2_tele_fqK_6bit/8x8_c8_S2_tele_fqK_6bit.hdf5
+PRETRAINED_MODEL=/home/olivia/xdr/econ-t/fastml-science/sensor-data-compression/training/fkeras-6bit-end-of-life/8x8_c8_S2_tele_fqK_6bit/8x8_c8_S2_tele_fqK_6bit.hdf5
 OUTPUT_DIR=faulty-eval/sampling-ber1e-4-test
 LOGFILE=/home/anmeza/GitHub/fastml-science/sensor-data-compression/faulty-eval/end-of-life-emd-sampling-ber1e-4-test.csv
 
@@ -16,6 +17,14 @@ VMs=8
 system=0
 lbi=$((bits/VMs * system))
 hbi=$((bits/VMs * system + bits/VMs))
+
+# model_id=$1
+# vinputs=$2
+# vsystem=$3 
+# lbi=$4
+# hbi=$5
+# git_step=$6
+
 for (( i=$lbi; i<$hbi ; i++ )); do 
 echo "Sanity check ber = 0"
 python3 sampling_faulty_eval_experiment.py \
@@ -36,5 +45,15 @@ python3 sampling_faulty_eval_experiment.py \
         --bfr_start $i \
         --bfr_end   $((i+1)) \
         --bfr_step  1 \
-        --num_val_inputs 800000
+        --num_val_inputs 648002 \
+        --num_hess_inputs 8192 \
+        # --ieu_model_id $model_id \
+        # --ieu_vinputs $vinputs \
+        # --ieu_vsystem_id $vsystem \
+        # --ieu_efx_dir $IEU_EFX_DIR \
+        # --ieu_pefr_name "${model_id}_pefr_vinputs${vinputs}_vsystem${vsystem}_b${lbi}-${hbi}.pkl" \
+        # --ieu_pefd_name "${model_id}_pefd_vinputs${vinputs}_vsystem${vsystem}_b${lbi}-${hbi}.pkl" \
+        # --ieu_git_step $git_step \
+        # --ieu_lbi $lbi
+        exit
 done

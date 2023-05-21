@@ -7,17 +7,17 @@ DATASET=../../hgcal22data_signal_driven_ttbar_v11/nElinks_5/
 OUTPUT_DIR=training
 LOGFILE=/home/olivia/xdr/econ-t/fastml-science/sensor-data-compression/training/fkeras_pareto_training.csv
 
-# MODEL=run3-row27-small-econ-qkeras
-MODEL=run5-row21-big-econ-qkeras
+MODEL=run3-row27-small-econ
+# MODEL=run5-row21-big-econ-qkeras
 
 python3 train.py \
 	-i $DATASET \
-	-o ${OUTPUT_DIR}/fkeras-big-econ-qkeras-hawq-end-of-life \
+	-o ${OUTPUT_DIR}/fkeras-small-econ-hawq-end-of-life \
 	--AEonly 1 \
 	--nELinks 5 \
 	--models $MODEL \
 	--nrowsPerFile=4500000 \
 	--noHeader \
 	--log-file $LOGFILE \
-	--epochs 1
+	--epochs 100
 

@@ -16,6 +16,11 @@ import tensorflow as tf
 
 import time
 
+# ICCAD2023 related imports ##############
+import iccad_2023_experiment_utils as ieu
+import subprocess
+##########################################
+
 from utils.metrics import emd_multiproc
 from train import (
     load_data,
@@ -108,7 +113,7 @@ def main(args):
     # with open("pickled--data_values--phys_values--EoL_dataset.pkl", "w") as f:
     #     f.write(pickled_obj)
     
-    ## Load the data instances using the pickle string
+    # Load the data instances using the pickle string
     ld_data_time_s = time.time()
     pickled_obj = "" 
     with open("pickled--data_values--phys_values--EoL_dataset.pkl", "r") as f:
@@ -185,6 +190,12 @@ def main(args):
         curr_val_input = val_input[:args.num_val_inputs]
     else:
         raise RuntimeError("Improper configuration for 'num_val_inputs'")
+    
+    curr_hess_input = val_input
+    if 0 < args.num_hess_inputs < val_input.shape[0]:
+        curr_hess_input = val_input[:args.num_hess_inputs]
+    else:
+        raise RuntimeError("Improper configuration for 'num_hess_inputs'")
 
     #S: Configure which bits will be flipped
     # bit_flip_range_step = (0,2, 1)
@@ -200,6 +211,8 @@ def main(args):
 
     #S: Begin the single fault injection (bit flipping) campaign
     for bit_i in range(*bit_flip_range_step):
+        #S: Track FI loop start time
+        fi_loop_start = time.time()
 
         #S: Flip the desired bit in the model 
         fmodel.explicit_select_model_param_bitflip([bit_i])
@@ -216,7 +229,7 @@ def main(args):
         # cnn_enQ = fmodel.model.predict(curr_val_input, batch_size=128)
         # cnn_deQ = model.decoder.predict(cnn_enQ)
         # cnn_enQ = np.reshape(cnn_enQ, (len(cnn_enQ), model.pams["encoded_dim"], 1))
-
+        time_start = time.time()
         cnn_enQ = None
         cnn_deQ = f_autoencoder.predict(curr_val_input, batch_size=512)
         input_Q = curr_val_input
@@ -290,25 +303,46 @@ def main(args):
 
         #S: Evaluate the model and write results to result file 
         emd_vals = evaluate_model_experiment(model_info, charges, aux_arrs, eval_dict, args, [efd_fp, efr_fp])
-
+        loss_val = np.mean(emd_vals)
+        predict_time = time.time() - time_start
+        print(f"emd = {loss_val}")
+        print(f"Time to predict = {predict_time}")
         #######################
         # New Code START
         #######################
         hess_start = time.time()
-        hess = HessianMetrics(f_autoencoder, telescopeMSE8x8_for_FKeras, curr_val_input, curr_val_input, batch_size=512)
-        hess_trace_dict = hess.trace_hack(max_iter=500)
-        exp_file_write(efd_fp, f'Hessian trace compute time: {time.time() - hess_start} seconds\n')
-        exp_file_write(efd_fp,  "hess_trace_dict = {\n")
-        for k, v in hess_trace_dict.items():
-            exp_file_write(efd_fp,f"\t'{k}':{v},\n")
-        exp_file_write(efd_fp, "}\n\n")
+        hess = HessianMetrics(f_autoencoder, telescopeMSE8x8_for_FKeras, curr_hess_input, curr_hess_input, batch_size=512)
+        hess_trace = hess.trace_hack(tolerance=1e-1)
+        trace_time = time.time() - hess_start
+        print(f"Hessian trace compute time: {trace_time} seconds")
+        print(f"hess_trace = {hess_trace}")
         #######################
         # New Code END
         #######################
         
-        exp_file_write(efr_fp, f"(val_i, bit_i) | emd_val | hess_trace_dict\n")
-        for val_i, val in enumerate(emd_vals):
-            exp_file_write(efr_fp, f"({val_i},{bit_i}) | {Decimal.from_float(val)} | {hess_trace_dict}\n")
+        #S: Specify pefx file paths
+        # fp_pefr = os.path.join(args.ieu_efx_dir, args.ieu_model_id, args.ieu_pefr_name)
+        # fp_pefd = os.path.join(args.ieu_efx_dir, args.ieu_model_id, args.ieu_pefd_name)
+
+        # # @Andy: Only need to store strace and loss val, 
+        # #        no miss predictions for this model 
+        # #S: Update corresponding pefr file
+        # time_store_pefr = ieu.store_pefr_econ_t(fp_pefr, bit_i, hess_trace, loss_val)
+
+        # #S: Update corresponding pefd file
+        # subtime_dataset   = 0
+        # subtime_gt_metric = predict_time
+        # subtime_ht_metric = trace_time
+        # subtime_pefr      = time_store_pefr
+        # my_sub_times = (subtime_dataset, subtime_gt_metric, subtime_ht_metric, subtime_pefr)
+        # time_store_pefd = ieu.store_pefd_experiment1(fp_pefd, bit_i, fi_loop_start, my_sub_times)
+
+        # #S: Update IEU FKeras-Experiments repo by pushing pefd files (pefr files not tracked until later)
+        # bits_flipped_by_vsystem = args.bfr_start - args.ieu_lbi
+        # if bits_flipped_by_vsystem%args.ieu_git_step == 0: 
+        #     subprocess.run("./scripts/iccad_2023_experiment1_git_commands.sh", shell=True)
+        
+        break
         
         #I: Useful for debugging
         # for fmodel_layer in fmodel.model.layers:
@@ -497,7 +531,62 @@ if __name__ == "__main__":
         default=2,
         help="Number of validation inputs to use for evaluating the faulty models",
     )
+    parser.add_argument(
+        "--num_hess_inputs",
+        type=int, 
+        default=8192,
+        help="Number of inputs to compute hessian trace"
+    )
 
+
+    parser.add_argument(
+        "--ieu_model_id",
+        type=str,
+        default=None,
+        help="IEU identifying string of model.",
+    )
+    parser.add_argument(
+        "--ieu_vinputs",
+        type=int,
+        default=256,
+        help="IEU val inputs for run",
+    )
+    parser.add_argument(
+        "--ieu_vsystem_id",
+        type=str,
+        default=None,
+        help="IEU virtual system id",
+    )
+    parser.add_argument(
+        "--ieu_efx_dir",
+        type=str,
+        default=None,
+        help="IEU data directory for all models",
+    )
+    parser.add_argument(
+        "--ieu_pefr_name",
+        type=str,
+        default=None,
+        help="IEU name of pickled efr file",
+    )
+    parser.add_argument(
+        "--ieu_pefd_name",
+        type=str,
+        default=None,
+        help="IEU name of pickled efd file",
+    )
+    parser.add_argument(
+        "--ieu_git_step",
+        type=int,
+        default=100,
+        help="IEU frequency with which to update the IEU git repo",
+    )
+    parser.add_argument(
+        "--ieu_lbi",
+        type=int,
+        default=100,
+        help="IEU lbi (i.e., start of FI loop)",
+    )
     # args.bfr_start, args.bfr_end, args.bfr_step
     args = parser.parse_args()
     main(args)
