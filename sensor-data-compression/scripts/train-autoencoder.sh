@@ -9,12 +9,12 @@ LOGFILE=/home/olivia/xdr/econ-t/fastml-science/sensor-data-compression/training/
 
 python3 train.py \
 	-i $DATASET \
-	-o ${OUTPUT_DIR}/fkeras-big-econ-end-of-life \
+	-o ${OUTPUT_DIR}/fkeras-small-econ-end-of-life \
 	--AEonly 1 \
 	--nELinks 5 \
-	--models run5-row21-big-econ \
+	--models run3-row27-small-econ \
 	--nrowsPerFile=4500000 \
 	--noHeader \
 	--log-file $LOGFILE \
-	--epochs 1
+	--epochs 100
 

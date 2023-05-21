@@ -1,6 +1,10 @@
+import matplotlib.pyplot as plt
+from pulp import *
+import pulp 
+from tabulate import tabulate
+import math
+
 import os
-import time
-import json
 import argparse
 import numpy as np
 from pathlib import Path
@@ -20,8 +24,82 @@ from train import (
     split,
     train,
     evaluate_model,
+    evaluate_model_experiment,
     unnormalize,
 )
+
+def check_layers(name):
+    layers = [
+        "dense_1.weight_integer",
+        "dense_1.bias_integer",
+        "dense_2.weight_integer",
+        "dense_2.bias_integer",
+        "dense_3.weight_integer",
+        "dense_3.bias_integer",
+        "dense_4.weight_integer",
+        "dense_4.bias_integer",
+    ]
+    for layer in layers:
+        if name == layer:
+            return True
+    return False
+
+def count_hawq_nonzero_weights(model):
+    nonzero = total = 0
+    layer_count_alive = {}
+    layer_count_total = {}
+
+
+    for layer in model.layers:         
+        for i in range(0, len(layer.trainable_variables), 2):
+            print(layer.name)
+            weights = layer.trainable_variables[i].numpy()
+            print(weights.shape)
+
+            nz_count = np.count_nonzero(weights)
+            total_params = np.prod(weights.shape)
+            layer_count_alive.update({layer.name: nz_count})
+            layer_count_total.update({layer.name: total_params})
+            nonzero += nz_count
+            total += total_params
+
+    return (
+        nonzero,
+        total,
+        layer_count_alive,
+        layer_count_total,
+        (100 * (total - nonzero) / total),
+    )
+            
+
+
+
+def calc_hawq_bops(model, input_data_precision=32):
+    last_bit_width = input_data_precision
+    alive, total, l_alive, l_total, pruned = count_hawq_nonzero_weights(model)
+    b_w = 16
+    total_bops = 0
+    layer_bops = []
+
+    for layer in model.layers:
+        for _ in range(0, len(layer.trainable_variables), 2):
+            b_a = last_bit_width
+            n = last_output
+            m = np.prod([x for x in layer.output.shape if x])
+            module_bops = m * n * (b_a * b_w + b_a + b_w + math.log2(n))
+            last_bit_width = b_w
+            layer_bops.append(module_bops)
+            total_bops += module_bops
+        
+        last_output = np.prod([x for x in layer.output.shape if x])
+
+    return total_bops, layer_bops
+
+
+
+
+
+
 
 
 def exp_file_write(file_path, input_str, open_mode="a"):
@@ -127,121 +205,80 @@ def main(args):
     if model_info["ws"] == "":
         raise RuntimeError("No weights provided to preload into the model!")
     
+    total_bops, layer_bops = calc_hawq_bops(m_autoCNNen)
+
+    print(total_bops)
+    print(f"layer bops are {layer_bops}")
+
+    # Save autoencoder and encoder models to hdf5 files
+    # m_autoCNN.save(
+    #     os.path.join(args.odir, args.models, "hgcal_autoencoder.h5")
+    # )
+    # m_autoCNNen.save(
+    #     os.path.join(args.odir, args.models, "hgcal_encoder.h5")
+    # )
+    
     #S: Configure how many validation inputs will be used
-    curr_val_input = val_input
-    if 0 < args.num_val_inputs < val_input.shape[0]:
-        curr_val_input = val_input[:args.num_val_inputs]
-        # For debugging
-        # curr_val_input = val_input[args.num_val_inputs:args.num_val_inputs+1]
-    else:
-        raise RuntimeError("Improper configuration for 'num_val_inputs'")
+    # curr_val_input = val_input
+    # if 0 < args.num_val_inputs < val_input.shape[0]:
+    #     curr_val_input = val_input[:args.num_val_inputs]
+    #     # For debugging
+    #     # curr_val_input = val_input[args.num_val_inputs:args.num_val_inputs+1]
+    # else:
+    #     raise RuntimeError("Improper configuration for 'num_val_inputs'")
 
-    # Evaluate the model
-    print("Computing Hessian Metrics...")
-    hess_start = time.time()
-    hess = HessianMetrics(
-        m_autoCNN, 
-        telescopeMSE8x8_for_FKeras, 
-        curr_val_input, 
-        curr_val_input,
-        batch_size=512
-    )
-    hess_trace, layer_traces = hess.trace_hack(max_iter=500)
-    trace_time = time.time() - hess_start
-    print(f'Hessian trace: {hess_trace}')
-    print(f"layer traces {layer_traces}")
-    print(f"Hessian trace compute time: {trace_time} seconds\n")
+    # cnn_enQ = None
+    # cnn_deQ = m_autoCNN.predict(curr_val_input, batch_size=512)
+    # input_Q = curr_val_input
 
-    exp_file_write(
-        os.path.join(args.odir, "hessian_trace_debug.txt"), 
-        f"{args.num_val_inputs}: {hess_trace}\n"
-    )
-    exp_file_write(
-        os.path.join(args.odir, "hessian_trace_debug.txt"), 
-        f"layer_traces: {layer_traces}\n"
-    )
-    exp_file_write(
-        os.path.join(args.odir, "hessian_trace_debug.txt"), 
-        f"Num val inputs {args.num_val_inputs} compute time: {trace_time}\n"
-    )
-        
+    # input_calQ = model.mapToCalQ(input_Q)  # shape = (N,48) in CALQ order
+    # output_calQ_fr = model.mapToCalQ(cnn_deQ)  # shape = (N,48) in CALQ order
 
-    # hess_start = time.time()
-    # top_k = 8
-    # BIT_WIDTH = 5
-    # strategy = "sum"
-    # # Hessian model-wide sensitivity ranking
-    # eigenvalues, eigenvectors = hess.top_k_eigenvalues_hack(k=top_k, max_iter=500)
-    # print("Eigenvectors")
-    # for i in range(len(eigenvalues)):
-    #     print(f"Top {i+1} eigenvalue: {eigenvalues[i]}")
-    # print(f'Hessian eigenvalue compute time: {time.time() - hess_start} seconds\n')
-    # # eigenvalues = None
-    # rank_start_time = time.time()
-    # param_ranking, param_scores = hess.hessian_ranking(
-    #     eigenvectors, eigenvalues=eigenvalues, k=top_k, strategy=strategy
-    # )
-    # # bitwise_rank, bitwise_scores = hess.rank_bits(param_scores, 5) # add m = 5 bits (doesn't work; TODO: delete)
-    # bitwise_rank = hess.convert_param_ranking_to_msb_bit_ranking(param_ranking, BIT_WIDTH)
-
-    # ranking_file = os.path.join(args.odir, f"top{top_k}_hess_sum_eigenval_msb_bit_ranking.txt")
-    # exp_file_write(
-    #   ranking_file,
-    #    f"Hessian ranking (msb sum eigenvector components) for model (bit idx)\n",
-    #    open_mode="w"
-    # )
-    # for i in range(len(bitwise_rank)):
-    #     exp_file_write(
-    #         ranking_file,
-    #         f"{bitwise_rank[i]}\n",
-    #         open_mode="a"
+    # print("Restore normalization")
+    # input_Q_abs = (
+    #     np.array(
+    #         [
+    #             input_Q[i] * (val_max[i] if args.rescaleInputToMax else val_sum[i])
+    #             for i in range(0, len(input_Q))
+    #         ]
     #     )
+    #     * 35.0
+    # )  # restore abs input in CALQ unit
+    # input_calQ = np.array(
+    #     [
+    #         input_calQ[i] * (val_max[i] if args.rescaleInputToMax else val_sum[i])
+    #         for i in range(0, len(input_calQ))
+    #     ]
+    # )  # shape = (N,48) in CALQ order
+    # output_calQ = unnormalize(
+    #     output_calQ_fr.copy(),
+    #     val_max if args.rescaleOutputToMax else val_sum,
+    #     rescaleOutputToMax=args.rescaleOutputToMax,
+    # )
 
+    # occupancy_1MT = np.count_nonzero(input_calQ.reshape(len(input_Q), 48) > 1.0, axis=1)
 
+    # # Evaluate the model
+    # charges = {
+    #         "input_Q": input_Q,
+    #         "input_Q_abs": input_Q_abs,
+    #         "input_calQ": input_calQ,  # shape = (N,48) (in abs Q)   (in CALQ 1-48 order)
+    #         "output_calQ": output_calQ,  # shape = (N,48) (in abs Q)   (in CALQ 1-48 order)
+    #         "output_calQ_fr": output_calQ_fr,  # shape = (N,48) (in Q fr)   (in CALQ 1-48 order)
+    #         "cnn_deQ": cnn_deQ,
+    #         "cnn_enQ": cnn_enQ,
+    #         "val_sum": val_sum,
+    #         "val_max": val_max,
+    #     }
 
-    # Hessian layer-wise sensitivity ranking
-    # layer_eigenvalues, layer_eigenvectors = hess.layer_top_k_eigenvalues_hack(k=top_k, max_iter=500)
-    # for layer in layer_eigenvalues:
-    #     print(f'Layer {layer} top eigenvalue: {layer_eigenvalues[layer]}')
-    # for layer in layer_eigenvectors:
-    #     for i in range(len(layer_eigenvectors[layer])):
-    #         print(f'Layer {layer} top {i+1} eigenvector shapes:')
-    #         for vi in layer_eigenvectors[layer][i]:
-    #             print(f'{vi.shape}')
-    # print(f'Hessian eigenvalue compute time: {time.time() - hess_start} seconds\n')
-    # sensitivity_ranking = hess.layer_hessian_ranking(layer_eigenvectors, layer_eigenvalues=layer_eigenvalues, k=top_k)
-    # for layer in sensitivity_ranking:
-    #     exp_file_write(
-    #         os.path.join(args.odir, f"top{top_k}_hess_eigenval_ranking_layer_{layer}.txt"),
-    #         f"Hessian ranking (weighted sum * eigenvalue) for layer {layer} (param idx, rank)\n",
-    #         open_mode="w"
-    #     )
-    #     for i in range(len(sensitivity_ranking[layer])):
-    #         exp_file_write(
-    #             os.path.join(args.odir, f"top{top_k}_hess_eigenval_ranking_layer_{layer}.txt"),
-    #             f"{sensitivity_ranking[layer][i][0]}, {abs(sensitivity_ranking[layer][i][1])}\n"
-    #         )
-# Gradient ranking
-#     grad_start = time.time()
-#     grad_ranking, gradients = hess.layer_gradient_ranking()
-#     for layer in grad_ranking:
-#         exp_file_write(
-#             os.path.join(args.odir, f"gradient_ranking_layer_{layer}.txt"),
-#             f"Gradient ranking for layer {layer} (param idx, rank)\n",
-#             open_mode="w"
-#         )
-#         for i in range(len(grad_ranking[layer])):
-#             exp_file_write(
-#                 os.path.join(args.odir, f"gradient_ranking_layer_{layer}.txt"),
-#                 f"{grad_ranking[layer][i][0]}, {abs(grad_ranking[layer][i][1])}\n"
-#             )
-#     print(f'Gradient compute time: {time.time() - grad_start} seconds\n')
-#     # Compute L2 distance between gradient and Hessian eigenvectors
-#     for layer in layer_eigenvectors:
-#         print(f"eigenvector shape: {layer_eigenvectors[layer][0][0].shape}")
-#         print(f"gradient shape: {gradients[layer].shape}")
-#         print(f'Layer {layer} L2 norm(hessian - gradient) = {np.linalg.norm(layer_eigenvectors[layer][0][0] - gradients[layer])}')
- 
+    # aux_arrs = {"occupancy_1MT": occupancy_1MT}
+
+    # #S: Evaluate the model and write results to result file
+    # compute_time_log = os.path.join(args.odir, args.models, "compute_time_log.txt") 
+    # emd_vals = evaluate_model_experiment(
+    #     model_info, charges, aux_arrs, eval_dict, args, [compute_time_log, None]
+    # )
+    # print(f"Average EMD: {np.mean(emd_vals)}")
 
 
 if __name__ == "__main__":
