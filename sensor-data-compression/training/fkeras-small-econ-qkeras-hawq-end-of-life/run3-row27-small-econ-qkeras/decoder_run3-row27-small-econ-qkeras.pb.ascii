@@ -1,0 +1,946 @@
+node {
+  name: "x"
+  op: "Placeholder"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "shape"
+    value {
+      shape {
+        dim {
+          size: -1
+        }
+        dim {
+          size: 16
+        }
+      }
+    }
+  }
+}
+node {
+  name: "decoder/de_dense_0/MatMul/ReadVariableOp/resource"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_FLOAT
+        tensor_shape {
+          dim {
+            size: 16
+          }
+          dim {
+            size: 16
+          }
+        }
+        tensor_content: "\350^\352\275\022\300\207\275r8\260>J[\273\276f\326\261\276<\025\220>\223z~\276H%\255\276\224fX\276\220\377\214\276/8V\275?[\\\276\234~\361>C\234\270>\t\355\220\276\325\255\314=^\375\236=\2344Q>\016\372\003\276\340Ht=\336\220\303\276\347;\212>\334H\034>ixT>>\352\227\275\002\016\215>\370\010!?\356Y\251\275h\324\352\2750H\303>k]\220<\021h\024?j\313\253\275U\3246\276\333&\336\274\036\203\256>\241\030\342>?`{\276vr\322\275\230\n\325=3\231C\276>Y\270\275}\310\211\276!\033\317\274|8s>\244k\330\276\340\223\277\276\221\2552\275\362\342%>\267\261\033?\361\373v\275\315\367\312>c\325\224\276\030\330\263=\036{\001\276\007\216\227>X\273h\276z\312\374>0\370\241>\202\354\377\276\226\006d=\354g\022?]\253\367>\326\311\226>H\302\226>(\221)\275,u\022=\247X\004>?\216#>Pl\245\275\302H\334>!.\270>\307\274\255\276\342J5\276a\032\315>U\335\353\276o2\037\275\006\037\272>R\n\005>\215\267\232>\306\263E>sJ\310>\270x\213=\223\360\001?yCT\276\005W\001?\326\200\227=1\210\\\276\363\377\n\276\006(\331>\312\200F>\031\326\212?5z\330>7\025\t?\354\177\230><m\n?\201-G\276\342\254+\275\303\266\377\275\364\320\247<^\"\241\275@\016\354>5\345\010?\004\210\342>\246Mb\276M\347\222>R\237]>\277\0269\275\036\351\337>\362}\250>\3603\375>A\350#<\363\376\022\276\010`\022?\303W\315\274\237\307\205>}\234\206\276\373\n\017?:\361\t>\304\305\037?a-\302\276h$\357=V\014\220=\327G\212?D\032\245>\212\\1?\263\334\224>\036g}\275\367\243\201>\367\003S\276\255\266#\276\310\262F>\325C.\276\367/\031?\2748\007?\214\331^>\254C\206>>\325\034\276\t/\013?\322\037\265\277\202\021\270<\035\3071=\252\203\252>\347\014\275>\273 $>\024\027\275>#\256\355=\224\177\241>,\353s>f\000\275>\340\227\276>\334\n\351=\350\001\332\276\354\257\253>\2758i=\201\353\333>\r\237\231>\225^\t>Wu#>\"F\366\274\302\007\010>\247\354\025?F\243\005\275mx\r?~\262\312\276&~\344>\010\244c>\341\223\027>\302+\277\275\363\347B<\373\255\307>\201\271\026?`\260\013?\221\364\376>\245\241\373>\022%,?\"\371->]\010\246>\264\342x\274/\342\347=\222\330\233\275[F\300\275Pl\332>\r\226\310>\245T\266\276\325\346\346>\343\246\375>\234>\205?\256\374\303<\352\350Y=\215\270\002?\233_N>\003\031Z>I\342,\300\212\241R;\363.\202>Y\311\201\276B\000?>c@\r\277\346\242$\277\000\241\000\276&^m\277\330\r\344>\354\t\025\277\260\236\300\2774|v>\220\317\240\277\213\327\373>NJ\313\274$XL>\323Qy=\027X\010\276U\370\313>\256\346\254<\235\316\275\275\263\273\364\275\3367\244>\177\240y;\317\034\225\276\031\315\245>#%\234\275\202\275\275\275D\352\037>\025\n\300=?.\332>\343\001\233\275v\010_\276\352&\270\273\003\227o\276\330\352\207=\3402+>\210v\r?\233\215\332\276GbN>\304\276\226\275\233m\234\276a\214P\276.n\024>\366\276\354=\222!\031>\333\232%\276\275\247\341=\224\010g\276\'\017\355\276\027p1\276M\026\356>hT\254=\240\035\266<\265]\220=\306K\037\276x\033\213;h?\340>\332\'\226\275\206\010\302>\321&\232\276\230\337\235\276"
+      }
+    }
+  }
+}
+node {
+  name: "decoder/de_dense_0/BiasAdd/ReadVariableOp/resource"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_FLOAT
+        tensor_shape {
+          dim {
+            size: 16
+          }
+        }
+        tensor_content: "yu\017>h\2366>y\232,=i\257\013>\304\344\010=\210\265\305=\341\257\366=@b\035>\027\006\363\274\201@\031>e\305\027>\213\330\303\275A\036/>\006\364\354=]\360\373=\3279\335="
+      }
+    }
+  }
+}
+node {
+  name: "decoder/de_dense_final/MatMul/ReadVariableOp/resource"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_FLOAT
+        tensor_shape {
+          dim {
+            size: 16
+          }
+          dim {
+            size: 64
+          }
+        }
+        tensor_content: "\356\365\354=4W4>\237\231\231>\000\024\221\275\370\242\327>)/\217>\266\376\212>(\267\211>\024\004B\2743\342T\275\303/y>;ZK>\016\264\317>\245C\271>Mr\311=~%\031>|,\336<\227\357\321>85\300>\222\202p<<oL\275\177\314\315>\306\213_>\256\327S\276r\272\207>9\230\'\276P\177\225>PEd=\232]\221\276@\376(\276\363\253&\276\263\014\307<\013\352\336\275\2663\212\276\267@\013\276\345\216\253\276\032-\\=N\201\272=\303\305Q\276X\335B\276\213\215\376\275U\";\275n\360n>\013<\362;Q\033\275>(\213\336\275\267\220\211\276\036T\253\2759z\247\275vhC=\255t\276=\223!\321\274T\250K>\000\277\254\274^\344V>@\214\276\273\204wV\276\003FA>/:\r>\365\326\222>)[x\276\200t\254\274\354\306E\275\024V\304=6\326d\275\2166c>\2351T>2\007\267<\"g\334>\320\356W>\317\266\027\275\376\374\374\275C\2645=Kic\276\300\247`=\340\366B\276\324\230\036>\370t\002\276\365n\265\273\"k!=\267X}\276\004\343i>\351q\036>8s\017\276O\331\334=]<\342=\001}\353\273\214\025\035\276\010]\331>\213@!\276\307]>>+-j\275\314\267Y>\250e\255=<O\321=\245\363m\273\271\262\265=\240/^\276\251t%>\336\'\030\276\206)r\276\"\270:\276\235\021\211\276\n\037\370=\204\020\360\275X\234u\276`\017.\276d\316\250\2758T\217>\222h\001\276\026\242B>PK\306=!\357\022>\223\276~>\276hu\2766w\033\274\'\306\360>\250z\360\274F\325u\276\233\221;\2761\276\332>\260\374\005>o1m=\005A\362>\200\363\267=t\016\037\275>\305>>\262+k\276\326\020\244=\231\333?\275\231\013L>\362\326!>A\3569>\313\223\030\276\022mu>\024\010N>.\223\212\276\220\224\036>+\331\025\276\026\"{\275t\245m>\251MB>\253\362\227=\375\230\017>r\240\343\275<\350`\275\241\215\223=\305G\017>\220)~>@\354\023\276\026\271\367\274T\225\017\276\221NQ\276-\013>\274y.y>\2737\260<\234\310+=q;k>\317\202\243=\343\010\207=\243\304I>\320\270B\276tz3\276\363+@>\321\035$>\362\301D\2765\203\024>\027\315\000\276\320\305\337<\314L\221\275f\2454\276L\001\026\276\331\332\220>rA\007\276P\037\351<\230i6\276\240\273z\276^\324\001\276\346\301t\276\216\254\016>0\264\241>\220\212C\275\314s}\276\234\342+\276\340 \004>G\321\005>&\371,>\371\212\023\276F\312B>\366\303\013\276g9\204\276zO\'>\024\256Y>\300\206\304=\200l\360=\334\342r>\032J\275>\026e\354\274lv@>\363\177T=\207\342\027\276\376\316\307=/\301\215=8\245\246=\261\255\260>\300\253\227=\350t\365=m\316\003?\216\376\022\276\003\311\340>\323\027\265>L\351\306\273O9\203>s\003\014\274\223;\206\276E\r\033\276b$\212>5\267\020\276\237\241\207>\372\026\027>K\214\346=\346\275\254=\227\213S\276/L0\276\205y\357>\363*4>\210:\204\2768_\202\276s\213]>\363\323\313>\272\215\224\276\205\332M>\254?4>\265\223\362=g\277\221\276\344\311\036\276\347\021\314\273B\016\334\275\360W\306<v\332\340\275\314\325g>\007\371\033\276\373\026o>\304A\025>\342\267\277>|\023r>0\310\017=\306A\t>Q\371\313>\357C\242\2756\376\227\275\261\223\215>\245`\324\275x\310\207>\200\221\322\274\344|L>\277(1\275\267V\242>\371\224\'=\016\365\201=\024\001\226\275|tI>\270\210\026>\023\304\337\275\203\304h>\t*S\276#O\020=fM\\=\'\322\375\275\355\217)\276\027f==\357\3531\276v\300\275\274\350\0310\276\313\302=>\206\303+\275\005\265N\276\326 2\275\177\277\347=\336\307L=\377\365\316\275\305[\204\276\330z\334\275\353\002\031<\010#U>\202\243v\276\177\341 \276\225\\\312\275\272\2575\276\3715\002=|>y=\312\254\013\276G\026\305\275?2\223:\017.\037\276\317\316\024>\247v\375\2741e8>\271\332G>a\311\252<|\255\331\275P\306\326<N\332<>\310]R\276Tv\035>\373lc>\234;\217\275\244\317\266=\002\275P\276\226\364->P\214\245<\320!T=\307^g\275\006c\276=\364\341<\276\362\256N\275\301\363g>\240\211\331\275f\2413\276\242\263\023>g\252\271\275Q\333\236>\351$\231>\243\254\270>\221\000k>\322Y\207>\224\316\302\275>\211g>q\234\320\275\241\353x>\302>\224>\024U\223\275\t\357\341\275\217\265\013\276\253}\324\274\342\347K>\010\304\215\276\337!\322\274\345\376\235\275\330\364b>\273\375D\275\t\322\245>m:\">la\023\276\366j&>zW\200> \246\327\275\246!:\276\034\356\177\276\025\201\204\276\321C\033\276+\374X\2766W8>q\016\025\276\340p}>\0207\207\276o\251\231=\263\345B>/\020\215\275!i_\276j}\362<\276K@<\366\035a>K\253T>\032U\341>@\001J<\032V@\276wqE\276\262\350K\276\355;\010\276\004\005e\276\353V->\027\340\266>\274\217\337=\374\361V\275\224\035=>&\261\320\275\245Yi>\364\200n\276>8\025>KR0=\022\222\233\275\000H\267\274\304\351F\276h($=\364\242\263>\312a\323>_\242Z>8\212\244\274\262W\267>\271sW>L\337\266=\243\3237>/\231U\276\263\316\302>\014D\246=)0\265<\207$\256=\351\231&>\214\326R=%\236\215\276\023\223\253\274/m\240>Y\364g\276\'\001\020\274\350\364\325>\"y\323=\252*9>/\202\217=\265\331x\276\334\275A>\261\322=>\322\346\363=\007\233A\276\344\321\207=\217n\353<!\377l>^\252\376=\001T\205\276V\275\356\274u\022\223\276\327\253\302<w\021\257=\0356\035>0\024r=\206XU\276\234\210\027\276E\213C>\237/\003>\342\336[>`=\264\274\036(\360\275\202\030\373\274\2760H>S\230\203\276aMO\275\251\276Y<\342\211[\276\334\034.>\206\234/>\374\'Q=\261I\362\275\034\002\177\276\306\261f=G\217\351\275\351C\205\276\240\207R=\357\017(\276\017%\202>\021\323\214>QF\322>\230\357\033=4\221?>\252\324&>\243Y\226>g\217\375=\254\022\226\273\246\322=\276\027P#>&\035\356\275\017\277\307>\240\315c;!\000\234>#\200\347=\375\246\016\276\006\377\254>7\257/>\345\343v\275\300\306\217\274.\224\333=3\027\n\276\251\255$\276\336K\241>\261js=\345iI>\024\304\272\275\3252\022>v\335\201\275\026\325\215\276,/t\272\305\2238:\231\300\224</\230Q>\346j!>\0210\207\276\372\243x\276\r\246\273\274\366\231\227\276\203,\014=U+\210\276\312d\014\276\274\200&\276\210\227\001>\010\033k=\n\375\317\275\020\336E=\3760\005\275$\261f>\363\246\336\275\374Z\236\276\300\235\326>0\226\214<.\275\206\276\316\350\205>\241\022\213\276\316p\324\274\351\216\020>f\311\374\275\351\315/>\260F\264<\022\377A>\004m\256\275\020??\276\026\370\320\275f\223\323<\303{\204<\214\265\035\276Z\260F>(\240\250\275hU\014\276\252\031 >@\363r\276\222\210\016>\362\353&;\270\350\341;\365\241\204\275m{\307\275H\240y>z\235K=\253\256\331\275\006A+\276\312R\220\275M>\203\276\300\177k\276\261\347\356\275vl\214\276\360\266i>:\372\270=\254\201J\276\311]`\276a&\216\276 `\217\275\247\203D>\033\237\332\2720bq\275[Y\317=:\0377\274\252L}\276\234\232/\273\004\211\351=\026\005\\>\010[\303\275\023\321M\275\357\232\212=\216\243I\276\312\333\255\275G\255R\276\253\237\201\276(\0015\276\212/#\276\267\361t=\214\341\204\276\362\305U>\325\005p\276\201\276\014>\215IG\276$\037\'>H6*\275Q\321\216\276bV\211\276\332\200\202\275\255&\247\274\262\026M>\340\356=>6\312\021>\370\302,>\013t\\> j\252>L\251\226=\206\3241>S\264\271>\274\030\307>\324qt>\3418\004\276\321po<[\035\r>(\316\334>\271\351\201\276ZO\006\275\212k\253>\352\347\034\275\202\360\025\276\023\220x\276\354\247\332=\001<R>\037\225\322\275\026\177\036>\262\212:\275\213\2135\275\237\256\314\275Oc\214>O[$\276C\346.>_\244,\276\326\030\236=\255\272\200\276,\000L>\210t8\276\373\226\242>\\8_\276\231\267\010=X\345\260=X\\s=k3N<\221\010\022>\361\006[\276fH;\276\213\265\r=\'\247\274=\251\302\252\276\212\234\262\274t\3472>\246\026\212>\270\332\034=gnD\275\325\265\256>)\210\353\275\332\332\307\2765\231\311>\000(594M\362\275\327\251\013\276\226\341G>\0331\271=\313.\213\276\375\370\230\2759On\275B\030\213\276XS\\\276\324\024\320=\320g\177>O\325t>|`\027=!\3749>\2744\216>\354/\324>\336/\206\275\375\236\214>\"\366\031\276IP\036\275\331y\341<\032\026\030\276s\265\r\2744\250\235>J\211\252>\356\374)>\360,\034>\330\374\324>\216\3221>B\030w>&\002\210=\305\353\246=\020z\221\276\360\251\204\276~\347\202>\313\226v>\333\005\341\275\037}\344\274s^R\276\352h0>\265\016y<\353\241_\276\231\316p\275\364\027\264\275\310 \207\276\320\361b=S\002\326\275\361\323q\273AU\227\275$\372\003>6\321\315=I\"\263=U]9\276\333\033\014\276>\306\212=@\323h>\214\337\232=\340\276]\276\216\301\2509\344=\034\275`\343\260;\240>?\275\202\\\265<\220m\006\276\340\271\271\274\270E\215=$\312\022\2769\360\225\276,\333,\275~\321\301=\314\351\243\275\240\364\233\274\014\305\201=\312\nS\276\004\031\310>)\365\272\276\206 \374=\367\230\366\2756\210\251\273\002\264\235\274\026\014\354\275\036\306\000>\227F\265=\316\215\017>15\375<}\215f\2762\355?>v\265\220> \265\377?\254\233@\276\330\231\036\2759\334\325\277\322\326\352\276\211\277\022>c\360\243>k\222\270?\250?`=\014!~>\250\217<?\202\217\222\273\316\237T>\375N\325\273\"\366w\276\213\203N>\204\r\t==\256K> *\340>Sw<\275\2647\202>4>q\276\257\213C\276\020%o\276IGK>\325\210\327\274\363\267W>\200\312P>\211\303R>\306\301\\>\244x\204>8\274\020\276h\232&\276\260\262Y>\355wS\2766JI?\226b\317\275\274\310\021=t4\343>8\223\035>\330X\211\275\000w\374<u\336\342?{\017|>,\305\020>l~\027=K*\177=@\263\331=XU\353\275\316{\002>\006A\333\275\225\r\346>j/\246>\313\252\256<\266#\343=\027gP>\215\020\304>\275\344\n\276J\226\362=\324Qp\275\352\304\036>\017\302\320\275\262&\254>\363\005x>\357\306\222:\t\260a>\376\226\374\275\021/a>\251\335\326>\326\202\205\2759\020\226>\357q-\275\353\330y\276\235U\221\276\355+\201>\252\025h\276Z\032\277>\205\350!>\323c\005=\236v\314=\312\036?\276\356\r\017\276tt\343>U6\220\275\251p\241=y\253\362=\022\261W=}\367\304=\007\0337>\265\"6=\301\330\266\275\305?\320=\372N\204>\236\346\221\276\3337\347<\370\311\370\275\254\010\001\275G\023b\276.o\352\274\345s{>^\376)>d[\242\276\215:\314>DR\310=hX\202>\230;q=\024\341t>\272jF\275\177\354\207\276\364\260C=\310c\032\276\234\2104>\324\221\240\2758\225\243=\303).\275\234{\316>\336\306r=#s\034>\r\003\247>\002\374\273\272 \243\214>=B\345=\204{\232;\270\221R\276Z\010Q>\227\367m\2765\233\260\275\362\333\344\275L\371\313=\210r\367\274\2008\020\276\031B\234>\227\200\355\275\025\034\225\275\0335\204>\365\231\353=^\337\221\276H\231\036\276\353.\335>\"\377\206\276Y\272\306>\332G\377\274\320v5>\003\020\205\276:8x\276\340\264\377=8R\222>H\024\267\275\335\377w\276\220\242;>,\320T\276Z[\247\275\321\276\206\2765I\223\276w!\324\2755\305\354=\326J\333\275M\366!>\371\224\\<p\220L>.\352\t\276Ll\010>\374}\323\275\2052\331\275\204\232@\276\364fS=\321X\360=\004Y\352\275\206,>>\266]$>a4b>k\346.\276y\364\300\275;%->Y\317Z>\000\277N\276\240\304\321<V\017*\276\214Kq=\374\260\201\274\027\177\246=\357\343\205>\013q\r>5G\312=\365\375\324>\354F\204<\225\264\340\275\027d\233=2\372\317=\361\330s\276+:\340=\235j\236=T@\231=E=\201\276C\327\025>\233\301m>\245\344\022>\347\3264\276\200Y>>[x\204=\236\005L\276.x\312\275\245[x>\"\322\343\275\372\262\225>\302X\026\276\263\317\363=N\262\034\274\005\233&\276\250\230\205\276\373\"\341=\311\233\333=\353\373d\276\230|\205\275\226\205J>\224\335\010=Nh\252=\'\227\267=O@\205\275\033\313P\273*\300\230\274ko\211\273n/\352>\230\222X=\273\005\213\276y\201\020\276\316\346y\274(#\203>8*\251\274\255\253\013\275\201Yl>\0202`\275@\260\345;\350\2241=\2021V>a\017\230\276\003\275K>\022\237\326\275u\331R\275\320\321\\\276 \227\201>(\377m=\201\002Z>N\315\257>\303\350g=d\354\276>\373X\325=\3429&<7\270\223\275e\277\241\275\3439l=\230\337\340<,z\224>&X\000>\220d\217=H!\224>\345\'\244>\373\334\034\275\264\357\256=\275\313!>4\273\252>y\225\003\276V\221\025\276\014\302,>\"\252\021\276\267+C>\n\266|>\202\251\017\276\253\377\265>\352\004\315<\006\2343>Y\336_\274\262\030\357\275\'\252\274\275\267\363\300>h\342\321\275\375uD>\302VH\276\024a\001=\346\260e>[\266\031\276x\331\225=\221/\237\275\307\302:\275\2006\234\275\207N\214\276\246\321\267>\244M\010> \255c<@\355\004\275\344\362\301\275c\244f\275\357\023f>\205\205\037>\010\023x=2DM\276\324\374h>@\252\374\273\217-4\275\266\246@\276\243\313\202\276\256\205\356<\310\331\330\275\024Hj>fB6>|\220\001>"
+      }
+    }
+  }
+}
+node {
+  name: "decoder/de_dense_final/BiasAdd/ReadVariableOp/resource"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_FLOAT
+        tensor_shape {
+          dim {
+            size: 64
+          }
+        }
+        tensor_content: "\203a\325=\374k\311=QB\340=/\221\276=\366\023\303=S\350\315=2\213\320=\236\301\030=\333t\305\274KG\214\274\310b\273=\030\017\230\274}`\240=\226B\222=\2669\257=z\250(\275\355,\343\274\277Q\033>\026n\244=\353\273\214\274\357\025C=P\341\304=\t\251\213\274\026\334\237\274\377g\001<\257-\265\274\302\235\276=\026c\257\274\203\260c\275r=\333\274\024|D\274\031\345\206\274\025g\213=\374\363\270\274\320&\232\2747\241\216\275ae\240\274D\210(\275,\316\220\275\354\000\356\274Q\312\350\274\001\020\227\274.E\217\274\n\263\376\274\2532\034>\000\000\000\000\000\000\000\000\000\000\000\000\262G\352\274=\035\345=q\341\256\274\225\325\317\274H\212%>\000\000\000\000\000\000\000\000\000\000\000\000\215J\267<{\364\261\274\2550\017\275\350,\342\274\203\025\346\274\000\000\000\000\000\000\000\000\000\000\000\000"
+      }
+    }
+  }
+}
+node {
+  name: "decoder/de_reshape/strided_slice/stack"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_INT32
+        tensor_shape {
+          dim {
+            size: 1
+          }
+        }
+      }
+    }
+  }
+}
+node {
+  name: "decoder/de_reshape/strided_slice/stack_1"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_INT32
+        tensor_shape {
+          dim {
+            size: 1
+          }
+        }
+        int_val: 1
+      }
+    }
+  }
+}
+node {
+  name: "decoder/de_reshape/strided_slice/stack_2"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_INT32
+        tensor_shape {
+          dim {
+            size: 1
+          }
+        }
+        int_val: 1
+      }
+    }
+  }
+}
+node {
+  name: "decoder/de_reshape/Reshape/shape/1"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_INT32
+        tensor_shape {
+        }
+        int_val: 8
+      }
+    }
+  }
+}
+node {
+  name: "decoder/de_reshape/Reshape/shape/2"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_INT32
+        tensor_shape {
+        }
+        int_val: 8
+      }
+    }
+  }
+}
+node {
+  name: "decoder/de_reshape/Reshape/shape/3"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_INT32
+        tensor_shape {
+        }
+        int_val: 1
+      }
+    }
+  }
+}
+node {
+  name: "decoder/conv2d_t_final/strided_slice/stack"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_INT32
+        tensor_shape {
+          dim {
+            size: 1
+          }
+        }
+      }
+    }
+  }
+}
+node {
+  name: "decoder/conv2d_t_final/strided_slice/stack_1"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_INT32
+        tensor_shape {
+          dim {
+            size: 1
+          }
+        }
+        int_val: 1
+      }
+    }
+  }
+}
+node {
+  name: "decoder/conv2d_t_final/strided_slice/stack_2"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_INT32
+        tensor_shape {
+          dim {
+            size: 1
+          }
+        }
+        int_val: 1
+      }
+    }
+  }
+}
+node {
+  name: "decoder/conv2d_t_final/stack/1"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_INT32
+        tensor_shape {
+        }
+        int_val: 8
+      }
+    }
+  }
+}
+node {
+  name: "decoder/conv2d_t_final/stack/2"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_INT32
+        tensor_shape {
+        }
+        int_val: 8
+      }
+    }
+  }
+}
+node {
+  name: "decoder/conv2d_t_final/stack/3"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_INT32
+        tensor_shape {
+        }
+        int_val: 1
+      }
+    }
+  }
+}
+node {
+  name: "decoder/conv2d_t_final/conv2d_transpose/ReadVariableOp/resource"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_FLOAT
+        tensor_shape {
+          dim {
+            size: 3
+          }
+          dim {
+            size: 3
+          }
+          dim {
+            size: 1
+          }
+          dim {
+            size: 1
+          }
+        }
+        tensor_content: "\321\225`\276\303n\230=\014\211\212\276\316B\215\276r\274\270=\004\233?\2775\371\355\276\257\301\007\277\260\016\362\276"
+      }
+    }
+  }
+}
+node {
+  name: "decoder/conv2d_t_final/BiasAdd/ReadVariableOp/resource"
+  op: "Const"
+  attr {
+    key: "dtype"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "value"
+    value {
+      tensor {
+        dtype: DT_FLOAT
+        tensor_shape {
+          dim {
+            size: 1
+          }
+        }
+        float_val: -0.11331161111593246
+      }
+    }
+  }
+}
+node {
+  name: "decoder/de_dense_0/MatMul/ReadVariableOp"
+  op: "Identity"
+  input: "decoder/de_dense_0/MatMul/ReadVariableOp/resource"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+}
+node {
+  name: "decoder/de_dense_0/MatMul"
+  op: "MatMul"
+  input: "x"
+  input: "decoder/de_dense_0/MatMul/ReadVariableOp"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "transpose_a"
+    value {
+      b: false
+    }
+  }
+  attr {
+    key: "transpose_b"
+    value {
+      b: false
+    }
+  }
+}
+node {
+  name: "decoder/de_dense_0/BiasAdd/ReadVariableOp"
+  op: "Identity"
+  input: "decoder/de_dense_0/BiasAdd/ReadVariableOp/resource"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+}
+node {
+  name: "decoder/de_dense_0/BiasAdd"
+  op: "BiasAdd"
+  input: "decoder/de_dense_0/MatMul"
+  input: "decoder/de_dense_0/BiasAdd/ReadVariableOp"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "data_format"
+    value {
+      s: "NHWC"
+    }
+  }
+}
+node {
+  name: "decoder/de_dense_0/Relu"
+  op: "Relu"
+  input: "decoder/de_dense_0/BiasAdd"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+}
+node {
+  name: "decoder/de_dense_final/MatMul/ReadVariableOp"
+  op: "Identity"
+  input: "decoder/de_dense_final/MatMul/ReadVariableOp/resource"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+}
+node {
+  name: "decoder/de_dense_final/MatMul"
+  op: "MatMul"
+  input: "decoder/de_dense_0/Relu"
+  input: "decoder/de_dense_final/MatMul/ReadVariableOp"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "transpose_a"
+    value {
+      b: false
+    }
+  }
+  attr {
+    key: "transpose_b"
+    value {
+      b: false
+    }
+  }
+}
+node {
+  name: "decoder/de_dense_final/BiasAdd/ReadVariableOp"
+  op: "Identity"
+  input: "decoder/de_dense_final/BiasAdd/ReadVariableOp/resource"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+}
+node {
+  name: "decoder/de_dense_final/BiasAdd"
+  op: "BiasAdd"
+  input: "decoder/de_dense_final/MatMul"
+  input: "decoder/de_dense_final/BiasAdd/ReadVariableOp"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "data_format"
+    value {
+      s: "NHWC"
+    }
+  }
+}
+node {
+  name: "decoder/de_dense_final/Relu"
+  op: "Relu"
+  input: "decoder/de_dense_final/BiasAdd"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+}
+node {
+  name: "decoder/de_reshape/Shape"
+  op: "Shape"
+  input: "decoder/de_dense_final/Relu"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "out_type"
+    value {
+      type: DT_INT32
+    }
+  }
+}
+node {
+  name: "decoder/de_reshape/strided_slice"
+  op: "StridedSlice"
+  input: "decoder/de_reshape/Shape"
+  input: "decoder/de_reshape/strided_slice/stack"
+  input: "decoder/de_reshape/strided_slice/stack_1"
+  input: "decoder/de_reshape/strided_slice/stack_2"
+  attr {
+    key: "Index"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "T"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "begin_mask"
+    value {
+      i: 0
+    }
+  }
+  attr {
+    key: "ellipsis_mask"
+    value {
+      i: 0
+    }
+  }
+  attr {
+    key: "end_mask"
+    value {
+      i: 0
+    }
+  }
+  attr {
+    key: "new_axis_mask"
+    value {
+      i: 0
+    }
+  }
+  attr {
+    key: "shrink_axis_mask"
+    value {
+      i: 1
+    }
+  }
+}
+node {
+  name: "decoder/de_reshape/Reshape/shape"
+  op: "Pack"
+  input: "decoder/de_reshape/strided_slice"
+  input: "decoder/de_reshape/Reshape/shape/1"
+  input: "decoder/de_reshape/Reshape/shape/2"
+  input: "decoder/de_reshape/Reshape/shape/3"
+  attr {
+    key: "N"
+    value {
+      i: 4
+    }
+  }
+  attr {
+    key: "T"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "axis"
+    value {
+      i: 0
+    }
+  }
+}
+node {
+  name: "decoder/de_reshape/Reshape"
+  op: "Reshape"
+  input: "decoder/de_dense_final/Relu"
+  input: "decoder/de_reshape/Reshape/shape"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "Tshape"
+    value {
+      type: DT_INT32
+    }
+  }
+}
+node {
+  name: "decoder/conv2d_t_final/Shape"
+  op: "Shape"
+  input: "decoder/de_reshape/Reshape"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "out_type"
+    value {
+      type: DT_INT32
+    }
+  }
+}
+node {
+  name: "decoder/conv2d_t_final/strided_slice"
+  op: "StridedSlice"
+  input: "decoder/conv2d_t_final/Shape"
+  input: "decoder/conv2d_t_final/strided_slice/stack"
+  input: "decoder/conv2d_t_final/strided_slice/stack_1"
+  input: "decoder/conv2d_t_final/strided_slice/stack_2"
+  attr {
+    key: "Index"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "T"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "begin_mask"
+    value {
+      i: 0
+    }
+  }
+  attr {
+    key: "ellipsis_mask"
+    value {
+      i: 0
+    }
+  }
+  attr {
+    key: "end_mask"
+    value {
+      i: 0
+    }
+  }
+  attr {
+    key: "new_axis_mask"
+    value {
+      i: 0
+    }
+  }
+  attr {
+    key: "shrink_axis_mask"
+    value {
+      i: 1
+    }
+  }
+}
+node {
+  name: "decoder/conv2d_t_final/stack"
+  op: "Pack"
+  input: "decoder/conv2d_t_final/strided_slice"
+  input: "decoder/conv2d_t_final/stack/1"
+  input: "decoder/conv2d_t_final/stack/2"
+  input: "decoder/conv2d_t_final/stack/3"
+  attr {
+    key: "N"
+    value {
+      i: 4
+    }
+  }
+  attr {
+    key: "T"
+    value {
+      type: DT_INT32
+    }
+  }
+  attr {
+    key: "axis"
+    value {
+      i: 0
+    }
+  }
+}
+node {
+  name: "decoder/conv2d_t_final/conv2d_transpose/ReadVariableOp"
+  op: "Identity"
+  input: "decoder/conv2d_t_final/conv2d_transpose/ReadVariableOp/resource"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+}
+node {
+  name: "decoder/conv2d_t_final/conv2d_transpose"
+  op: "Conv2DBackpropInput"
+  input: "decoder/conv2d_t_final/stack"
+  input: "decoder/conv2d_t_final/conv2d_transpose/ReadVariableOp"
+  input: "decoder/de_reshape/Reshape"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "data_format"
+    value {
+      s: "NHWC"
+    }
+  }
+  attr {
+    key: "dilations"
+    value {
+      list {
+        i: 1
+        i: 1
+        i: 1
+        i: 1
+      }
+    }
+  }
+  attr {
+    key: "explicit_paddings"
+    value {
+      list {
+      }
+    }
+  }
+  attr {
+    key: "padding"
+    value {
+      s: "SAME"
+    }
+  }
+  attr {
+    key: "strides"
+    value {
+      list {
+        i: 1
+        i: 1
+        i: 1
+        i: 1
+      }
+    }
+  }
+  attr {
+    key: "use_cudnn_on_gpu"
+    value {
+      b: true
+    }
+  }
+}
+node {
+  name: "decoder/conv2d_t_final/BiasAdd/ReadVariableOp"
+  op: "Identity"
+  input: "decoder/conv2d_t_final/BiasAdd/ReadVariableOp/resource"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+}
+node {
+  name: "decoder/conv2d_t_final/BiasAdd"
+  op: "BiasAdd"
+  input: "decoder/conv2d_t_final/conv2d_transpose"
+  input: "decoder/conv2d_t_final/BiasAdd/ReadVariableOp"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+  attr {
+    key: "data_format"
+    value {
+      s: "NHWC"
+    }
+  }
+}
+node {
+  name: "decoder/decoder_output/Sigmoid"
+  op: "Sigmoid"
+  input: "decoder/conv2d_t_final/BiasAdd"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+}
+node {
+  name: "NoOp"
+  op: "NoOp"
+  input: "^decoder/conv2d_t_final/BiasAdd/ReadVariableOp"
+  input: "^decoder/conv2d_t_final/conv2d_transpose/ReadVariableOp"
+  input: "^decoder/de_dense_0/BiasAdd/ReadVariableOp"
+  input: "^decoder/de_dense_0/MatMul/ReadVariableOp"
+  input: "^decoder/de_dense_final/BiasAdd/ReadVariableOp"
+  input: "^decoder/de_dense_final/MatMul/ReadVariableOp"
+  attr {
+    key: "_acd_function_control_output"
+    value {
+      b: true
+    }
+  }
+}
+node {
+  name: "Identity"
+  op: "Identity"
+  input: "decoder/decoder_output/Sigmoid"
+  input: "^NoOp"
+  attr {
+    key: "T"
+    value {
+      type: DT_FLOAT
+    }
+  }
+}
+versions {
+  producer: 1205
+}

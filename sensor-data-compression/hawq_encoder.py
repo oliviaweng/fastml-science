@@ -15,6 +15,7 @@ from denseCNN import denseCNN
 from fkeras.metrics.hessian import HessianMetrics
 from telescope import telescopeMSE8x8_for_FKeras
 from tensorflow.keras.models import Model
+import tensorflow as tf
 
 from utils.metrics import emd_multiproc
 from train import (
@@ -52,9 +53,9 @@ def count_hawq_nonzero_weights(model):
 
     for layer in model.layers:         
         for i in range(0, len(layer.trainable_variables), 2):
-            print(layer.name)
+            # print(layer.name)
             weights = layer.trainable_variables[i].numpy()
-            print(weights.shape)
+            # print(weights.shape)
 
             nz_count = np.count_nonzero(weights)
             total_params = np.prod(weights.shape)
@@ -70,14 +71,12 @@ def count_hawq_nonzero_weights(model):
         layer_count_total,
         (100 * (total - nonzero) / total),
     )
-            
 
 
-
-def calc_hawq_bops(model, input_data_precision=32):
+def calc_hawq_bops(model, input_data_precision=10, bitwidth=4):
     last_bit_width = input_data_precision
     alive, total, l_alive, l_total, pruned = count_hawq_nonzero_weights(model)
-    b_w = 16
+    b_w = bitwidth
     total_bops = 0
     layer_bops = []
 
@@ -96,10 +95,59 @@ def calc_hawq_bops(model, input_data_precision=32):
     return total_bops, layer_bops
 
 
+def get_quant_perturbations(model, min_bitwidth=4, max_bitwidth=8):
+    # version 4
+    # calculate the L2 norm.
+    # based on HAWQv2 appendix A (symmetric quantization z=0)
 
+    all_bit_widths = list(range(min_bitwidth, max_bitwidth+1))
+    delta_weights = {}  # store the L2 norm. 
 
+    for bit_width in all_bit_widths:
+        tmp_delta_weights = []
+        
+        for layer in model.layers:
+            for i in range(0, len(layer.trainable_variables), 2):
+                # min and max for chosen bitwidth 
+                q_min = -(2**bit_width)
+                q_max = (2**bit_width)-1
+                
+                # quantize and dequantize weights
+                weights = layer.trainable_variables[i]
+                x = tf.clip_by_value(weights, q_min, q_max)
+                delta = (q_max-q_min)/(q_max-1)
+                x_integer = tf.round((x-q_min)/delta)
+                x = x_integer*delta+q_min
 
+                # compute the L2 norm. 
+                l2_weight_perturbation = tf.reduce_sum((tf.reshape(x,[1,-1]) - tf.reshape(weights,[1, -1]))**2)
+                # l2_weight_perturbation = ((x.reshape(1,-1) - weights.reshape(1,-1))**2).sum()
+                l2_weight_perturbation = l2_weight_perturbation.numpy()
+                # store resut
+                tmp_delta_weights.append(l2_weight_perturbation)
 
+        delta_weights[bit_width] = np.array(tmp_delta_weights)
+
+    for bit_width in all_bit_widths:
+        print(f"{bit_width} {delta_weights[bit_width]}")
+        # print(f"{bit_width} {delta_weights[bit_width]/np.array([ 1088, 2080, 1056, 165]).sum()}")
+
+    # convert to numpy array 
+    l2_quant_pert = []
+
+    for bit_width in delta_weights.keys():
+        l2_quant_pert.append(delta_weights[bit_width])
+
+    l2_quant_pert = np.array(l2_quant_pert)
+    # print(l2_quant_pert)
+    return l2_quant_pert
+               
+def get_num_params_per_layer(model):
+    num_params = []
+    for layer in model.layers:
+        for i in range(0, len(layer.trainable_variables), 2):
+            num_params.append(layer.trainable_variables[i].numpy().size)
+    return np.array(num_params)
 
 
 def exp_file_write(file_path, input_str, open_mode="a"):
@@ -205,81 +253,92 @@ def main(args):
     if model_info["ws"] == "":
         raise RuntimeError("No weights provided to preload into the model!")
     
+    # Begin ILP for HAWQ
+    
+    NUM_LAYERS = 2
+    BOPS_LIMIT = 3e6
+    MIN_BITWIDTH = 4
+    MAX_BITWIDTH = 8
+    # Hutchinson_trace = np.array([1684.955, 533.25946]) # big econ model trace
+    Hutchinson_trace = np.array([567.98376, 1437.5316]) # small econ model trace
     total_bops, layer_bops = calc_hawq_bops(m_autoCNNen)
 
     print(total_bops)
     print(f"layer bops are {layer_bops}")
 
-    # Save autoencoder and encoder models to hdf5 files
-    # m_autoCNN.save(
-    #     os.path.join(args.odir, args.models, "hgcal_autoencoder.h5")
-    # )
-    # m_autoCNNen.save(
-    #     os.path.join(args.odir, args.models, "hgcal_encoder.h5")
-    # )
+    l2_quant_pert = get_quant_perturbations(m_autoCNNen, min_bitwidth=MIN_BITWIDTH, max_bitwidth=MAX_BITWIDTH)
+
+    # parameters = get_num_params_per_layer(m_autoCNNen)
+
+    _, bops_4bit = calc_hawq_bops(m_autoCNNen, bitwidth=4)
+    _, bops_5bit = calc_hawq_bops(m_autoCNNen, bitwidth=5)
+    _, bops_6bit = calc_hawq_bops(m_autoCNNen, bitwidth=6)
+    _, bops_7bit = calc_hawq_bops(m_autoCNNen, bitwidth=7)
+    _, bops_8bit = calc_hawq_bops(m_autoCNNen, bitwidth=8)
+    bops = np.array([bops_4bit, bops_5bit, bops_6bit, bops_7bit, bops_8bit]).reshape(-1) 
+
+    print(f"4bit\n{bops_4bit}")
+    print(f"5bit\n{bops_5bit}")
+    print(f"6bit\n{bops_6bit}")
+    print(f"7bit\n{bops_7bit}")
+    print(f"8bit\n{bops_8bit}")
     
-    #S: Configure how many validation inputs will be used
-    # curr_val_input = val_input
-    # if 0 < args.num_val_inputs < val_input.shape[0]:
-    #     curr_val_input = val_input[:args.num_val_inputs]
-    #     # For debugging
-    #     # curr_val_input = val_input[args.num_val_inputs:args.num_val_inputs+1]
-    # else:
-    #     raise RuntimeError("Improper configuration for 'num_val_inputs'")
+    # construct the problem 
+    number_variables = Hutchinson_trace.shape[0]*len(l2_quant_pert) # NUM_LAYERS * BIT_WIDTH_OPTIONS
 
-    # cnn_enQ = None
-    # cnn_deQ = m_autoCNN.predict(curr_val_input, batch_size=512)
-    # input_Q = curr_val_input
+    # first get the variables
+    variable = {}
+    for i in range(number_variables):
+        variable[f"x{i}"] = LpVariable(f"x{i}", 0, 1, cat=LpInteger)
+        
+    prob = LpProblem("Model_Size", LpMinimize)
 
-    # input_calQ = model.mapToCalQ(input_Q)  # shape = (N,48) in CALQ order
-    # output_calQ_fr = model.mapToCalQ(cnn_deQ)  # shape = (N,48) in CALQ order
+    # add objective function, minimize model size 
+    # prob += sum([variable[f"x{i}"] * parameters[i%4] for i in range(num_variable) ]) <= model_size_limit 
 
-    # print("Restore normalization")
-    # input_Q_abs = (
-    #     np.array(
-    #         [
-    #             input_Q[i] * (val_max[i] if args.rescaleInputToMax else val_sum[i])
-    #             for i in range(0, len(input_Q))
-    #         ]
-    #     )
-    #     * 35.0
-    # )  # restore abs input in CALQ unit
-    # input_calQ = np.array(
-    #     [
-    #         input_calQ[i] * (val_max[i] if args.rescaleInputToMax else val_sum[i])
-    #         for i in range(0, len(input_calQ))
-    #     ]
-    # )  # shape = (N,48) in CALQ order
-    # output_calQ = unnormalize(
-    #     output_calQ_fr.copy(),
-    #     val_max if args.rescaleOutputToMax else val_sum,
-    #     rescaleOutputToMax=args.rescaleOutputToMax,
-    # )
+    # add objective function, minimize bops 
+    prob += sum([variable[f"x{i}"] * bops[i] for i in range(number_variables) ]) <= BOPS_LIMIT 
 
-    # occupancy_1MT = np.count_nonzero(input_calQ.reshape(len(input_Q), 48) > 1.0, axis=1)
+    # Each layer has BIT_WIDTH_OPTIONS variables (5 in this case), each variable can either be 0 or 1 
+    # an extra constraint is needed to chose one bitwidth per layer
+    prob += sum([variable[f"x{i}"] for i in list(range(0, number_variables, NUM_LAYERS))]) == 1  
+    prob += sum([variable[f"x{i}"] for i in list(range(1, number_variables, NUM_LAYERS))]) == 1
+    prob += sum([variable[f"x{i}"] for i in list(range(2, number_variables, NUM_LAYERS))]) == 1
+    prob += sum([variable[f"x{i}"] for i in list(range(3, number_variables, NUM_LAYERS))]) == 1
+    
+    prob += sum( [ variable[f"x{i}"] * l2_quant_pert.reshape(-1)[i] * Hutchinson_trace[i%NUM_LAYERS] for i in range(number_variables) ] ) 
+    
+    # solve the problem
+    status = prob.solve(GLPK_CMD(msg=1, options=["--tmlim", "10000","--simplex"]))
+    # get the result
+    print(f"LpStatus {LpStatus[status]}")
 
-    # # Evaluate the model
-    # charges = {
-    #         "input_Q": input_Q,
-    #         "input_Q_abs": input_Q_abs,
-    #         "input_calQ": input_calQ,  # shape = (N,48) (in abs Q)   (in CALQ 1-48 order)
-    #         "output_calQ": output_calQ,  # shape = (N,48) (in abs Q)   (in CALQ 1-48 order)
-    #         "output_calQ_fr": output_calQ_fr,  # shape = (N,48) (in Q fr)   (in CALQ 1-48 order)
-    #         "cnn_deQ": cnn_deQ,
-    #         "cnn_enQ": cnn_enQ,
-    #         "val_sum": val_sum,
-    #         "val_max": val_max,
-    #     }
+    # reshape ILP result 
+    result = []
+    for i in range(number_variables):
+        result.append(value(variable[f"x{i}"]))
 
-    # aux_arrs = {"occupancy_1MT": occupancy_1MT}
+    # result
 
-    # #S: Evaluate the model and write results to result file
-    # compute_time_log = os.path.join(args.odir, args.models, "compute_time_log.txt") 
-    # emd_vals = evaluate_model_experiment(
-    #     model_info, charges, aux_arrs, eval_dict, args, [compute_time_log, None]
-    # )
-    # print(f"Average EMD: {np.mean(emd_vals)}")
+    result = np.array(result).reshape(len(l2_quant_pert),-1)
+    bitwidth_idxs = np.argmax(result, axis=0)
 
+    all_bit_widths = list(range(MIN_BITWIDTH,MAX_BITWIDTH+1))
+
+    print(f"Bit Width\tLayer1\t\tLayer2")
+    for idx in range(len(l2_quant_pert)):
+        print(f"{all_bit_widths[idx]:2} \
+                {result[idx][0]:4d} \
+                {result[idx][1]:3d}")
+
+    # get total bops
+    total_bops = 0
+    for idx in range(NUM_LAYERS):
+        bops_index = bitwidth_idxs[idx]*NUM_LAYERS + idx
+        total_bops += bops[bops_index]
+
+    print(f"Total BOPs: {total_bops}")
+    print(f"BOPs limit: {BOPS_LIMIT}")    
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

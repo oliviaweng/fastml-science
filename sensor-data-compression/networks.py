@@ -160,9 +160,9 @@ networks_by_name = [
         'CNN_kernel_size':[5],
         'CNN_strides':[(2,2)],
         'nBits_input': {'total': 10, 'integer': 3, 'keep_negative':1},
-        'nBits_encod': {'total':  16, 'integer': 6,'keep_negative':0}, # 0 to 2 range, 8 bit decimal 
-        'nBits_accum': {'total': 16, 'integer': 6, 'keep_negative':1},
-        'nBits_weight': {'total':  16, 'integer': 6, 'keep_negative':1}, # sign bit not included
+        'nBits_dense': {'total':  7, 'integer': 1, 'keep_negative':1}, 
+        'nBits_accum': {'total': 11, 'integer': 3, 'keep_negative':1},
+        'nBits_weight': {'total':  5, 'integer': 1, 'keep_negative':1}, # sign bit not included
         'is_fkeras': True, # This is an FKeras model
         'Dense_layer_nodes': [], 
         'learning_rate': 0.028, 
@@ -180,9 +180,9 @@ networks_by_name = [
         'CNN_kernel_size':[5],
         'CNN_strides':[(2,2)],
         'nBits_input': {'total': 10, 'integer': 3, 'keep_negative':1},
-        'nBits_encod': {'total':  16, 'integer': 6,'keep_negative':0}, # 0 to 2 range, 8 bit decimal 
-        'nBits_accum': {'total': 16, 'integer': 6, 'keep_negative':1},
-        'nBits_weight': {'total':  16, 'integer': 6, 'keep_negative':1}, # sign bit not included
+        'nBits_dense': {'total':  7, 'integer': 1, 'keep_negative':1}, 
+        'nBits_accum': {'total': 11, 'integer': 3, 'keep_negative':1},
+        'nBits_weight': {'total':  5, 'integer': 1, 'keep_negative':1}, # sign bit not included
         'is_fkeras': False, # This is not an FKeras model
         'Dense_layer_nodes': [], 
         'learning_rate': 0.028, 
@@ -200,9 +200,9 @@ networks_by_name = [
         'CNN_kernel_size':[3],
         'CNN_strides':[],
         'nBits_input': {'total': 10, 'integer': 3, 'keep_negative':1},
-        'nBits_encod': {'total':  16, 'integer': 6,'keep_negative':0}, # 0 to 2 range, 8 bit decimal 
-        'nBits_accum': {'total': 16, 'integer': 6, 'keep_negative':1},
-        'nBits_weight': {'total':  16, 'integer': 6, 'keep_negative':1}, # sign bit not included
+        'nBits_encod': {'total': 16, 'integer': 6, 'keep_negative':0}, # 0 to 2 range, 8 bit decimal 
+        'nBits_accum': {'total': 11, 'integer': 3, 'keep_negative':1},
+        'nBits_weight': {'total': 8, 'integer': 1, 'keep_negative':1}, # sign bit not included
         'is_fkeras': True, # This is an FKeras model
         'Dense_layer_nodes': [16], 
         'learning_rate': 0.1, 
@@ -220,9 +220,9 @@ networks_by_name = [
         'CNN_kernel_size':[3],
         'CNN_strides':[],
         'nBits_input': {'total': 10, 'integer': 3, 'keep_negative':1},
-        'nBits_encod': {'total':  16, 'integer': 6,'keep_negative':0}, # 0 to 2 range, 8 bit decimal 
-        'nBits_accum': {'total': 16, 'integer': 6, 'keep_negative':1},
-        'nBits_weight': {'total':  16, 'integer': 6, 'keep_negative':1}, # sign bit not included
+        'nBits_encod': {'total': 16, 'integer': 6, 'keep_negative':0}, # 0 to 2 range, 8 bit decimal 
+        'nBits_accum': {'total': 11, 'integer': 3, 'keep_negative':1},
+        'nBits_weight': {'total': 8, 'integer': 1, 'keep_negative':1}, # sign bit not included
         'is_fkeras': False, # This is not an FKeras model
         'Dense_layer_nodes': [16], 
         'learning_rate': 0.1, 
