@@ -191,6 +191,8 @@ class qDenseCNN(denseCNN):
                     bias_quantizer=dense_Qbits,
                     ber=self.ber,
                 )(x)
+                x = QActivation(qa_encod, name='en_dense_act'+str(i))(x)
+
             else:
                 x = QDense(
                     n_nodes,  
@@ -198,6 +200,7 @@ class qDenseCNN(denseCNN):
                     kernel_quantizer=dense_Qbits, 
                     bias_quantizer=dense_Qbits
                 )(x)
+                x = QActivation(qa_encod, name='en_dense_act'+str(i))(x)
 
 
         #x = QDense(encoded_dim, activation='relu', name='encoded_vector',
