@@ -44,5 +44,4 @@ python3 iccad_2023_experiment1.py \
         --ieu_pefd_name "${model_id}_pefd_vinputs${vinputs}_vsystem${vsystem}_b${lbi}-${hbi}.pkl" \
         --ieu_git_step $git_step \
         --ieu_lbi $lbi
-        exit
 done
