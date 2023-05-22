@@ -18,7 +18,7 @@ git_step=$6
 
 for (( i=$lbi; i<$hbi ; i++ )); do 
 echo "Sanity check ber = 0"
-python3 sampling_faulty_eval_experiment.py \
+python3 iccad_2023_experiment1.py \
         -i $DATASET \
         -o ${OUTPUT_DIR}/ber0 \
         --AEonly 1 \
@@ -39,7 +39,6 @@ python3 sampling_faulty_eval_experiment.py \
         --num_val_inputs 648002 \
         --num_hess_inputs 8192 \
         --ieu_model_id $model_id \
-        --ieu_vinputs $vinputs \
         --ieu_vsystem_id $vsystem \
         --ieu_efx_dir $IEU_EFX_DIR \
         --ieu_pefr_name "${model_id}_pefr_vinputs${vinputs}_vsystem${vsystem}_b${lbi}-${hbi}.pkl" \
