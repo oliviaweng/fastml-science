@@ -36,7 +36,7 @@ python3 iccad_2023_experiment1.py \
         --bfr_start $i \
         --bfr_end   $((i+1)) \
         --bfr_step  1 \
-        --num_val_inputs 648002 \
+        --num_val_inputs 20000 \
         --num_hess_inputs 8192 \
         --ieu_model_id $model_id \
         --ieu_vsystem_id $vsystem \
