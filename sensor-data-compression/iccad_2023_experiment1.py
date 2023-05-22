@@ -530,8 +530,8 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--ieu_vinputs",
-        type=int,
-        default=256,
+        type=str,
+        default="256",
         help="IEU val inputs for run",
     )
     parser.add_argument(
