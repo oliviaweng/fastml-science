@@ -119,8 +119,8 @@ def main(args):
     with open("pickled--data_values--phys_values--EoL_dataset.pkl", "r") as f:
         pickled_obj = f.read()
     data_values, phys_values = pickle.loads(codecs.decode(pickled_obj.encode(), "base64"))
-    print(f"Time to load data: {time.time() - ld_data_time_s} seconds")
-    exp_file_write(efd_fp, f'Time to load data: {time.time() - ld_data_time_s} seconds\n')
+    ld_data_time = time.time() - ld_data_time_s
+    print(f"Time to load data: {ld_data_time} seconds")
 
     normdata, maxdata, sumdata = normalize_data(data_values)
     maxdata = maxdata / 35.0  # normalize to units of transverse MIPs
@@ -226,21 +226,12 @@ def main(args):
         model_info["m_autoCNN"] = f_autoencoder
         model_info["m_autoCNNen"] = fmodel.model
 
-        # cnn_enQ = fmodel.model.predict(curr_val_input, batch_size=128)
-        # cnn_deQ = model.decoder.predict(cnn_enQ)
-        # cnn_enQ = np.reshape(cnn_enQ, (len(cnn_enQ), model.pams["encoded_dim"], 1))
+
         time_start = time.time()
         cnn_enQ = None
         cnn_deQ = f_autoencoder.predict(curr_val_input, batch_size=512)
         input_Q = curr_val_input
 
-        #I: Useful for debugging
-        #exp_file_write(efd_fp, f"Eval Only: {args.evalOnly}\n")
-        #exp_file_write(efd_fp, f"'val_input' type : {type(val_input)}\n")
-        #exp_file_write(efd_fp, f"'val_input' shape: {val_input.shape}\n")
-        #exp_file_write(efd_fp, f"'cnn_enQ' type : {type(cnn_enQ)}\n")
-        #exp_file_write(efd_fp, f"'cnn_enQ' shape: {cnn_enQ.shape}\n")
-        #pre_exit_procedure([exp_file_debug, exp_file_result])
 
         input_calQ = model.mapToCalQ(input_Q)  # shape = (N,48) in CALQ order
         output_calQ_fr = model.mapToCalQ(cnn_deQ)  # shape = (N,48) in CALQ order
@@ -307,35 +298,32 @@ def main(args):
         predict_time = time.time() - time_start
         print(f"emd = {loss_val}")
         print(f"Time to predict = {predict_time}")
-        #######################
-        # New Code START
-        #######################
+
+
         hess_start = time.time()
         hess = HessianMetrics(f_autoencoder, telescopeMSE8x8_for_FKeras, curr_hess_input, curr_hess_input, batch_size=512)
         hess_trace = hess.trace_hack(tolerance=1e-1)
         trace_time = time.time() - hess_start
         print(f"Hessian trace compute time: {trace_time} seconds")
         print(f"hess_trace = {hess_trace}")
-        #######################
-        # New Code END
-        #######################
+
         
         #S: Specify pefx file paths
-        # fp_pefr = os.path.join(args.ieu_efx_dir, args.ieu_model_id, args.ieu_pefr_name)
-        # fp_pefd = os.path.join(args.ieu_efx_dir, args.ieu_model_id, args.ieu_pefd_name)
+        fp_pefr = os.path.join(args.ieu_efx_dir, args.ieu_model_id, args.ieu_pefr_name)
+        fp_pefd = os.path.join(args.ieu_efx_dir, args.ieu_model_id, args.ieu_pefd_name)
 
         # # @Andy: Only need to store strace and loss val, 
         # #        no miss predictions for this model 
-        # #S: Update corresponding pefr file
-        # time_store_pefr = ieu.store_pefr_econ_t(fp_pefr, bit_i, hess_trace, loss_val)
+        #S: Update corresponding pefr file
+        time_store_pefr = ieu.store_pefr_econ_t(fp_pefr, bit_i, hess_trace, loss_val)
 
         # #S: Update corresponding pefd file
-        # subtime_dataset   = 0
-        # subtime_gt_metric = predict_time
-        # subtime_ht_metric = trace_time
-        # subtime_pefr      = time_store_pefr
-        # my_sub_times = (subtime_dataset, subtime_gt_metric, subtime_ht_metric, subtime_pefr)
-        # time_store_pefd = ieu.store_pefd_experiment1(fp_pefd, bit_i, fi_loop_start, my_sub_times)
+        subtime_dataset   = ld_data_time
+        subtime_gt_metric = predict_time
+        subtime_ht_metric = trace_time
+        subtime_pefr      = time_store_pefr
+        my_sub_times = (subtime_dataset, subtime_gt_metric, subtime_ht_metric, subtime_pefr)
+        time_store_pefd = ieu.store_pefd_experiment1(fp_pefd, bit_i, fi_loop_start, my_sub_times)
 
         # #S: Update IEU FKeras-Experiments repo by pushing pefd files (pefr files not tracked until later)
         # bits_flipped_by_vsystem = args.bfr_start - args.ieu_lbi
@@ -343,11 +331,6 @@ def main(args):
         #     subprocess.run("./scripts/iccad_2023_experiment1_git_commands.sh", shell=True)
         
         break
-        
-        #I: Useful for debugging
-        # for fmodel_layer in fmodel.model.layers:
-        #     if fmodel_layer.__class__.__name__ in ["FQDense", "FQConv2D"]:
-        #         print(f"Model flbrs = {fmodel_layer.flbrs}")
 
 
 if __name__ == "__main__":
