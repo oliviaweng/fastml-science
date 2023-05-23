@@ -23,6 +23,8 @@ from train import (
     unnormalize,
 )
 
+import codecs
+import pickle
 
 def exp_file_write(file_path, input_str, open_mode="a"):
     with open(file_path, open_mode) as f:
@@ -138,7 +140,7 @@ def main(args):
 
     # Evaluate the model
     print("Computing Hessian Metrics...")
-    hess_start = time.time()
+    # hess_start = time.time()
     hess = HessianMetrics(
         m_autoCNN, 
         telescopeMSE8x8_for_FKeras, 
@@ -146,56 +148,50 @@ def main(args):
         curr_val_input,
         batch_size=512
     )
-    hess_trace, layer_traces = hess.trace_hack(max_iter=500)
-    trace_time = time.time() - hess_start
-    print(f'Hessian trace: {hess_trace}')
-    print(f"layer traces {layer_traces}")
-    print(f"Hessian trace compute time: {trace_time} seconds\n")
+    # hess_trace, layer_traces = hess.trace_hack(max_iter=500)
+    # trace_time = time.time() - hess_start
+    # print(f'Hessian trace: {hess_trace}')
+    # print(f"layer traces {layer_traces}")
+    # print(f"Hessian trace compute time: {trace_time} seconds\n")
 
-    exp_file_write(
-        os.path.join(args.odir, "hessian_trace_debug.txt"), 
-        f"{args.num_val_inputs}: {hess_trace}\n"
-    )
-    exp_file_write(
-        os.path.join(args.odir, "hessian_trace_debug.txt"), 
-        f"layer_traces: {layer_traces}\n"
-    )
-    exp_file_write(
-        os.path.join(args.odir, "hessian_trace_debug.txt"), 
-        f"Num val inputs {args.num_val_inputs} compute time: {trace_time}\n"
-    )
+    # exp_file_write(
+    #     os.path.join(args.odir, "hessian_trace_debug.txt"), 
+    #     f"{args.num_val_inputs}: {hess_trace}\n"
+    # )
+    # exp_file_write(
+    #     os.path.join(args.odir, "hessian_trace_debug.txt"), 
+    #     f"layer_traces: {layer_traces}\n"
+    # )
+    # exp_file_write(
+    #     os.path.join(args.odir, "hessian_trace_debug.txt"), 
+    #     f"Num val inputs {args.num_val_inputs} compute time: {trace_time}\n"
+    # )
         
 
-    # hess_start = time.time()
-    # top_k = 8
-    # BIT_WIDTH = 5
-    # strategy = "sum"
-    # # Hessian model-wide sensitivity ranking
-    # eigenvalues, eigenvectors = hess.top_k_eigenvalues_hack(k=top_k, max_iter=500)
-    # print("Eigenvectors")
-    # for i in range(len(eigenvalues)):
-    #     print(f"Top {i+1} eigenvalue: {eigenvalues[i]}")
-    # print(f'Hessian eigenvalue compute time: {time.time() - hess_start} seconds\n')
-    # # eigenvalues = None
-    # rank_start_time = time.time()
-    # param_ranking, param_scores = hess.hessian_ranking(
-    #     eigenvectors, eigenvalues=eigenvalues, k=top_k, strategy=strategy
-    # )
-    # # bitwise_rank, bitwise_scores = hess.rank_bits(param_scores, 5) # add m = 5 bits (doesn't work; TODO: delete)
-    # bitwise_rank = hess.convert_param_ranking_to_msb_bit_ranking(param_ranking, BIT_WIDTH)
+    hess_start = time.time()
+    top_k = 8
+    BIT_WIDTH = 6
+    strategy = "sum"
+    # Hessian model-wide sensitivity ranking
+    eigenvalues, eigenvectors = hess.top_k_eigenvalues_hack(k=top_k, max_iter=500)
+    print("Eigenvectors")
+    for i in range(len(eigenvalues)):
+        print(f"Top {i+1} eigenvalue: {eigenvalues[i]}")
+    print(f'Hessian eigenvalue compute time: {time.time() - hess_start} seconds\n')
+    # eigenvalues = None
+    rank_start_time = time.time()
+    param_ranking, param_scores = hess.hessian_ranking(
+        eigenvectors, eigenvalues=eigenvalues, k=top_k, strategy=strategy
+    )
+    # bitwise_rank, bitwise_scores = hess.rank_bits(param_scores, 5) # add m = 5 bits (doesn't work; TODO: delete)
+    bitwise_rank = hess.convert_param_ranking_to_msb_bit_ranking(param_ranking, BIT_WIDTH)
 
-    # ranking_file = os.path.join(args.odir, f"top{top_k}_hess_sum_eigenval_msb_bit_ranking.txt")
-    # exp_file_write(
-    #   ranking_file,
-    #    f"Hessian ranking (msb sum eigenvector components) for model (bit idx)\n",
-    #    open_mode="w"
-    # )
-    # for i in range(len(bitwise_rank)):
-    #     exp_file_write(
-    #         ranking_file,
-    #         f"{bitwise_rank[i]}\n",
-    #         open_mode="a"
-    #     )
+    pickled_ranking_file = os.path.join(args.odir, f"hessian_ranked_model_bits_iccad_2023_ECONT-baseline.pkl")
+    
+    obj = list(bitwise_rank)
+    pickled_obj = codecs.encode(pickle.dumps(obj), "base64").decode()
+    with open(pickled_ranking_file, "w") as f:
+        f.write(pickled_obj)
 
 
 
