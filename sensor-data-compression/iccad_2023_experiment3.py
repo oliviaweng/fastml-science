@@ -233,7 +233,7 @@ def main(args):
         ### based on selective TMR list
         bits_to_actually_flip = list()
         for bit in bits_to_potentially_flip:
-            if protected_bits_dict.get(bit) != None:
+            if protected_bits_dict.get(bit) == None:
                 bits_to_actually_flip.append(bit)
 
         delta_multi_bits_to_flip = args.num_multi_bit_flips-len(bits_to_actually_flip)
@@ -242,7 +242,7 @@ def main(args):
         bit_flip_info_str += f"--Desired bits to flip: {args.num_multi_bit_flips}\n"
         bit_flip_info_str += f"--Bits to actually flip: {len(bits_to_actually_flip)}\n"
         bit_flip_info_str += f"--Desired - Actual: {delta_multi_bits_to_flip}\n\n"
-        print(bit_flip_info_str)
+        # print(bit_flip_info_str)
 
         #S: Flip the desired bit in the model 
         fmodel.explicit_select_model_param_bitflip(bits_to_actually_flip)
@@ -328,6 +328,11 @@ def main(args):
         predict_time = time.time() - time_start
         print(f"emd = {loss_val}")
         print(f"Time to predict = {predict_time}")
+        
+        print(bit_flip_info_str)
+        print(f"delta_multi_bits_to_flip = {delta_multi_bits_to_flip} | {type(delta_multi_bits_to_flip)}")
+        print(f"args.num_multi_bit_flips = {args.num_multi_bit_flips} | {type(args.num_multi_bit_flips)}")
+
 
 
         # hess_start = time.time()
@@ -344,7 +349,7 @@ def main(args):
 
 
         #S: Update corresponding pefr file
-        time_store_pefr = ieu.store_pefr_econ_t(fp_pefr, loop_i, (delta_multi_bits_to_flip, args.num_multi_bit_flips), loss_val)
+        time_store_pefr = ieu.store_pefr_econ_t(fp_pefr, loop_i, (len(bits_to_actually_flip), args.num_multi_bit_flips), loss_val)
 
         # #S: Update corresponding pefd file
         subtime_dataset   = ld_data_time
