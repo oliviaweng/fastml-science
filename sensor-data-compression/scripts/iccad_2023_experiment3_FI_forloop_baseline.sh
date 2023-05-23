@@ -20,7 +20,7 @@ num_bits_to_protect=$8
 
 for (( i=$lbi; i<$hbi ; i++ )); do 
 echo "Sanity check ber = 0"
-python3 iccad_2023_experiment1.py \
+python3 iccad_2023_experiment3.py \
         -i $DATASET \
         -o ${OUTPUT_DIR}/ber0 \
         --AEonly 1 \
