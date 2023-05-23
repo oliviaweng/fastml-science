@@ -103,9 +103,9 @@ def main(args):
         )
 
     # load data
-    # ld_data_time_s = time.time()
-    # data_values, phys_values = load_data(args)
-    # print(f"Time to load data: {time.time() - ld_data_time_s}")
+    ld_data_time_s = time.time()
+    data_values, phys_values = load_data(args)
+    print(f"Time to load data: {time.time() - ld_data_time_s}")
     
     ## Save a pickled/serialized representation of the data instances
     # obj = (data_values, phys_values)
@@ -114,13 +114,13 @@ def main(args):
     #     f.write(pickled_obj)
     
     # Load the data instances using the pickle string
-    ld_data_time_s = time.time()
-    pickled_obj = "" 
-    with open("pickled--data_values--phys_values--EoL_dataset.pkl", "r") as f:
-        pickled_obj = f.read()
-    data_values, phys_values = pickle.loads(codecs.decode(pickled_obj.encode(), "base64"))
-    print(f"Time to load data: {time.time() - ld_data_time_s} seconds")
-    exp_file_write(efd_fp, f'Time to load data: {time.time() - ld_data_time_s} seconds\n')
+    # ld_data_time_s = time.time()
+    # pickled_obj = "" 
+    # with open("pickled--data_values--phys_values--EoL_dataset.pkl", "r") as f:
+    #     pickled_obj = f.read()
+    # data_values, phys_values = pickle.loads(codecs.decode(pickled_obj.encode(), "base64"))
+    # print(f"Time to load data: {time.time() - ld_data_time_s} seconds")
+    # exp_file_write(efd_fp, f'Time to load data: {time.time() - ld_data_time_s} seconds\n')
 
     normdata, maxdata, sumdata = normalize_data(data_values)
     maxdata = maxdata / 35.0  # normalize to units of transverse MIPs
