@@ -199,10 +199,10 @@ def main(args):
 
     #S: Configure which bits will be flipped
     # bit_flip_range_step = (0,2, 1)
-    bit_flip_range_step = (0,args.num_multi_bit_flips, 1)
+    bit_flip_range_step = (0,args.num_FI_loops, 1)
     if (args.use_custom_bfr == 1): 
-        bfr_start_ok = (0 <= args.bfr_start) and (args.bfr_start<= args.num_multi_bit_flips)
-        bfr_end_ok   = (0 <= args.bfr_end  ) and (args.bfr_end  <= args.num_multi_bit_flips)
+        bfr_start_ok = (0 <= args.bfr_start) and (args.bfr_start<= args.num_FI_loops)
+        bfr_end_ok   = (0 <= args.bfr_end  ) and (args.bfr_end  <= args.num_FI_loops)
         bfr_ok = bfr_start_ok and bfr_end_ok
         if bfr_ok:
             bit_flip_range_step = (args.bfr_start, args.bfr_end, args.bfr_step)
@@ -548,6 +548,12 @@ if __name__ == "__main__":
         type=int, 
         default=8192,
         help="Number of inputs to compute hessian trace"
+    )
+    parser.add_argument(
+        "--num_FI_loops",
+        type=int, 
+        default=14000,
+        help="Number of fault injection loop to run"
     )
     parser.add_argument(
         "--num_multi_bit_flips",
