@@ -180,7 +180,7 @@ def main(args):
     print(f'Hessian eigenvalue compute time: {time.time() - hess_start} seconds\n')
     # eigenvalues = None
     rank_start_time = time.time()
-    param_ranking, param_scores = hess.hessian_ranking(
+    param_ranking, param_scores = hess.hessian_ranking_hack(
         eigenvectors, eigenvalues=eigenvalues, k=top_k, strategy=strategy
     )
     # bitwise_rank, bitwise_scores = hess.rank_bits(param_scores, 5) # add m = 5 bits (doesn't work; TODO: delete)
@@ -193,30 +193,15 @@ def main(args):
     with open(pickled_ranking_file, "w") as f:
         f.write(pickled_obj)
 
+    gradient_rank, _ = hess.gradient_ranking_hack()
+    bitwise_rank = hess.convert_param_ranking_to_msb_bit_ranking(gradient_rank, BIT_WIDTH)
+    
+    pickled_ranking_file = f"gradient_ranked_model_bits_iccad_2023_ECONT-baseline.pkl"
+    obj = list(bitwise_rank)
+    pickled_obj = codecs.encode(pickle.dumps(obj), "base64").decode()
+    with open(pickled_ranking_file, "w") as f:
+        f.write(pickled_obj)
 
-
-    # Hessian layer-wise sensitivity ranking
-    # layer_eigenvalues, layer_eigenvectors = hess.layer_top_k_eigenvalues_hack(k=top_k, max_iter=500)
-    # for layer in layer_eigenvalues:
-    #     print(f'Layer {layer} top eigenvalue: {layer_eigenvalues[layer]}')
-    # for layer in layer_eigenvectors:
-    #     for i in range(len(layer_eigenvectors[layer])):
-    #         print(f'Layer {layer} top {i+1} eigenvector shapes:')
-    #         for vi in layer_eigenvectors[layer][i]:
-    #             print(f'{vi.shape}')
-    # print(f'Hessian eigenvalue compute time: {time.time() - hess_start} seconds\n')
-    # sensitivity_ranking = hess.layer_hessian_ranking(layer_eigenvectors, layer_eigenvalues=layer_eigenvalues, k=top_k)
-    # for layer in sensitivity_ranking:
-    #     exp_file_write(
-    #         os.path.join(args.odir, f"top{top_k}_hess_eigenval_ranking_layer_{layer}.txt"),
-    #         f"Hessian ranking (weighted sum * eigenvalue) for layer {layer} (param idx, rank)\n",
-    #         open_mode="w"
-    #     )
-    #     for i in range(len(sensitivity_ranking[layer])):
-    #         exp_file_write(
-    #             os.path.join(args.odir, f"top{top_k}_hess_eigenval_ranking_layer_{layer}.txt"),
-    #             f"{sensitivity_ranking[layer][i][0]}, {abs(sensitivity_ranking[layer][i][1])}\n"
-    #         )
 # Gradient ranking
 #     grad_start = time.time()
 #     grad_ranking, gradients = hess.layer_gradient_ranking()
