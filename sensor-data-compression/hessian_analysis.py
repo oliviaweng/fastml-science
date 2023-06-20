@@ -141,12 +141,18 @@ def main(args):
     # Evaluate the model
     print("Computing Hessian Metrics...")
     # hess_start = time.time()
+    
+    processed_layer_precision_info = None
+    if args.layer_precision_info != None:
+        processed_layer_precision_info = eval(args.layer_precision_info[1:-1])
+
     hess = HessianMetrics(
         m_autoCNN, 
         telescopeMSE8x8_for_FKeras, 
         curr_val_input, 
         curr_val_input,
-        batch_size=512
+        batch_size=512,
+        layer_precision_info=processed_layer_precision_info
     )
     # hess_trace, layer_traces = hess.trace_hack(max_iter=500)
     # trace_time = time.time() - hess_start
@@ -170,7 +176,7 @@ def main(args):
 
     hess_start = time.time()
     top_k = 8
-    BIT_WIDTH = 6
+    BIT_WIDTH = args.bit_width
     strategy = "sum"
     # Hessian model-wide sensitivity ranking
     eigenvalues, eigenvectors = hess.top_k_eigenvalues_hack(k=top_k, max_iter=500)
@@ -186,7 +192,7 @@ def main(args):
     # bitwise_rank, bitwise_scores = hess.rank_bits(param_scores, 5) # add m = 5 bits (doesn't work; TODO: delete)
     bitwise_rank = hess.convert_param_ranking_to_msb_bit_ranking(param_ranking, BIT_WIDTH)
 
-    pickled_ranking_file = os.path.join(args.odir, f"hessian_ranked_model_bits_iccad_2023_ECONT-baseline.pkl")
+    pickled_ranking_file = os.path.join(args.odir, f"hessian_ranked_model_bits_iccad_2023_{args.model_id}.pkl")
     
     obj = list(bitwise_rank)
     pickled_obj = codecs.encode(pickle.dumps(obj), "base64").decode()
@@ -196,7 +202,7 @@ def main(args):
     gradient_rank, _ = hess.gradient_ranking_hack()
     bitwise_rank = hess.convert_param_ranking_to_msb_bit_ranking(gradient_rank, BIT_WIDTH)
     
-    pickled_ranking_file = f"gradient_ranked_model_bits_iccad_2023_ECONT-baseline.pkl"
+    pickled_ranking_file = os.path.join(args.odir, f"gradient_ranked_model_bits_iccad_2023_{args.model_id}.pkl")
     obj = list(bitwise_rank)
     pickled_obj = codecs.encode(pickle.dumps(obj), "base64").decode()
     with open(pickled_ranking_file, "w") as f:
@@ -405,6 +411,22 @@ if __name__ == "__main__":
         type=int,
         default=2,
         help="Number of validation inputs to use for evaluating the faulty models",
+    )
+    parser.add_argument(
+        "--bit_width",
+        type=int,
+        help="Bitwidth of the weights (assuming single precision)",
+    )
+    parser.add_argument(
+        "--layer_precision_info",
+        type=str,
+        default=None,
+        help="List of tuples describing precision information for each layer (assuming mixed precision)",
+    )
+    parser.add_argument(
+        "--model_id",
+        type=str,
+        help="Model ID string for pickling",
     )
 
     # args.bfr_start, args.bfr_end, args.bfr_step
