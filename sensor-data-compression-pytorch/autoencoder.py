@@ -1,14 +1,7 @@
-import ot
-import time
 import torch
 import torch.nn as nn
 import pytorch_lightning as pl
-import multiprocessing
-import itertools
 
-from qtorch import FixedPoint
-from qtorch.optim import OptimLP
-from qtorch.quant import Quantizer, fixed_point_quantize
 from collections import OrderedDict
 from telescope_pt import telescopeMSE8x8, move_constants_to_gpu
 from autoencoder_datamodule import ARRANGE, ARRANGE_MASK
@@ -159,31 +152,31 @@ class AutoEncoder(pl.LightningModule):
                 ]
             )
         )
-        if self.quantize:
-            self.automatic_optimization = False
-            input_forward_num = FixedPoint(wl=4, fl=7) # 11-bit input
-            input_quantizer = Quantizer(forward_number=input_forward_num, forward_rounding="stochastic")
-            accum_forward_num = FixedPoint(wl=4, fl=8) # 12-bit accumulator
-            accum_quantizer = Quantizer(forward_number=accum_forward_num, forward_rounding="stochastic")
-            encoder_out_forward_num = FixedPoint(wl=2, fl=8) # 10-bit encoder output
-            encoder_out_quantizer = Quantizer(
-                forward_number=encoder_out_forward_num, 
-                forward_rounding="stochastic"
-            )
-            self.encoder = nn.Sequential(OrderedDict([
-                ("input_quant", input_quantizer),
-                ("qconv", nn.Conv2d(1, 8, kernel_size=3, stride=2, padding=1)),
-                ("accum_quant1", accum_quantizer),
-                ("relu", nn.ReLU()),
-                ("accum_quant2", accum_quantizer),
-                ("flatten", nn.Flatten()),
-                ("qenc_dense", nn.Linear(128, self.encoded_dim)),
-                ("encoder_out_quant1", encoder_out_quantizer),
-                ("relu1", nn.ReLU()),
-                ("encoder_out_quant2", encoder_out_quantizer),
-            ]))
+        # if self.quantize: # TODO: rebuild with brevitas
+        #     self.automatic_optimization = False
+        #     input_forward_num = FixedPoint(wl=4, fl=7) # 11-bit input
+        #     input_quantizer = Quantizer(forward_number=input_forward_num, forward_rounding="stochastic")
+        #     accum_forward_num = FixedPoint(wl=4, fl=8) # 12-bit accumulator
+        #     accum_quantizer = Quantizer(forward_number=accum_forward_num, forward_rounding="stochastic")
+        #     encoder_out_forward_num = FixedPoint(wl=2, fl=8) # 10-bit encoder output
+        #     encoder_out_quantizer = Quantizer(
+        #         forward_number=encoder_out_forward_num, 
+        #         forward_rounding="stochastic"
+        #     )
+        #     self.encoder = nn.Sequential(OrderedDict([
+        #         ("input_quant", input_quantizer),
+        #         ("qconv", nn.Conv2d(1, 8, kernel_size=3, stride=2, padding=1)),
+        #         ("accum_quant1", accum_quantizer),
+        #         ("relu", nn.ReLU()),
+        #         ("accum_quant2", accum_quantizer),
+        #         ("flatten", nn.Flatten()),
+        #         ("qenc_dense", nn.Linear(128, self.encoded_dim)),
+        #         ("encoder_out_quant1", encoder_out_quantizer),
+        #         ("relu1", nn.ReLU()),
+        #         ("encoder_out_quant2", encoder_out_quantizer),
+        #     ]))
 
-            self.weight_quantizer = lambda x : fixed_point_quantize(x, wl=2, fl=4, rounding="stochastic")
+        #     self.weight_quantizer = lambda x : fixed_point_quantize(x, wl=2, fl=4, rounding="stochastic")
 
         self.decoder = nn.Sequential(OrderedDict([
             ("dec_dense", nn.Linear(self.encoded_dim, 128)),
@@ -258,13 +251,13 @@ class AutoEncoder(pl.LightningModule):
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=1e-3)
-        if self.quantize:
-            optimizer = OptimLP(
-                optimizer, 
-                weight_quant=self.weight_quantizer,
-                grad_quant=self.weight_quantizer,
-                momentum_quant=self.weight_quantizer,
-            )
+        # if self.quantize:  # TODO: rebuild with brevitas
+        #     optimizer = OptimLP(
+        #         optimizer, 
+        #         weight_quant=self.weight_quantizer,
+        #         grad_quant=self.weight_quantizer,
+        #         momentum_quant=self.weight_quantizer,
+        #     )
         return optimizer
 
     def training_step(self, batch, batch_idx):

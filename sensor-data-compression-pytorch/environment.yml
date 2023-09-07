@@ -1,0 +1,27 @@
+name: auto
+channels:
+  - conda-forge
+dependencies:
+  - python=3.9
+  - conda-forge::cudatoolkit=11.6
+  - pytorch::pytorch==1.12.1
+  - pytorch::torchaudio==0.12.1
+  - pytorch::torchvision==0.13.1
+  - conda-forge::cupy
+  - conda-forge::matplotlib
+  - conda-forge::torchinfo
+  - conda-forge::gpustat
+  - conda-forge::pandas
+  - conda-forge::scipy
+  - conda-forge::numpy
+  - conda-forge::numba
+  - conda-forge::pillow
+  - conda-forge::pot
+  - conda-forge::mplhep
+  - conda-forge::pytorch-lightning==1.9.0
+  - conda-forge::tensorboard
+  - conda-forge::google-auth==2.13.0
+  - conda-forge::pip
+  - pip:
+    - opencv-python
+    - brevitas

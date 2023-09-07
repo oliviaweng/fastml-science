@@ -11,10 +11,10 @@ services:
             - '../../hgcal22data_signal_driven_ttbar_v11:/app/data/hgcal22data_signal_driven_ttbar_v11'
             - '../../elegun-low-pt-high-eta:/app/data/elegun-low-pt-high-eta'
         image: autoencoder
-        deploy:
-          resources:
-            reservations:
-              devices:
-                - driver: nvidia
-                  count: all
-                  capabilities: [gpu]
+        # deploy:
+        #   resources:
+        #     reservations:
+        #       devices:
+        #         - driver: nvidia
+        #           count: all
+        #           capabilities: [gpu]

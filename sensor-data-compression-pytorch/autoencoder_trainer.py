@@ -2,7 +2,6 @@ import os
 import time
 from tqdm import tqdm
 import torch
-import qtorch
 import torchinfo
 import numpy as np
 import multiprocessing
@@ -49,6 +48,7 @@ def test_model(model, test_loader):
 
 
 def main(args):
+    pl.seed_everything(args.seed, workers=True)
     if not os.path.exists(args.save_dir):
         os.makedirs(args.save_dir)
     # ------------------------
@@ -86,9 +86,11 @@ def main(args):
     trainer = pl.Trainer(
         max_epochs=args.max_epochs,
         accelerator=args.accelerator,
+        devices=1,
         logger=tb_logger,
         callbacks=[top3_checkpoint_callback],
         fast_dev_run=args.fast_dev_run,
+        deterministic=True,
     )
 
     # ------------------------
@@ -108,8 +110,9 @@ def main(args):
         model.set_val_sum(val_sum)
         data_module.setup("test")
         test_results = test_model(model, data_module.test_dataloader())
+        eval_tag = "_eval" if args.evaluate else ""
         test_results_log = os.path.join(
-            args.save_dir, args.experiment_name, args.experiment_name + "_emd.txt"
+            args.save_dir, args.experiment_name, args.experiment_name + eval_tag + "_emd.txt"
         )
         with open(test_results_log, "w") as f:
             f.write(str(test_results))
@@ -120,6 +123,7 @@ if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("--process_data", action="store_true", default=False)
     parser.add_argument("--max_epochs", type=int, default=100)
+    parser.add_argument("--seed", type=int, default=1)
     parser.add_argument("--save_dir", type=str, default="./pt_autoencoder_test")
     parser.add_argument("--experiment_name", type=str, default="autoencoder")
     parser.add_argument("--fast_dev_run", action="store_true", default=False)
