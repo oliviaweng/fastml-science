@@ -61,9 +61,10 @@ def main(args):
     # ------------------------
     # 1 INIT LIGHTNING MODEL
     # ------------------------
-    model = AutoEncoder(accelerator=args.accelerator, quantize=args.quantize)
-
-
+    model = AutoEncoder(
+        accelerator=args.accelerator, 
+        quantize_act=args.quantize_act,
+    )
 
     torchinfo.summary(model, input_size=(1, 1, 8, 8))  # (B, C, H, W)
 
@@ -83,14 +84,19 @@ def main(args):
     # ------------------------
     # 2 INIT TRAINER
     # ------------------------
+    if args.accelerator == "gpu":
+        devices = 1 # we support single-gpu training only
+    else: # training on cpu
+        devices = "auto"
+    
     trainer = pl.Trainer(
         max_epochs=args.max_epochs,
         accelerator=args.accelerator,
-        devices=1,
         logger=tb_logger,
         callbacks=[top3_checkpoint_callback],
         fast_dev_run=args.fast_dev_run,
-        deterministic=True,
+        deterministic='warn',
+        devices=devices, 
     )
 
     # ------------------------
@@ -134,10 +140,10 @@ if __name__ == "__main__":
     parser.add_argument("--train", action="store_true", default=False)
     parser.add_argument("--evaluate", action="store_true", default=False)
     parser.add_argument(
-        "--quantize", 
+        "--quantize_act", 
         action="store_true", 
         default=False, 
-        help="quantize model to 6-bit fixed point (1 signed bit, 1 integer bit, 4 fractional bits)"
+        help="quantize activations only"
     )
 
     # Add dataset-specific args

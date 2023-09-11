@@ -1,5 +1,8 @@
 import torch
 import torch.nn as nn
+import brevitas.nn as qnn
+from brevitas.quant import Int8BiasPerTensorFixedPointInternalScaling
+from brevitas.inject.enum import QuantType, ScalingImplType
 import pytorch_lightning as pl
 
 from collections import OrderedDict
@@ -132,14 +135,14 @@ class AutoEncoder(pl.LightningModule):
     XDR AutoEncoder class
     """
 
-    def __init__(self, accelerator="gpu", quantize=False) -> None:
+    def __init__(self, accelerator="gpu", quantize_act=False) -> None:
         super().__init__()
 
         self.encoded_dim = 16
         self.shape = (1, 8, 8)  # PyTorch defaults to (C, H, W)
         self.val_sum = None
         self.accelerator = accelerator
-        self.quantize = quantize
+        self.quantize_act = quantize_act
 
         self.encoder = nn.Sequential(
             OrderedDict(
@@ -152,8 +155,11 @@ class AutoEncoder(pl.LightningModule):
                 ]
             )
         )
-        # if self.quantize: # TODO: rebuild with brevitas
-        #     self.automatic_optimization = False
+        if self.quantize_act: # Quantize activations only
+            print("Quantizing activations only!")
+            self.input_quant = qnn.QuantIdentity(
+                bit_width=11, quant_type=QuantType.INT,
+            )
         #     input_forward_num = FixedPoint(wl=4, fl=7) # 11-bit input
         #     input_quantizer = Quantizer(forward_number=input_forward_num, forward_rounding="stochastic")
         #     accum_forward_num = FixedPoint(wl=4, fl=8) # 12-bit accumulator
@@ -163,20 +169,24 @@ class AutoEncoder(pl.LightningModule):
         #         forward_number=encoder_out_forward_num, 
         #         forward_rounding="stochastic"
         #     )
-        #     self.encoder = nn.Sequential(OrderedDict([
-        #         ("input_quant", input_quantizer),
-        #         ("qconv", nn.Conv2d(1, 8, kernel_size=3, stride=2, padding=1)),
-        #         ("accum_quant1", accum_quantizer),
-        #         ("relu", nn.ReLU()),
-        #         ("accum_quant2", accum_quantizer),
-        #         ("flatten", nn.Flatten()),
-        #         ("qenc_dense", nn.Linear(128, self.encoded_dim)),
-        #         ("encoder_out_quant1", encoder_out_quantizer),
-        #         ("relu1", nn.ReLU()),
-        #         ("encoder_out_quant2", encoder_out_quantizer),
-        #     ]))
-
-        #     self.weight_quantizer = lambda x : fixed_point_quantize(x, wl=2, fl=4, rounding="stochastic")
+            self.encoder = nn.Sequential(OrderedDict([
+                ("input_quant", self.input_quant),
+                ("conv", nn.Conv2d(1, 8, kernel_size=3, stride=2, padding=1)),
+                # elem-wise op, e.g., BN
+                ("qrelu", qnn.QuantReLU(
+                    bit_width=12, 
+                    quant_type=QuantType.INT, 
+                    # scaling_impl_type=ScalingImplType.PARAMETER,
+                )),
+                ("flatten", nn.Flatten()),
+                ("enc_dense", nn.Linear(128, self.encoded_dim)),
+                # elem-wise op, e.g., BN
+                ("qrelu1", qnn.QuantReLU(
+                    bit_width=10,
+                    quant_type=QuantType.INT, # FP = float32 
+                    # scaling_impl_type=ScalingImplType.PARAMETER,
+                )),
+            ]))
 
         self.decoder = nn.Sequential(OrderedDict([
             ("dec_dense", nn.Linear(self.encoded_dim, 128)),
@@ -203,7 +213,6 @@ class AutoEncoder(pl.LightningModule):
         ]))
         self.loss = telescopeMSE8x8
         if accelerator == "gpu":
-            print("Moved constants to gpu")
             move_constants_to_gpu()
 
     def invert_arrange(self):
@@ -251,13 +260,6 @@ class AutoEncoder(pl.LightningModule):
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=1e-3)
-        # if self.quantize:  # TODO: rebuild with brevitas
-        #     optimizer = OptimLP(
-        #         optimizer, 
-        #         weight_quant=self.weight_quantizer,
-        #         grad_quant=self.weight_quantizer,
-        #         momentum_quant=self.weight_quantizer,
-        #     )
         return optimizer
 
     def training_step(self, batch, batch_idx):
@@ -266,13 +268,6 @@ class AutoEncoder(pl.LightningModule):
         x_hat = self(x)
         loss = self.loss(x, x_hat)
         self.log("train_loss", loss, on_epoch=True, prog_bar=True)
-        if self.quantize:
-            # Automatic optimization is disabled for quantization
-            # so we need to manually call the optimizer
-            self.manual_backward(loss)
-            optimizer = self.optimizers()
-            optimizer.step()
-            optimizer.zero_grad()
         return loss
 
     def validation_step(self, batch, batch_idx):
