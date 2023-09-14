@@ -4,7 +4,7 @@ matplotlib
 numpy
 pandas
 tensorboard
-pytorch-lightning
+pytorch-lightning==1.9.0
 gpustat
 numba
 pillow
@@ -16,3 +16,4 @@ jupyter
 pot
 mplhep
 qtorch
+brevitas

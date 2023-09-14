@@ -203,11 +203,21 @@ for i in range(48):
 
 def move_constants_to_gpu():
     global remap_8x8_matrix, Remap_48_36, Remap_48_12, Remap_12_3, Weights_48_36
-    remap_8x8_matrix = remap_8x8_matrix.cuda()
-    Remap_48_36 = Remap_48_36.cuda()
-    Remap_48_12 = Remap_48_12.cuda()
-    Remap_12_3 = Remap_12_3.cuda()
-    Weights_48_36 = Weights_48_36.cuda()
+    # NOTE: unclear if this works for multi-gpu training, but that is overkill for this model
+    # for dev in devices:
+    #     cuda_dev = "cuda:" + str(dev)
+    #     remap_8x8_matrix = remap_8x8_matrix.to(torch.device(cuda_dev))
+    #     Remap_48_36 = Remap_48_36.to(torch.device(cuda_dev))
+    #     Remap_48_12 = Remap_48_12.to(torch.device(cuda_dev))
+    #     Remap_12_3 = Remap_12_3.to(torch.device(cuda_dev))
+    #     Weights_48_36 = Weights_48_36.to(torch.device(cuda_dev))
+
+    cuda_dev = "cuda:0"
+    remap_8x8_matrix = remap_8x8_matrix.to(torch.device(cuda_dev))
+    Remap_48_36 = Remap_48_36.to(torch.device(cuda_dev))
+    Remap_48_12 = Remap_48_12.to(torch.device(cuda_dev))
+    Remap_12_3 = Remap_12_3.to(torch.device(cuda_dev))
+    Weights_48_36 = Weights_48_36.to(torch.device(cuda_dev))
 
 
 def telescopeMSE8x8(y_true, y_pred):
