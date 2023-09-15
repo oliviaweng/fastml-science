@@ -151,7 +151,7 @@ class AutoEncoder(pl.LightningModule):
                     ("relu", nn.ReLU()),
                     ("flatten", nn.Flatten()),
                     ("enc_dense", nn.Linear(128, self.encoded_dim)),
-                    ("relu1", nn.ReLU()),
+                    # ("relu1", nn.ReLU()),
                 ]
             )
         )

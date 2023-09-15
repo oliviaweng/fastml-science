@@ -14,12 +14,15 @@ tmux new-session -d -s r210 "source ~/.bash_profile; conda activate auto; ./scri
 tmux new-session -d -s r211 "source ~/.bash_profile; conda activate auto; ./scripts/run_seed_exp.sh 2 random_seeds11.txt"
 
 
-# tmux kill-session -t rs00
-# tmux kill-session -t rs01
-# tmux kill-session -t rs02
-# tmux kill-session -t rs13
-# tmux kill-session -t rs14
-# tmux kill-session -t rs15
-# tmux kill-session -t rs26
-# tmux kill-session -t rs27
-# tmux kill-session -t rs28
+# tmux kill-session -t r00
+# tmux kill-session -t r01
+# tmux kill-session -t r02
+# tmux kill-session -t r03
+# tmux kill-session -t r14
+# tmux kill-session -t r15
+# tmux kill-session -t r16
+# tmux kill-session -t r17
+# tmux kill-session -t r28
+# tmux kill-session -t r29
+# tmux kill-session -t r210
+# tmux kill-session -t r211

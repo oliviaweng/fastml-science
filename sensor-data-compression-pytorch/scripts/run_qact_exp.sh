@@ -5,11 +5,17 @@
 DATA_DIR=../../hgcal22data_signal_driven_ttbar_v11/nElinks_5/
 DATA_FILE=../../hgcal22data_signal_driven_ttbar_v11/hgcal22data_signal_driven_ttbar_v11_nELinks5.npy 
 SAVE_DIR=./brevitas
-SEED=1
+SEED=3
 EXP_NAME="autoencoder_hgcal_qact${SEED}"
 EPOCHS=100
 
-# for i in `seq 1 3`; do
-tmux new-session -d -s qeol1 'source /proj/xlabs/users/olivweng/opt/mambaforge/etc/profile.d/conda.sh ; conda activate auto; sleep infinity'
-./scripts/train_pt_autoencoder_qact.sh $DATA_DIR $DATA_FILE $SAVE_DIR $EXP_NAME $EPOCHS $SEED
-# done
+python3 autoencoder_trainer.py \
+    --data_dir $DATA_DIR \
+    --data_file $DATA_FILE \
+    --save_dir $SAVE_DIR \
+    --experiment_name $EXP_NAME \
+    --max_epochs $EPOCHS \
+    --seed $SEED \
+    --train \
+    --quantize_act \
+    --accelerator gpu \

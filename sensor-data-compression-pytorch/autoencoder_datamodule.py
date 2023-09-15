@@ -241,7 +241,7 @@ class AutoEncoderDataModule(pl.LightningDataModule):
         Return the training dataloader
         """
         return torch.utils.data.DataLoader(
-            self.train_data, batch_size=500, shuffle=True, num_workers=self.num_workers
+            self.train_data, batch_size=500, shuffle=True, num_workers=self.num_workers, pin_memory=True,
         )
 
     def val_dataloader(self):
