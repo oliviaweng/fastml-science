@@ -24,4 +24,4 @@ dependencies:
   - conda-forge::pip
   - pip:
     - opencv-python
-    - brevitas
+    - brevitas==0.9.1

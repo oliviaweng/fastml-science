@@ -1,0 +1,12 @@
+accelerator: gpu
+batchnorm: true
+cos_anneal_warm_restarts: true
+learning_rate: 0.01
+qidentity_bitwidth: 4
+qinput_bitwidth: 6
+qrelu_bitwidth: 2
+quantize_act: true
+quantize_input: true
+quantize_weight: false
+warm_restart_freq: 100
+weight_decay: 0.01
