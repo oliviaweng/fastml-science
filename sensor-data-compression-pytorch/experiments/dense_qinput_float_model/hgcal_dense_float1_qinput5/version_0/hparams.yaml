@@ -1,0 +1,14 @@
+accelerator: gpu
+act1_bitwidth: 12
+act2_bitwidth: 10
+batchnorm: true
+cos_anneal_warm_restarts: true
+dense_only: true
+learning_rate: 0.001
+num_dense_feat: 128
+qinput_bitwidth: 5
+quantize_act: false
+quantize_input: true
+quantize_weight: false
+warm_restart_freq: 50
+weight_decay: 0.01

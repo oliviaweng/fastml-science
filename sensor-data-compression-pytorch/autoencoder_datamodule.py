@@ -146,7 +146,7 @@ ARRANGE_MASK = torch.tensor(
 
 
 class AutoEncoderDataModule(pl.LightningDataModule):
-    def __init__(self, data_file, data_dir=None, batch_size=500, num_workers=8) -> None:
+    def __init__(self, data_file, data_dir=None, batch_size=512, num_workers=8) -> None:
         super().__init__()
         self.data_dir = data_dir
         self.data_file = data_file
@@ -167,7 +167,7 @@ class AutoEncoderDataModule(pl.LightningDataModule):
         parser.add_argument("--data_dir", type=str, default=None)
         parser.add_argument("--data_file", type=str, default="data.npy")
         parser.add_argument("--num_workers", type=int, default=8)
-        parser.add_argument("--batch_size", type=int, default=500)
+        parser.add_argument("--batch_size", type=int, default=512)
         return parent_parser
 
     def mask_data(self, data):
@@ -241,7 +241,11 @@ class AutoEncoderDataModule(pl.LightningDataModule):
         Return the training dataloader
         """
         return torch.utils.data.DataLoader(
-            self.train_data, batch_size=500, shuffle=True, num_workers=self.num_workers
+            self.train_data, 
+            shuffle=True, 
+            pin_memory=True,
+            batch_size=self.batch_size, 
+            num_workers=self.num_workers, 
         )
 
     def val_dataloader(self):
@@ -250,7 +254,10 @@ class AutoEncoderDataModule(pl.LightningDataModule):
         """
         # Take the first valid_split% of the data as validation data
         return torch.utils.data.DataLoader(
-            self.val_data, batch_size=500, shuffle=False, num_workers=self.num_workers
+            self.val_data, 
+            shuffle=False, 
+            batch_size=self.batch_size, 
+            num_workers=self.num_workers,
         )
 
     def test_dataloader(self):
