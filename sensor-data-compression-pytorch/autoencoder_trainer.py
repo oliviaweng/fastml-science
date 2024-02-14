@@ -129,7 +129,7 @@ if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("--process_data", action="store_true", default=False)
     parser.add_argument("--max_epochs", type=int, default=100)
-    parser.add_argument("--seed", type=int, default=1)
+    parser.add_argument("--seed", type=int, default=None)
     parser.add_argument("--save_dir", type=str, default="./pt_autoencoder_test")
     parser.add_argument("--experiment_name", type=str, default="autoencoder")
     parser.add_argument("--fast_dev_run", action="store_true", default=False)
