@@ -1,0 +1,23 @@
+name: ecoder-hls4ml-env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.7
+  - pip
+  - pip:
+    - numba
+    - numpy
+    - pandas
+    - PyYAML
+    - matplotlib
+    - pillow
+    - jupyter
+    - tensorflow
+    - keras
+    - qkeras
+    - tensorflow-model-optimization
+    - tqdm
+    - pot
+    - mplhep
+    - hls4ml
