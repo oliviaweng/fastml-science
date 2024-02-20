@@ -13,7 +13,6 @@ from qDenseCNN import qDenseCNN
 
 import hls4ml
 import matplotlib
-matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 
 from utils.metrics import emd_multiproc
@@ -27,7 +26,7 @@ from train import (
 )
 
 # edit depending on where Vivado is installed:
-# os.environ['PATH'] = '/<Xilinx installation directory>/Vivado/<version>/bin:' + os.environ['PATH']
+os.environ['PATH'] = '/data/oweng/tools/Xilinx/Vivado/2019.2/bin:' + os.environ['PATH']
 # or source settings before running file
 
 
@@ -233,7 +232,7 @@ def main(args):
         input_data_tb=args.input_data_tb,
         output_data_tb=args.output_data_tb,
         part="xc7z020clg400-1", # pynq-z2
-        clock_period=10, # ns
+        clock_period=5, # ns
         io_type="io_stream",
     )
     hls4ml.utils.plot_model(
@@ -252,7 +251,7 @@ def main(args):
     output_hls = hls_model.predict(input_test)
 
     hls4ml.model.profiling.numerical(
-        model=encoder, hls_model=hls_model, X=input_test
+        model=encoder, hls_model=hls_model, X=input_test,
     )
 
     plt.show()
@@ -267,7 +266,15 @@ def main(args):
     # assert np.allclose(output_hls, output_data_tb)
 
     # Build the model
-    hls_model.build(csim=False)
+    hls_model.build(
+        reset=True,
+        csim=False,
+        synth=True,
+        cosim=True,
+        validation=True,
+        export=True,
+        vsynth=True,
+    )
     hls4ml.report.read_vivado_report(os.path.join(args.odir, "hls4ml_prj"))
 
 
