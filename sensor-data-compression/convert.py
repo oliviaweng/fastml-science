@@ -107,8 +107,11 @@ def predict_and_eval_model(model, val_input, val_max, val_sum, args, save_enc_io
         i_file = os.path.join(args.odir, "hgcal_test_input.npy")
         o_file = os.path.join(args.odir, "hgcal_test_output.npy")
         # Save first 10 only
-        np.save(i_file, input_Q[:10])
-        np.save(o_file, cnn_enQ[:10])
+        # np.save(i_file, input_Q[:10])
+        # np.save(o_file, cnn_enQ[:10])
+
+        np.save(i_file, input_Q[:2])
+        np.save(o_file, cnn_enQ[:2][:, :, 0]) # Remove last dim of 1)
 
     input_calQ = model.mapToCalQ(input_Q)  # shape = (N,48) in CALQ order
     output_calQ_fr = model.mapToCalQ(cnn_deQ)  # shape = (N,48) in CALQ order
@@ -207,7 +210,7 @@ def main(args):
         raise RuntimeError("No weights provided to preload into the model!")
 
     # Validate model performance
-    # predict_and_eval_model(model, val_input, val_max, val_sum, args, save_enc_io=True)
+    predict_and_eval_model(model, val_input, val_max, val_sum, args, save_enc_io=True)
     
     # Converting encoder ONLY
     encoder = model.encoder
@@ -233,7 +236,7 @@ def main(args):
         input_data_tb=args.input_data_tb,
         output_data_tb=args.output_data_tb,
         part="xc7z020clg400-1", # pynq-z2
-        clock_period=10, # ns
+        clock_period=5, # ns
         io_type="io_stream",
     )
     hls4ml.utils.plot_model(
@@ -247,15 +250,22 @@ def main(args):
 
     # Test hls4ml model & keras model equivalence w/tb data
     input_data_tb = np.load(args.input_data_tb)
-    output_data_tb = np.load(args.output_data_tb)[:, :, 0] # Remove last dim of 1
+    output_data_tb = np.load(args.output_data_tb)
     input_test = np.ascontiguousarray(input_data_tb)
     output_hls = hls_model.predict(input_test)
 
-    hls4ml.model.profiling.numerical(
-        model=encoder, hls_model=hls_model, X=input_test
+    wp, wph, ap, aph = hls4ml.model.profiling.numerical(
+        model=encoder, hls_model=hls_model, X=input_test,
     )
+    wp.savefig(os.path.join(args.odir, "wp.pdf"))
+    wph.savefig(os.path.join(args.odir, "wph.pdf"))
+    ap.savefig(os.path.join(args.odir, "ap.pdf"))
+    aph.savefig(os.path.join(args.odir, "aph.pdf"))
 
-    plt.show()
+    _, hls4ml_trace = hls_model.trace(input_test)
+    keras_trace = hls4ml.model.profiling.get_ymodel_keras(encoder, input_test)
+    print("hls4ml_trace")
+    print(hls4ml_trace)
 
     
     for i, out_tb in enumerate(output_data_tb):
@@ -267,8 +277,8 @@ def main(args):
     # assert np.allclose(output_hls, output_data_tb)
 
     # Build the model
-    hls_model.build(csim=False)
-    hls4ml.report.read_vivado_report(os.path.join(args.odir, "hls4ml_prj"))
+    # hls_model.build(csim=False)
+    # hls4ml.report.read_vivado_report(os.path.join(args.odir, "hls4ml_prj"))
 
 
 
