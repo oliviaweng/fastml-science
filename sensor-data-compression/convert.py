@@ -8,15 +8,12 @@ from pathlib import Path
 import tensorflow as tf
 from tensorflow.keras.models import Model
 
-from qkeras.utils import model_save_quantized_weights
 
 
 from denseCNN import denseCNN
 from qDenseCNN import qDenseCNN
 
 import hls4ml
-import matplotlib
-import matplotlib.pyplot as plt
 
 from utils.metrics import emd_multiproc
 from train import (
@@ -219,11 +216,11 @@ def main(args):
     config = hls4ml.utils.config_from_keras_model(encoder, granularity='name')
     
     # Custom config settings
-    # config["Model"]["Strategy"] = "Resource"
+    config["Model"]["Strategy"] = "Resource"
     config["LayerName"]["input_1"]["Precision"]["result"] = "fixed<11,4,RND_CONV,SAT>"
     
-    config["LayerName"]["encoded_vector"]["Precision"]["result"] = "fixed<16,6,RND_CONV,SAT>"
-    config["LayerName"]["encoded_vector_linear"]["Precision"]["result"] = "fixed<16,6,RND_CONV,SAT>"
+    config["LayerName"]["encoded_vector"]["Precision"]["result"] = "fixed<32,12,RND_CONV,SAT>"
+    config["LayerName"]["encoded_vector_linear"]["Precision"]["result"] = "fixed<32,12,RND_CONV,SAT>"
     config["LayerName"]["encod_qa"]["Precision"]["result"] = "ufixed<9,1,RND_CONV,SAT>"
     
     # For debugging
@@ -269,8 +266,6 @@ def main(args):
     keras_trace = hls4ml.model.profiling.get_ymodel_keras(encoder, input_test)
 
     print("Comparing trace")
-    print(f"hls trace keys: {hls4ml_trace.keys()}")
-    print(f"keras trace keys: {keras_trace.keys()}")
     for key in hls4ml_trace.keys():
         print(key)
         for i in range(0, len(input_test)):
