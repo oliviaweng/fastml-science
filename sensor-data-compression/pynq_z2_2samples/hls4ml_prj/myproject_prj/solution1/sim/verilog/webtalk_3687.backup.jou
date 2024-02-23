@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Webtalk v2020.1 (64-bit)
+# SW Build 2902540 on Wed May 27 19:54:35 MDT 2020
+# IP Build 2902112 on Wed May 27 22:43:36 MDT 2020
+# Start of session at: Wed Feb 21 17:52:26 2024
+# Process ID: 3687
+# Current directory: /app/dev/pynq_z2/hls4ml_prj/myproject_prj/solution1/sim/verilog
+# Command line: wbtcv -mode batch -source /app/dev/pynq_z2/hls4ml_prj/myproject_prj/solution1/sim/verilog/xsim.dir/myproject/webtalk/xsim_webtalk.tcl -notrace
+# Log file: /app/dev/pynq_z2/hls4ml_prj/myproject_prj/solution1/sim/verilog/webtalk.log
+# Journal file: /app/dev/pynq_z2/hls4ml_prj/myproject_prj/solution1/sim/verilog/webtalk.jou
+#-----------------------------------------------------------
+source /app/dev/pynq_z2/hls4ml_prj/myproject_prj/solution1/sim/verilog/xsim.dir/myproject/webtalk/xsim_webtalk.tcl -notrace

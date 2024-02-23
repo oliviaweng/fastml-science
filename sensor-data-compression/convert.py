@@ -278,7 +278,7 @@ def main(args):
     # Build the model
     hls_model.build(
         reset=True,
-        csim=False,
+        csim=True,
         synth=True,
         cosim=True,
         validation=True,

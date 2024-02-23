@@ -1,0 +1,173 @@
+<InterfaceSummary>
+<RtlPorts>
+<name>input_1_V_data_0_V</name>
+<CType>
+<TypeName>ap_fixed 11 4 4 0 0</TypeName>
+<TypeWidth>11</TypeWidth>
+<PhysicalWidth>16</PhysicalWidth>
+</CType>
+<CFractionWidth>7</CFractionWidth>
+<InvalidType>0</InvalidType>
+</RtlPorts>
+<RtlPorts>
+<name>layer9_out_V_data_0_V</name>
+<CType>
+<TypeName>ap_ufixed 9 1 4 0 0</TypeName>
+<TypeWidth>9</TypeWidth>
+<PhysicalWidth>16</PhysicalWidth>
+</CType>
+<CFractionWidth>8</CFractionWidth>
+<InvalidType>0</InvalidType>
+</RtlPorts>
+<RtlPorts>
+<name>layer9_out_V_data_1_V</name>
+<CType>
+<TypeName>ap_ufixed 9 1 4 0 0</TypeName>
+<TypeWidth>9</TypeWidth>
+<PhysicalWidth>16</PhysicalWidth>
+</CType>
+<CFractionWidth>8</CFractionWidth>
+<InvalidType>0</InvalidType>
+</RtlPorts>
+<RtlPorts>
+<name>layer9_out_V_data_2_V</name>
+<CType>
+<TypeName>ap_ufixed 9 1 4 0 0</TypeName>
+<TypeWidth>9</TypeWidth>
+<PhysicalWidth>16</PhysicalWidth>
+</CType>
+<CFractionWidth>8</CFractionWidth>
+<InvalidType>0</InvalidType>
+</RtlPorts>
+<RtlPorts>
+<name>layer9_out_V_data_3_V</name>
+<CType>
+<TypeName>ap_ufixed 9 1 4 0 0</TypeName>
+<TypeWidth>9</TypeWidth>
+<PhysicalWidth>16</PhysicalWidth>
+</CType>
+<CFractionWidth>8</CFractionWidth>
+<InvalidType>0</InvalidType>
+</RtlPorts>
+<RtlPorts>
+<name>layer9_out_V_data_4_V</name>
+<CType>
+<TypeName>ap_ufixed 9 1 4 0 0</TypeName>
+<TypeWidth>9</TypeWidth>
+<PhysicalWidth>16</PhysicalWidth>
+</CType>
+<CFractionWidth>8</CFractionWidth>
+<InvalidType>0</InvalidType>
+</RtlPorts>
+<RtlPorts>
+<name>layer9_out_V_data_5_V</name>
+<CType>
+<TypeName>ap_ufixed 9 1 4 0 0</TypeName>
+<TypeWidth>9</TypeWidth>
+<PhysicalWidth>16</PhysicalWidth>
+</CType>
+<CFractionWidth>8</CFractionWidth>
+<InvalidType>0</InvalidType>
+</RtlPorts>
+<RtlPorts>
+<name>layer9_out_V_data_6_V</name>
+<CType>
+<TypeName>ap_ufixed 9 1 4 0 0</TypeName>
+<TypeWidth>9</TypeWidth>
+<PhysicalWidth>16</PhysicalWidth>
+</CType>
+<CFractionWidth>8</CFractionWidth>
+<InvalidType>0</InvalidType>
+</RtlPorts>
+<RtlPorts>
+<name>layer9_out_V_data_7_V</name>
+<CType>
+<TypeName>ap_ufixed 9 1 4 0 0</TypeName>
+<TypeWidth>9</TypeWidth>
+<PhysicalWidth>16</PhysicalWidth>
+</CType>
+<CFractionWidth>8</CFractionWidth>
+<InvalidType>0</InvalidType>
+</RtlPorts>
+<RtlPorts>
+<name>layer9_out_V_data_8_V</name>
+<CType>
+<TypeName>ap_ufixed 9 1 4 0 0</TypeName>
+<TypeWidth>9</TypeWidth>
+<PhysicalWidth>16</PhysicalWidth>
+</CType>
+<CFractionWidth>8</CFractionWidth>
+<InvalidType>0</InvalidType>
+</RtlPorts>
+<RtlPorts>
+<name>layer9_out_V_data_9_V</name>
+<CType>
+<TypeName>ap_ufixed 9 1 4 0 0</TypeName>
+<TypeWidth>9</TypeWidth>
+<PhysicalWidth>16</PhysicalWidth>
+</CType>
+<CFractionWidth>8</CFractionWidth>
+<InvalidType>0</InvalidType>
+</RtlPorts>
+<RtlPorts>
+<name>layer9_out_V_data_10_V</name>
+<CType>
+<TypeName>ap_ufixed 9 1 4 0 0</TypeName>
+<TypeWidth>9</TypeWidth>
+<PhysicalWidth>16</PhysicalWidth>
+</CType>
+<CFractionWidth>8</CFractionWidth>
+<InvalidType>0</InvalidType>
+</RtlPorts>
+<RtlPorts>
+<name>layer9_out_V_data_11_V</name>
+<CType>
+<TypeName>ap_ufixed 9 1 4 0 0</TypeName>
+<TypeWidth>9</TypeWidth>
+<PhysicalWidth>16</PhysicalWidth>
+</CType>
+<CFractionWidth>8</CFractionWidth>
+<InvalidType>0</InvalidType>
+</RtlPorts>
+<RtlPorts>
+<name>layer9_out_V_data_12_V</name>
+<CType>
+<TypeName>ap_ufixed 9 1 4 0 0</TypeName>
+<TypeWidth>9</TypeWidth>
+<PhysicalWidth>16</PhysicalWidth>
+</CType>
+<CFractionWidth>8</CFractionWidth>
+<InvalidType>0</InvalidType>
+</RtlPorts>
+<RtlPorts>
+<name>layer9_out_V_data_13_V</name>
+<CType>
+<TypeName>ap_ufixed 9 1 4 0 0</TypeName>
+<TypeWidth>9</TypeWidth>
+<PhysicalWidth>16</PhysicalWidth>
+</CType>
+<CFractionWidth>8</CFractionWidth>
+<InvalidType>0</InvalidType>
+</RtlPorts>
+<RtlPorts>
+<name>layer9_out_V_data_14_V</name>
+<CType>
+<TypeName>ap_ufixed 9 1 4 0 0</TypeName>
+<TypeWidth>9</TypeWidth>
+<PhysicalWidth>16</PhysicalWidth>
+</CType>
+<CFractionWidth>8</CFractionWidth>
+<InvalidType>0</InvalidType>
+</RtlPorts>
+<RtlPorts>
+<name>layer9_out_V_data_15_V</name>
+<CType>
+<TypeName>ap_ufixed 9 1 4 0 0</TypeName>
+<TypeWidth>9</TypeWidth>
+<PhysicalWidth>16</PhysicalWidth>
+</CType>
+<CFractionWidth>8</CFractionWidth>
+<InvalidType>0</InvalidType>
+</RtlPorts>
+</InterfaceSummary>
+

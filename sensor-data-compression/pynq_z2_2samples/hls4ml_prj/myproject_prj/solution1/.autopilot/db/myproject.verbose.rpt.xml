@@ -1,0 +1,201 @@
+<profile>
+
+<section name = "Vivado HLS Report for 'myproject'" level="0">
+<item name = "Date">Wed Feb 21 17:51:24 2024
+</item>
+<item name = "Version">2020.1 (Build 2897737 on Wed May 27 20:21:37 MDT 2020)</item>
+<item name = "Project">myproject_prj</item>
+<item name = "Solution">solution1</item>
+<item name = "Product family">zynq</item>
+<item name = "Target device">xc7z020-clg400-1</item>
+</section>
+
+<section name = "Performance Estimates" level="0">
+<item name = "Timing">
+<section name = "" level="1">
+<item name = "Summary"><table name="" hasTotal="0">
+<keys size="4">Clock, Target, Estimated, Uncertainty</keys>
+<column name="ap_clk">5.00 ns, 5.019 ns, 0.62 ns</column>
+</table>
+</item>
+</section>
+</item>
+<item name = "Latency">
+<section name = "" level="1">
+<item name = "Summary"><table name="" hasTotal="0">
+<keys size="8">, min, max, min, max, min, max, Type</keys>
+<column name="">103, 103, 0.517 us, 0.517 us, 92, 92, dataflow</column>
+</table>
+</item>
+<item name = "Detail">
+<section name = "" level="1">
+<item name = "Instance"><table name="" hasTotal="0">
+<keys size="9">Instance, Module, min, max, min, max, min, max, Type</keys>
+<column name="dense_array_ap_ufixed_8u_array_ap_fixed_16_6_5_3_0_16u_config7_U0">dense_array_ap_ufixed_8u_array_ap_fixed_16_6_5_3_0_16u_config7_s, 29, 29, 0.146 us, 0.146 us, 29, 29, none</column>
+<column name="conv_2d_cl_array_ap_fixed_1u_array_ap_fixed_16_6_5_3_0_8u_config3_U0">conv_2d_cl_array_ap_fixed_1u_array_ap_fixed_16_6_5_3_0_8u_config3_s, 87, 87, 0.437 us, 0.437 us, 87, 87, none</column>
+<column name="relu_array_ap_fixed_16u_array_ap_ufixed_9_1_4_0_0_16u_relu_config9_U0">relu_array_ap_fixed_16u_array_ap_ufixed_9_1_4_0_0_16u_relu_config9_s, 2, 2, 10.038 ns, 10.038 ns, 1, 1, function</column>
+<column name="relu_array_ap_fixed_8u_array_ap_ufixed_12_3_4_0_0_8u_relu_config5_U0">relu_array_ap_fixed_8u_array_ap_ufixed_12_3_4_0_0_8u_relu_config5_s, 20, 20, 0.100 us, 0.100 us, 20, 20, none</column>
+<column name="zeropad2d_cl_array_ap_fixed_1u_array_ap_fixed_11_4_4_0_0_1u_config10_U0">zeropad2d_cl_array_ap_fixed_1u_array_ap_fixed_11_4_4_0_0_1u_config10_s, 91, 91, 0.457 us, 0.457 us, 91, 91, none</column>
+</table>
+</item>
+<item name = "Loop"><table name="" hasTotal="0">
+<keys size="8">Loop Name, min, max, Latency, achieved, target, Count, Pipelined</keys>
+</table>
+</item>
+</section>
+</item>
+</section>
+</item>
+</section>
+
+<section name = "Utilization Estimates" level="0">
+<item name = "Summary"><table name="" hasTotal="1">
+<keys size="6">Name, BRAM_18K, DSP48E, FF, LUT, URAM</keys>
+<column name="DSP">-, -, -, -, -</column>
+<column name="Expression">-, -, 0, 2, -</column>
+<column name="FIFO">1, -, 226, 990, -</column>
+<column name="Instance">0, 132, 33973, 58903, -</column>
+<column name="Memory">-, -, -, -, -</column>
+<column name="Multiplexer">-, -, -, -, -</column>
+<column name="Register">-, -, -, -, -</column>
+<specialColumn name="Available">280, 220, 106400, 53200, 0</specialColumn>
+<specialColumn name="Utilization (%)">~0, 60, 32, 112, 0</specialColumn>
+</table>
+</item>
+<item name = "Detail">
+<section name = "" level="1">
+<item name = "Instance"><table name="" hasTotal="1">
+<keys size="7">Instance, Module, BRAM_18K, DSP48E, FF, LUT, URAM</keys>
+<column name="conv_2d_cl_array_ap_fixed_1u_array_ap_fixed_16_6_5_3_0_8u_config3_U0">conv_2d_cl_array_ap_fixed_1u_array_ap_fixed_16_6_5_3_0_8u_config3_s, 0, 8, 2021, 2455, 0</column>
+<column name="dense_array_ap_ufixed_8u_array_ap_fixed_16_6_5_3_0_16u_config7_U0">dense_array_ap_ufixed_8u_array_ap_fixed_16_6_5_3_0_16u_config7_s, 0, 124, 31079, 53826, 0</column>
+<column name="relu_array_ap_fixed_16u_array_ap_ufixed_9_1_4_0_0_16u_relu_config9_U0">relu_array_ap_fixed_16u_array_ap_ufixed_9_1_4_0_0_16u_relu_config9_s, 0, 0, 436, 1557, 0</column>
+<column name="relu_array_ap_fixed_8u_array_ap_ufixed_12_3_4_0_0_8u_relu_config5_U0">relu_array_ap_fixed_8u_array_ap_ufixed_12_3_4_0_0_8u_relu_config5_s, 0, 0, 415, 884, 0</column>
+<column name="zeropad2d_cl_array_ap_fixed_1u_array_ap_fixed_11_4_4_0_0_1u_config10_U0">zeropad2d_cl_array_ap_fixed_1u_array_ap_fixed_11_4_4_0_0_1u_config10_s, 0, 0, 22, 181, 0</column>
+</table>
+</item>
+<item name = "DSP48E"><table name="" hasTotal="0">
+<keys size="3">Instance, Module, Expression</keys>
+</table>
+</item>
+<item name = "Memory"><table name="" hasTotal="1">
+<keys size="10">Memory, Module, BRAM_18K, FF, LUT, URAM, Words, Bits, Banks, W*Bits*Banks</keys>
+</table>
+</item>
+<item name = "FIFO"><table name="" hasTotal="1">
+<keys size="8">Name, BRAM_18K, FF, LUT, URAM, Depth, Bits, Size:D*B</keys>
+<column name="layer10_out_V_data_0_V_U">1, 34, 0, -, 81, 11, 891</column>
+<column name="layer3_out_V_data_0_V_U">0, 7, 0, -, 16, 16, 256</column>
+<column name="layer3_out_V_data_1_V_U">0, 7, 0, -, 16, 16, 256</column>
+<column name="layer3_out_V_data_2_V_U">0, 7, 0, -, 16, 16, 256</column>
+<column name="layer3_out_V_data_3_V_U">0, 7, 0, -, 16, 16, 256</column>
+<column name="layer3_out_V_data_4_V_U">0, 7, 0, -, 16, 16, 256</column>
+<column name="layer3_out_V_data_5_V_U">0, 7, 0, -, 16, 16, 256</column>
+<column name="layer3_out_V_data_6_V_U">0, 7, 0, -, 16, 16, 256</column>
+<column name="layer3_out_V_data_7_V_U">0, 7, 0, -, 16, 16, 256</column>
+<column name="layer5_out_V_data_0_V_U">0, 7, 0, -, 16, 12, 192</column>
+<column name="layer5_out_V_data_1_V_U">0, 7, 0, -, 16, 12, 192</column>
+<column name="layer5_out_V_data_2_V_U">0, 7, 0, -, 16, 12, 192</column>
+<column name="layer5_out_V_data_3_V_U">0, 7, 0, -, 16, 12, 192</column>
+<column name="layer5_out_V_data_4_V_U">0, 7, 0, -, 16, 12, 192</column>
+<column name="layer5_out_V_data_5_V_U">0, 7, 0, -, 16, 12, 192</column>
+<column name="layer5_out_V_data_6_V_U">0, 7, 0, -, 16, 12, 192</column>
+<column name="layer5_out_V_data_7_V_U">0, 7, 0, -, 16, 12, 192</column>
+<column name="layer7_out_V_data_0_V_U">0, 5, 0, -, 1, 16, 16</column>
+<column name="layer7_out_V_data_10_V_U">0, 5, 0, -, 1, 16, 16</column>
+<column name="layer7_out_V_data_11_V_U">0, 5, 0, -, 1, 16, 16</column>
+<column name="layer7_out_V_data_12_V_U">0, 5, 0, -, 1, 16, 16</column>
+<column name="layer7_out_V_data_13_V_U">0, 5, 0, -, 1, 16, 16</column>
+<column name="layer7_out_V_data_14_V_U">0, 5, 0, -, 1, 16, 16</column>
+<column name="layer7_out_V_data_15_V_U">0, 5, 0, -, 1, 16, 16</column>
+<column name="layer7_out_V_data_1_V_U">0, 5, 0, -, 1, 16, 16</column>
+<column name="layer7_out_V_data_2_V_U">0, 5, 0, -, 1, 16, 16</column>
+<column name="layer7_out_V_data_3_V_U">0, 5, 0, -, 1, 16, 16</column>
+<column name="layer7_out_V_data_4_V_U">0, 5, 0, -, 1, 16, 16</column>
+<column name="layer7_out_V_data_5_V_U">0, 5, 0, -, 1, 16, 16</column>
+<column name="layer7_out_V_data_6_V_U">0, 5, 0, -, 1, 16, 16</column>
+<column name="layer7_out_V_data_7_V_U">0, 5, 0, -, 1, 16, 16</column>
+<column name="layer7_out_V_data_8_V_U">0, 5, 0, -, 1, 16, 16</column>
+<column name="layer7_out_V_data_9_V_U">0, 5, 0, -, 1, 16, 16</column>
+</table>
+</item>
+<item name = "Expression"><table name="" hasTotal="1">
+<keys size="7">Variable Name, Operation, DSP48E, FF, LUT, Bitwidth P0, Bitwidth P1</keys>
+<column name="ap_idle">and, 0, 0, 2, 1, 1</column>
+</table>
+</item>
+<item name = "Multiplexer"><table name="" hasTotal="1">
+<keys size="5">Name, LUT, Input Size, Bits, Total Bits</keys>
+</table>
+</item>
+<item name = "Register"><table name="" hasTotal="1">
+<keys size="5">Name, FF, LUT, Bits, Const Bits</keys>
+</table>
+</item>
+</section>
+</item>
+</section>
+
+<section name = "Interface" level="0">
+<item name = "Summary"><table name="" hasTotal="0">
+<keys size="6">RTL Ports, Dir, Bits, Protocol, Source Object, C Type</keys>
+<column name="input_1_V_data_0_V_TDATA">in, 16, axis, input_1_V_data_0_V, pointer</column>
+<column name="input_1_V_data_0_V_TVALID">in, 1, axis, input_1_V_data_0_V, pointer</column>
+<column name="input_1_V_data_0_V_TREADY">out, 1, axis, input_1_V_data_0_V, pointer</column>
+<column name="layer9_out_V_data_0_V_TDATA">out, 16, axis, layer9_out_V_data_0_V, pointer</column>
+<column name="layer9_out_V_data_0_V_TVALID">out, 1, axis, layer9_out_V_data_0_V, pointer</column>
+<column name="layer9_out_V_data_0_V_TREADY">in, 1, axis, layer9_out_V_data_0_V, pointer</column>
+<column name="layer9_out_V_data_1_V_TDATA">out, 16, axis, layer9_out_V_data_1_V, pointer</column>
+<column name="layer9_out_V_data_1_V_TVALID">out, 1, axis, layer9_out_V_data_1_V, pointer</column>
+<column name="layer9_out_V_data_1_V_TREADY">in, 1, axis, layer9_out_V_data_1_V, pointer</column>
+<column name="layer9_out_V_data_2_V_TDATA">out, 16, axis, layer9_out_V_data_2_V, pointer</column>
+<column name="layer9_out_V_data_2_V_TVALID">out, 1, axis, layer9_out_V_data_2_V, pointer</column>
+<column name="layer9_out_V_data_2_V_TREADY">in, 1, axis, layer9_out_V_data_2_V, pointer</column>
+<column name="layer9_out_V_data_3_V_TDATA">out, 16, axis, layer9_out_V_data_3_V, pointer</column>
+<column name="layer9_out_V_data_3_V_TVALID">out, 1, axis, layer9_out_V_data_3_V, pointer</column>
+<column name="layer9_out_V_data_3_V_TREADY">in, 1, axis, layer9_out_V_data_3_V, pointer</column>
+<column name="layer9_out_V_data_4_V_TDATA">out, 16, axis, layer9_out_V_data_4_V, pointer</column>
+<column name="layer9_out_V_data_4_V_TVALID">out, 1, axis, layer9_out_V_data_4_V, pointer</column>
+<column name="layer9_out_V_data_4_V_TREADY">in, 1, axis, layer9_out_V_data_4_V, pointer</column>
+<column name="layer9_out_V_data_5_V_TDATA">out, 16, axis, layer9_out_V_data_5_V, pointer</column>
+<column name="layer9_out_V_data_5_V_TVALID">out, 1, axis, layer9_out_V_data_5_V, pointer</column>
+<column name="layer9_out_V_data_5_V_TREADY">in, 1, axis, layer9_out_V_data_5_V, pointer</column>
+<column name="layer9_out_V_data_6_V_TDATA">out, 16, axis, layer9_out_V_data_6_V, pointer</column>
+<column name="layer9_out_V_data_6_V_TVALID">out, 1, axis, layer9_out_V_data_6_V, pointer</column>
+<column name="layer9_out_V_data_6_V_TREADY">in, 1, axis, layer9_out_V_data_6_V, pointer</column>
+<column name="layer9_out_V_data_7_V_TDATA">out, 16, axis, layer9_out_V_data_7_V, pointer</column>
+<column name="layer9_out_V_data_7_V_TVALID">out, 1, axis, layer9_out_V_data_7_V, pointer</column>
+<column name="layer9_out_V_data_7_V_TREADY">in, 1, axis, layer9_out_V_data_7_V, pointer</column>
+<column name="layer9_out_V_data_8_V_TDATA">out, 16, axis, layer9_out_V_data_8_V, pointer</column>
+<column name="layer9_out_V_data_8_V_TVALID">out, 1, axis, layer9_out_V_data_8_V, pointer</column>
+<column name="layer9_out_V_data_8_V_TREADY">in, 1, axis, layer9_out_V_data_8_V, pointer</column>
+<column name="layer9_out_V_data_9_V_TDATA">out, 16, axis, layer9_out_V_data_9_V, pointer</column>
+<column name="layer9_out_V_data_9_V_TVALID">out, 1, axis, layer9_out_V_data_9_V, pointer</column>
+<column name="layer9_out_V_data_9_V_TREADY">in, 1, axis, layer9_out_V_data_9_V, pointer</column>
+<column name="layer9_out_V_data_10_V_TDATA">out, 16, axis, layer9_out_V_data_10_V, pointer</column>
+<column name="layer9_out_V_data_10_V_TVALID">out, 1, axis, layer9_out_V_data_10_V, pointer</column>
+<column name="layer9_out_V_data_10_V_TREADY">in, 1, axis, layer9_out_V_data_10_V, pointer</column>
+<column name="layer9_out_V_data_11_V_TDATA">out, 16, axis, layer9_out_V_data_11_V, pointer</column>
+<column name="layer9_out_V_data_11_V_TVALID">out, 1, axis, layer9_out_V_data_11_V, pointer</column>
+<column name="layer9_out_V_data_11_V_TREADY">in, 1, axis, layer9_out_V_data_11_V, pointer</column>
+<column name="layer9_out_V_data_12_V_TDATA">out, 16, axis, layer9_out_V_data_12_V, pointer</column>
+<column name="layer9_out_V_data_12_V_TVALID">out, 1, axis, layer9_out_V_data_12_V, pointer</column>
+<column name="layer9_out_V_data_12_V_TREADY">in, 1, axis, layer9_out_V_data_12_V, pointer</column>
+<column name="layer9_out_V_data_13_V_TDATA">out, 16, axis, layer9_out_V_data_13_V, pointer</column>
+<column name="layer9_out_V_data_13_V_TVALID">out, 1, axis, layer9_out_V_data_13_V, pointer</column>
+<column name="layer9_out_V_data_13_V_TREADY">in, 1, axis, layer9_out_V_data_13_V, pointer</column>
+<column name="layer9_out_V_data_14_V_TDATA">out, 16, axis, layer9_out_V_data_14_V, pointer</column>
+<column name="layer9_out_V_data_14_V_TVALID">out, 1, axis, layer9_out_V_data_14_V, pointer</column>
+<column name="layer9_out_V_data_14_V_TREADY">in, 1, axis, layer9_out_V_data_14_V, pointer</column>
+<column name="layer9_out_V_data_15_V_TDATA">out, 16, axis, layer9_out_V_data_15_V, pointer</column>
+<column name="layer9_out_V_data_15_V_TVALID">out, 1, axis, layer9_out_V_data_15_V, pointer</column>
+<column name="layer9_out_V_data_15_V_TREADY">in, 1, axis, layer9_out_V_data_15_V, pointer</column>
+<column name="ap_clk">in, 1, ap_ctrl_hs, myproject, return value</column>
+<column name="ap_rst_n">in, 1, ap_ctrl_hs, myproject, return value</column>
+<column name="ap_start">in, 1, ap_ctrl_hs, myproject, return value</column>
+<column name="ap_done">out, 1, ap_ctrl_hs, myproject, return value</column>
+<column name="ap_ready">out, 1, ap_ctrl_hs, myproject, return value</column>
+<column name="ap_idle">out, 1, ap_ctrl_hs, myproject, return value</column>
+</table>
+</item>
+</section>
+</profile>
