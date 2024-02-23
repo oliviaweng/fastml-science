@@ -8,6 +8,9 @@ from pathlib import Path
 import tensorflow as tf
 from tensorflow.keras.models import Model
 
+from qkeras.utils import model_save_quantized_weights
+
+
 from denseCNN import denseCNN
 from qDenseCNN import qDenseCNN
 
@@ -106,11 +109,11 @@ def predict_and_eval_model(model, val_input, val_max, val_sum, args, save_enc_io
         i_file = os.path.join(args.odir, "hgcal_test_input.npy")
         o_file = os.path.join(args.odir, "hgcal_test_output.npy")
         # Save first 10 only
-        # np.save(i_file, input_Q[:10])
-        # np.save(o_file, cnn_enQ[:10])
+        np.save(i_file, input_Q[:10])
+        np.save(o_file, cnn_enQ[:10][:, :, 0]) # Remove last dim of 1)
 
-        np.save(i_file, input_Q[:2])
-        np.save(o_file, cnn_enQ[:2][:, :, 0]) # Remove last dim of 1)
+        # np.save(i_file, input_Q[:2])
+        # np.save(o_file, cnn_enQ[:2][:, :, 0]) # Remove last dim of 1)
 
     input_calQ = model.mapToCalQ(input_Q)  # shape = (N,48) in CALQ order
     output_calQ_fr = model.mapToCalQ(cnn_deQ)  # shape = (N,48) in CALQ order
@@ -177,13 +180,13 @@ def predict_and_eval_model(model, val_input, val_max, val_sum, args, save_enc_io
 
 def main(args):
     # load data
-    ld_data_time_s = time.time()
-    data_values, phys_values = load_data(args)
-    print(f"Time to load data: {time.time() - ld_data_time_s}")
+    # ld_data_time_s = time.time()
+    # data_values, phys_values = load_data(args)
+    # print(f"Time to load data: {time.time() - ld_data_time_s}")
 
-    normdata, maxdata, sumdata = normalize_data(data_values)
-    maxdata = maxdata / 35.0  # normalize to units of transverse MIPs
-    sumdata = sumdata / 35.0  # normalize to units of transverse MIPs
+    # normdata, maxdata, sumdata = normalize_data(data_values)
+    # maxdata = maxdata / 35.0  # normalize to units of transverse MIPs
+    # sumdata = sumdata / 35.0  # normalize to units of transverse MIPs
 
     # Returns a list of models, but we will only ever test one model at a time
     model_info = build_model(args)[0]
@@ -195,21 +198,21 @@ def main(args):
     model = model_setup(model_info, args.odir)
 
     # split in training/validation datasets
-    shaped_data = model.prepInput(normdata)
-    val_input, train_input, val_ind, train_ind = split(shaped_data)
+    # shaped_data = model.prepInput(normdata)
+    # val_input, train_input, val_ind, train_ind = split(shaped_data)
 
     m_autoCNN, m_autoCNNen = model.get_models()
     model_info["m_autoCNN"] = m_autoCNN
     model_info["m_autoCNNen"] = m_autoCNNen # encoder only
     
-    val_max = maxdata[val_ind]
-    val_sum = sumdata[val_ind]
+    # val_max = maxdata[val_ind]
+    # val_sum = sumdata[val_ind]
 
     if model_info["ws"] == "":
         raise RuntimeError("No weights provided to preload into the model!")
-
+    
     # Validate model performance
-    predict_and_eval_model(model, val_input, val_max, val_sum, args, save_enc_io=True)
+    # predict_and_eval_model(model, val_input, val_max, val_sum, args, save_enc_io=True)
     
     # Converting encoder ONLY
     encoder = model.encoder
@@ -218,7 +221,10 @@ def main(args):
     # Custom config settings
     # config["Model"]["Strategy"] = "Resource"
     config["LayerName"]["input_1"]["Precision"]["result"] = "fixed<11,4,RND_CONV,SAT>"
-    # TODO: Adjust other layers based on profiling/trace
+    
+    config["LayerName"]["encoded_vector"]["Precision"]["result"] = "fixed<16,6,RND_CONV,SAT>"
+    config["LayerName"]["encoded_vector_linear"]["Precision"]["result"] = "fixed<16,6,RND_CONV,SAT>"
+    config["LayerName"]["encod_qa"]["Precision"]["result"] = "ufixed<9,1,RND_CONV,SAT>"
     
     # For debugging
     for layer in config["LayerName"]:
@@ -244,48 +250,59 @@ def main(args):
         show_precision=True, 
         to_file=os.path.join(args.odir, "hls4ml_model.pdf"),
     )
-    hls_model.compile()
-
-
     # Test hls4ml model & keras model equivalence w/tb data
     input_data_tb = np.load(args.input_data_tb)
     output_data_tb = np.load(args.output_data_tb)
     input_test = np.ascontiguousarray(input_data_tb)
-    output_hls = hls_model.predict(input_test)
 
-    wp, wph, ap, aph = hls4ml.model.profiling.numerical(
-        model=encoder, hls_model=hls_model, X=input_test,
-    )
-    wp.savefig(os.path.join(args.odir, "wp.pdf"))
-    wph.savefig(os.path.join(args.odir, "wph.pdf"))
-    ap.savefig(os.path.join(args.odir, "ap.pdf"))
-    aph.savefig(os.path.join(args.odir, "aph.pdf"))
+    # wp, wph, ap, aph = hls4ml.model.profiling.numerical(
+    #     model=encoder, hls_model=hls_model, X=input_test,
+    # )
+    # wp.savefig(os.path.join(args.odir, "wp.pdf"))
+    # wph.savefig(os.path.join(args.odir, "wph.pdf"))
+    # ap.savefig(os.path.join(args.odir, "ap.pdf"))
+    # aph.savefig(os.path.join(args.odir, "aph.pdf"))
+
+    hls_model.compile()
 
     _, hls4ml_trace = hls_model.trace(input_test)
     keras_trace = hls4ml.model.profiling.get_ymodel_keras(encoder, input_test)
-    print("hls4ml_trace")
-    print(hls4ml_trace)
 
-    
-    for i, out_tb in enumerate(output_data_tb):
-        print(f"Sample #{i}")
-        print(f"output_hls: {output_hls[i]}")
-        print(f"output_tb:  {out_tb}")
-        print()
-    print(np.isclose(output_hls, output_data_tb))
+    print("Comparing trace")
+    print(f"hls trace keys: {hls4ml_trace.keys()}")
+    print(f"keras trace keys: {keras_trace.keys()}")
+    for key in hls4ml_trace.keys():
+        print(key)
+        for i in range(0, len(input_test)):
+            print(i)
+            # print(np.isclose(hls4ml_trace[key][i], keras_trace[key][i]))
+            # assert np.allclose(hls4ml_trace[key][i], keras_trace[key][i])
+            if not np.allclose(hls4ml_trace[key][i], keras_trace[key][i]):
+                print(np.isclose(hls4ml_trace[key][i], keras_trace[key][i]))
+                # print(f"output_hls:", hls4ml_trace[key][i])
+                # print(f"output_keras:", keras_trace[key][i])
+                print(f"output_hls - output_keras: {hls4ml_trace[key][i] - keras_trace[key][i]}")
+
+    # output_hls = hls_model.predict(input_test)
+    # for i, out_tb in enumerate(output_data_tb):
+    #     print(f"Sample #{i}")
+    #     print(f"output_hls: {output_hls[i]}")
+    #     print(f"output_tb:  {out_tb}")
+    #     print()
+    # print(np.isclose(output_hls, output_data_tb))
     # assert np.allclose(output_hls, output_data_tb)
 
     # Build the model
-    hls_model.build(
-        reset=True,
-        csim=False,
-        synth=True,
-        cosim=True,
-        validation=True,
-        export=True,
-        vsynth=True,
-    )
-    hls4ml.report.read_vivado_report(os.path.join(args.odir, "hls4ml_prj"))
+    # hls_model.build(
+    #     reset=True,
+    #     csim=False,
+    #     synth=True,
+    #     cosim=True,
+    #     validation=True,
+    #     export=True,
+    #     vsynth=True,
+    # )
+    # hls4ml.report.read_vivado_report(os.path.join(args.odir, "hls4ml_prj"))
 
 
 

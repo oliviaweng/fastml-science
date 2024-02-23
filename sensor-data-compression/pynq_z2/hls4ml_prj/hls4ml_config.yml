@@ -23,12 +23,12 @@ HLSConfig:
     encoded_vector:
       Precision:
         bias: fixed<6,2>
-        result: fixed<16,6>
+        result: fixed<16,6,RND_CONV,SAT>
         weight: fixed<6,2>
       Trace: true
     encoded_vector_linear:
       Precision:
-        result: fixed<16,6>
+        result: fixed<16,6,RND_CONV,SAT>
       Trace: true
     flatten:
       Precision:
@@ -55,4 +55,4 @@ OutputDir: ./pynq_z2/hls4ml_prj
 OutputPredictions: ./pynq_z2/hgcal_test_output.npy
 Part: xc7z020clg400-1
 ProjectName: myproject
-Stamp: 8989dCb1
+Stamp: 1E27eCa4

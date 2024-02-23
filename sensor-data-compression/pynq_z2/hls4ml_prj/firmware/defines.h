@@ -33,7 +33,7 @@ typedef ap_fixed<6,2> weight3_t;
 typedef ap_fixed<6,2> bias3_t;
 typedef nnet::array<ap_ufixed<12,3,AP_RND_CONV,AP_SAT>, 8*1> layer5_t;
 typedef ap_fixed<18,8> accum1_qa_table_t;
-typedef nnet::array<ap_fixed<16,6>, 16*1> layer7_t;
+typedef nnet::array<ap_fixed<16,6,AP_RND_CONV,AP_SAT>, 16*1> layer7_t;
 typedef ap_fixed<6,2> weight7_t;
 typedef ap_fixed<6,2> bias7_t;
 typedef ap_uint<1> layer7_index;
