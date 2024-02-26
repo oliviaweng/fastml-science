@@ -237,7 +237,11 @@ def main(args):
         output_dir=os.path.join(args.odir, "hls4ml_prj"),
         input_data_tb=args.input_data_tb,
         output_data_tb=args.output_data_tb,
-        part="xc7z020clg400-1", # pynq-z2
+        # part="xc7z020clg400-1", # pynq-z2
+        part="xczu9eg-ffvb1156-2-e", # zcu102
+        # board="pynq-z2",
+        board="zcu102",
+        backend='VivadoAccelerator',
         clock_period=5, # ns
         io_type="io_stream",
     )
@@ -262,21 +266,21 @@ def main(args):
 
     hls_model.compile()
 
-    _, hls4ml_trace = hls_model.trace(input_test)
-    keras_trace = hls4ml.model.profiling.get_ymodel_keras(encoder, input_test)
+    # _, hls4ml_trace = hls_model.trace(input_test)
+    # keras_trace = hls4ml.model.profiling.get_ymodel_keras(encoder, input_test)
 
-    print("Comparing trace")
-    for key in hls4ml_trace.keys():
-        print(key)
-        for i in range(0, len(input_test)):
-            print(i)
-            # print(np.isclose(hls4ml_trace[key][i], keras_trace[key][i]))
-            # assert np.allclose(hls4ml_trace[key][i], keras_trace[key][i])
-            if not np.allclose(hls4ml_trace[key][i], keras_trace[key][i]):
-                print(np.isclose(hls4ml_trace[key][i], keras_trace[key][i]))
-                # print(f"output_hls:", hls4ml_trace[key][i])
-                # print(f"output_keras:", keras_trace[key][i])
-                print(f"output_hls - output_keras: {hls4ml_trace[key][i] - keras_trace[key][i]}")
+    # print("Comparing trace")
+    # for key in hls4ml_trace.keys():
+    #     print(key)
+    #     for i in range(0, len(input_test)):
+    #         print(i)
+    #         # print(np.isclose(hls4ml_trace[key][i], keras_trace[key][i]))
+    #         # assert np.allclose(hls4ml_trace[key][i], keras_trace[key][i])
+    #         if not np.allclose(hls4ml_trace[key][i], keras_trace[key][i]):
+    #             print(np.isclose(hls4ml_trace[key][i], keras_trace[key][i]))
+    #             # print(f"output_hls:", hls4ml_trace[key][i])
+    #             # print(f"output_keras:", keras_trace[key][i])
+    #             print(f"output_hls - output_keras: {hls4ml_trace[key][i] - keras_trace[key][i]}")
 
     # output_hls = hls_model.predict(input_test)
     # for i, out_tb in enumerate(output_data_tb):

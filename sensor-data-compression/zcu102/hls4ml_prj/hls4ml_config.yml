@@ -1,0 +1,65 @@
+AcceleratorConfig:
+  Board: zcu102
+  Driver: python
+  Interface: axi_stream
+  Precision:
+    Input: float
+    Output: float
+Backend: VivadoAccelerator
+ClockPeriod: 5
+HLSConfig:
+  LayerName:
+    accum1_qa:
+      Precision:
+        result: ufixed<12,3,RND_CONV,SAT>
+      Trace: true
+    conv2d_0_m:
+      Precision:
+        bias: fixed<6,2>
+        result: fixed<16,6>
+        weight: fixed<6,2>
+      Trace: true
+    conv2d_0_m_linear:
+      Precision:
+        result: fixed<16,6>
+      Trace: true
+    encod_qa:
+      Precision:
+        result: ufixed<9,1,RND_CONV,SAT>
+      Trace: true
+    encoded_vector:
+      Precision:
+        bias: fixed<6,2>
+        result: fixed<32,12,RND_CONV,SAT>
+        weight: fixed<6,2>
+      Trace: true
+    encoded_vector_linear:
+      Precision:
+        result: fixed<32,12,RND_CONV,SAT>
+      Trace: true
+    flatten:
+      Precision:
+        result: fixed<16,6>
+      Trace: true
+    input_1:
+      Precision:
+        result: fixed<11,4,RND_CONV,SAT>
+      Trace: true
+    input_qa:
+      Precision:
+        result: fixed<11,4,RND_CONV,SAT>
+      Trace: true
+  Model:
+    BramFactor: 1000000000
+    Precision: fixed<16,6>
+    ReuseFactor: 1
+    Strategy: Resource
+    TraceOutput: false
+IOType: io_stream
+InputData: ./zcu102/hgcal_test_input.npy
+KerasModel: !keras_model './zcu102/hls4ml_prj/keras_model.h5'
+OutputDir: ./zcu102/hls4ml_prj
+OutputPredictions: ./zcu102/hgcal_test_output.npy
+Part: xczu9eg-ffvb1156-2-e
+ProjectName: myproject
+Stamp: b7e20bcb
