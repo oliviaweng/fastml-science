@@ -14,8 +14,6 @@
 #include "nnet_utils/nnet_dense.h"
 #include "nnet_utils/nnet_dense_compressed.h"
 #include "nnet_utils/nnet_dense_stream.h"
-#include "nnet_utils/nnet_padding.h"
-#include "nnet_utils/nnet_padding_stream.h"
 
 // hls-fpga-machine-learning insert weights
 #include "weights/w3.h"
@@ -24,19 +22,6 @@
 #include "weights/b7.h"
 
 // hls-fpga-machine-learning insert layer-config
-// zp2d_conv2d_0_m
-struct config10 : nnet::padding2d_config {
-    static const unsigned in_height = 8;
-    static const unsigned in_width = 8;
-    static const unsigned n_chan = 1;
-    static const unsigned out_height = 9;
-    static const unsigned out_width = 9;
-    static const unsigned pad_top = 0;
-    static const unsigned pad_bottom = 1;
-    static const unsigned pad_left = 0;
-    static const unsigned pad_right = 1;
-};
-
 // conv2d_0_m
 struct config3_mult : nnet::dense_config {
     static const unsigned n_in = 9;
@@ -54,11 +39,11 @@ struct config3_mult : nnet::dense_config {
 
 struct config3 : nnet::conv2d_config {
     static const unsigned pad_top = 0;
-    static const unsigned pad_bottom = 0;
+    static const unsigned pad_bottom = 1;
     static const unsigned pad_left = 0;
-    static const unsigned pad_right = 0;
-    static const unsigned in_height = 9;
-    static const unsigned in_width = 9;
+    static const unsigned pad_right = 1;
+    static const unsigned in_height = 8;
+    static const unsigned in_width = 8;
     static const unsigned n_chan = 1;
     static const unsigned filt_height = 3;
     static const unsigned filt_width = 3;
@@ -75,29 +60,29 @@ struct config3 : nnet::conv2d_config {
     static const bool store_weights_in_bram = false;
     static const unsigned strategy = nnet::resource;
     static const nnet::conv_implementation implementation = nnet::conv_implementation::linebuffer;
-    static const unsigned min_height = 5;
-    static const unsigned min_width = 5;
+    static const unsigned min_height = 8;
+    static const unsigned min_width = 8;
     static const ap_uint<filt_height * filt_width> pixels[min_height * min_width];
     static const unsigned n_partitions = 16;
     static const unsigned n_pixels = out_height * out_width / n_partitions;
     template<class data_T, class CONFIG_T>
-    using fill_buffer = nnet::FillConv2DBuffer<data_T, CONFIG_T>;
+    using fill_buffer = nnet::fill_buffer_3<data_T, CONFIG_T>;
     typedef model_default_t accum_t;
     typedef bias3_t bias_t;
     typedef weight3_t weight_t;
     typedef config3_mult mult_config;
     template<unsigned K, unsigned S, unsigned W>
-    using scale_index_height = nnet::scale_index_regular<K, S, W>;
+    using scale_index_height = nnet::scale_index_unscaled<K, S, W>;
     template<unsigned K, unsigned S, unsigned W>
-    using scale_index_width = nnet::scale_index_regular<K, S, W>;
+    using scale_index_width = nnet::scale_index_unscaled<K, S, W>;
 };
-const ap_uint<config3::filt_height * config3::filt_width> config3::pixels[] = {1,2,5,2,4,8,16,40,16,32,65,130,325,130,260,8,16,40,16,32,64,128,320,128,256};
+const ap_uint<config3::filt_height * config3::filt_width> config3::pixels[] = {0};
 
 // accum1_qa
 struct relu_config5 : nnet::activ_config {
     static const unsigned n_in = 128;
     static const unsigned table_size = 1024;
-    static const unsigned io_type = nnet::io_stream;
+    static const unsigned io_type = nnet::io_parallel;
     static const unsigned reuse_factor = 1;
     typedef accum1_qa_table_t table_t;
 };
@@ -106,8 +91,8 @@ struct relu_config5 : nnet::activ_config {
 struct config7 : nnet::dense_config {
     static const unsigned n_in = 128;
     static const unsigned n_out = 16;
-    static const unsigned io_type = nnet::io_stream;
-    static const unsigned strategy = nnet::resource;
+    static const unsigned io_type = nnet::io_parallel;
+    static const unsigned strategy = nnet::latency;
     static const unsigned reuse_factor = 1;
     static const unsigned n_zeros = 167;
     static const unsigned n_nonzeros = 1881;
@@ -125,7 +110,7 @@ struct config7 : nnet::dense_config {
 struct relu_config9 : nnet::activ_config {
     static const unsigned n_in = 16;
     static const unsigned table_size = 1024;
-    static const unsigned io_type = nnet::io_stream;
+    static const unsigned io_type = nnet::io_parallel;
     static const unsigned reuse_factor = 1;
     typedef encod_qa_table_t table_t;
 };

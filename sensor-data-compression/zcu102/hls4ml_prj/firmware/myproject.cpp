@@ -4,12 +4,14 @@
 #include "parameters.h"
 
 void myproject(
-    hls::stream<input_t> &input_1,
-    hls::stream<result_t> &layer9_out
+    input_t input_1[N_INPUT_1_1*N_INPUT_2_1*N_INPUT_3_1],
+    result_t layer9_out[N_LAYER_7]
 ) {
 
     // hls-fpga-machine-learning insert IO
-    #pragma HLS INTERFACE axis port=input_1,layer9_out 
+    #pragma HLS ARRAY_RESHAPE variable=input_1 complete dim=0
+    #pragma HLS ARRAY_PARTITION variable=layer9_out complete dim=0
+    #pragma HLS INTERFACE ap_vld port=input_1,layer9_out 
     #pragma HLS DATAFLOW 
 
 #ifndef __SYNTHESIS__
@@ -30,23 +32,31 @@ void myproject(
 
     // hls-fpga-machine-learning insert layers
 
-    hls::stream<layer10_t> layer10_out("layer10_out");
-    #pragma HLS STREAM variable=layer10_out depth=81
-    nnet::zeropad2d_cl<input_t, layer10_t, config10>(input_1, layer10_out); // zp2d_conv2d_0_m
+    layer3_t layer3_out[OUT_HEIGHT_3*OUT_WIDTH_3*N_FILT_3];
+    #pragma HLS ARRAY_PARTITION variable=layer3_out complete dim=0
+    nnet::conv_2d_cl<input_t, layer3_t, config3>(input_1, layer3_out, w3, b3); // conv2d_0_m
+#ifndef __SYNTHESIS__
+    nnet::save_layer_output<layer3_t>(layer3_out, "conv2d_0_m", OUT_HEIGHT_3*OUT_WIDTH_3*N_FILT_3);
+#endif
 
-    hls::stream<layer3_t> layer3_out("layer3_out");
-    #pragma HLS STREAM variable=layer3_out depth=16
-    nnet::conv_2d_cl<layer10_t, layer3_t, config3>(layer10_out, layer3_out, w3, b3); // conv2d_0_m
-
-    hls::stream<layer5_t> layer5_out("layer5_out");
-    #pragma HLS STREAM variable=layer5_out depth=16
+    layer5_t layer5_out[OUT_HEIGHT_3*OUT_WIDTH_3*N_FILT_3];
+    #pragma HLS ARRAY_PARTITION variable=layer5_out complete dim=0
     nnet::relu<layer3_t, layer5_t, relu_config5>(layer3_out, layer5_out); // accum1_qa
+#ifndef __SYNTHESIS__
+    nnet::save_layer_output<layer5_t>(layer5_out, "accum1_qa", OUT_HEIGHT_3*OUT_WIDTH_3*N_FILT_3);
+#endif
 
     auto& layer6_out = layer5_out;
-    hls::stream<layer7_t> layer7_out("layer7_out");
-    #pragma HLS STREAM variable=layer7_out depth=1
+    layer7_t layer7_out[N_LAYER_7];
+    #pragma HLS ARRAY_PARTITION variable=layer7_out complete dim=0
     nnet::dense<layer5_t, layer7_t, config7>(layer6_out, layer7_out, w7, b7); // encoded_vector
+#ifndef __SYNTHESIS__
+    nnet::save_layer_output<layer7_t>(layer7_out, "encoded_vector", N_LAYER_7);
+#endif
 
     nnet::relu<layer7_t, result_t, relu_config9>(layer7_out, layer9_out); // encod_qa
+#ifndef __SYNTHESIS__
+    nnet::save_layer_output<result_t>(layer9_out, "encod_qa", N_LAYER_7);
+#endif
 
 }

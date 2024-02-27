@@ -218,10 +218,14 @@ def main(args):
     # Custom config settings
     config["Model"]["Strategy"] = "Resource"
     config["LayerName"]["input_1"]["Precision"]["result"] = "fixed<11,4,RND_CONV,SAT>"
-    
+    config["LayerName"]["input_1"]["Strategy"] = "Latency"
+    config["LayerName"]["accum1_qa"]["Strategy"] = "Latency"
+    config["LayerName"]["flatten"]["Strategy"] = "Latency"
+    config["LayerName"]["encoded_vector"]["Strategy"] = "Latency"
     config["LayerName"]["encoded_vector"]["Precision"]["result"] = "fixed<32,12,RND_CONV,SAT>"
     config["LayerName"]["encoded_vector_linear"]["Precision"]["result"] = "fixed<32,12,RND_CONV,SAT>"
     config["LayerName"]["encod_qa"]["Precision"]["result"] = "ufixed<9,1,RND_CONV,SAT>"
+    config["LayerName"]["encod_qa"]["Strategy"] = "Latency"
     
     # For debugging
     for layer in config["LayerName"]:
@@ -243,7 +247,7 @@ def main(args):
         board="zcu102",
         backend='VivadoAccelerator',
         clock_period=5, # ns
-        io_type="io_stream",
+        io_type="io_parallel",
     )
     hls4ml.utils.plot_model(
         hls_model, 
@@ -256,13 +260,13 @@ def main(args):
     output_data_tb = np.load(args.output_data_tb)
     input_test = np.ascontiguousarray(input_data_tb)
 
-    # wp, wph, ap, aph = hls4ml.model.profiling.numerical(
-    #     model=encoder, hls_model=hls_model, X=input_test,
-    # )
-    # wp.savefig(os.path.join(args.odir, "wp.pdf"))
-    # wph.savefig(os.path.join(args.odir, "wph.pdf"))
-    # ap.savefig(os.path.join(args.odir, "ap.pdf"))
-    # aph.savefig(os.path.join(args.odir, "aph.pdf"))
+    wp, wph, ap, aph = hls4ml.model.profiling.numerical(
+        model=encoder, hls_model=hls_model, X=input_test,
+    )
+    wp.savefig(os.path.join(args.odir, "wp.pdf"))
+    wph.savefig(os.path.join(args.odir, "wph.pdf"))
+    ap.savefig(os.path.join(args.odir, "ap.pdf"))
+    aph.savefig(os.path.join(args.odir, "aph.pdf"))
 
     hls_model.compile()
 
