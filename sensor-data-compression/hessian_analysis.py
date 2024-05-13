@@ -9,6 +9,7 @@ from qDenseCNN import qDenseCNN
 from denseCNN import denseCNN
 
 from fkeras.metrics.hessian import HessianMetrics
+from fkeras.metrics.stat_fi import StatFI
 from telescope import telescopeMSE8x8_for_FKeras
 from tensorflow.keras.models import Model
 
@@ -189,25 +190,58 @@ def main(args):
     param_ranking, param_scores = hess.hessian_ranking_hack(
         eigenvectors, eigenvalues=eigenvalues, k=top_k, strategy=strategy
     )
+
+    sfi_model = StatFI(m_autoCNNen)
+    params_and_quants = sfi_model.get_params_and_quantizers()
+    # List where param idx indexes into its associated quantizer idx, which
+    # we use to index into the list of quantizers
+    # Need ([param0_quant_idx, param1_quant_idx], [quant1, quant2]) for mixed precision
+    if processed_layer_precision_info is not None:
+        param_idx_to_quant_list = []
+        quantizers = []
+        # Example: [(800,5),(8192,7)]
+        param_counter = 0
+        for i, num_param_and_bitwidth in enumerate(processed_layer_precision_info):
+            num_params = num_param_and_bitwidth[0]
+            quantizers.append(params_and_quants[1][i])
+            for _ in range(param_counter, param_counter + num_params):
+                param_idx_to_quant_list.append(i)
+            param_counter += num_params
+        quantizer_info = (param_idx_to_quant_list, quantizers)
+    else: # else just a single quantizer for uniform precision
+        quantizer_info = params_and_quants[1][0]
+    # print(quantizer_info)
+
+    pickled_param_ranking_file = os.path.join(args.odir, f"hessian_ranked_params_{args.model_id}.pkl")
+    obj = (list(param_ranking), quantizer_info)
+    pickled_obj = codecs.encode(pickle.dumps(obj), "base64").decode()
+    with open(pickled_param_ranking_file, "w") as f:
+        f.write(pickled_obj)
+    
+
+    # Compute bit ranking
     # bitwise_rank, bitwise_scores = hess.rank_bits(param_scores, 5) # add m = 5 bits (doesn't work; TODO: delete)
-    bitwise_rank = hess.convert_param_ranking_to_msb_bit_ranking(param_ranking, BIT_WIDTH)
+    # bitwise_rank = hess.convert_param_ranking_to_msb_bit_ranking(param_ranking, BIT_WIDTH)
 
-    pickled_ranking_file = os.path.join(args.odir, f"hessian_ranked_model_bits_iccad_2023_{args.model_id}.pkl")
+    # pickled_ranking_file = os.path.join(args.odir, f"hessian_ranked_model_bits_iccad_2023_{args.model_id}.pkl")
     
-    obj = list(bitwise_rank)
-    pickled_obj = codecs.encode(pickle.dumps(obj), "base64").decode()
-    with open(pickled_ranking_file, "w") as f:
-        f.write(pickled_obj)
+    # obj = list(bitwise_rank)
+    # pickled_obj = codecs.encode(pickle.dumps(obj), "base64").decode()
+    # with open(pickled_ranking_file, "w") as f:
+    #     f.write(pickled_obj)
 
-    gradient_rank, _ = hess.gradient_ranking_hack()
-    bitwise_rank = hess.convert_param_ranking_to_msb_bit_ranking(gradient_rank, BIT_WIDTH)
+    # gradient_rank, _ = hess.gradient_ranking_hack()
+    # bitwise_rank = hess.convert_param_ranking_to_msb_bit_ranking(gradient_rank, BIT_WIDTH)
     
-    pickled_ranking_file = os.path.join(args.odir, f"gradient_ranked_model_bits_iccad_2023_{args.model_id}.pkl")
-    obj = list(bitwise_rank)
-    pickled_obj = codecs.encode(pickle.dumps(obj), "base64").decode()
-    with open(pickled_ranking_file, "w") as f:
-        f.write(pickled_obj)
+    # pickled_ranking_file = os.path.join(args.odir, f"gradient_ranked_model_bits_iccad_2023_{args.model_id}.pkl")
+    # obj = list(bitwise_rank)
+    # pickled_obj = codecs.encode(pickle.dumps(obj), "base64").decode()
+    # with open(pickled_ranking_file, "w") as f:
+    #     f.write(pickled_obj)
 
+
+
+###############################################
 # Gradient ranking
 #     grad_start = time.time()
 #     grad_ranking, gradients = hess.layer_gradient_ranking()
