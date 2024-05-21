@@ -212,6 +212,7 @@ def main(args):
         quantizer_info = params_and_quants[1][0]
     # print(quantizer_info)
 
+    # Hessian param ranking + quantizer_info for hybrid Hessian + BinFI analysis
     pickled_param_ranking_file = os.path.join(args.odir, f"hessian_ranked_params_{args.model_id}.pkl")
     obj = (list(param_ranking), quantizer_info)
     pickled_obj = codecs.encode(pickle.dumps(obj), "base64").decode()
