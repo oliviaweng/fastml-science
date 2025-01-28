@@ -30,6 +30,43 @@ from train import (
 # or source settings before running file
 
 
+"""
+Model: "encoder"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ input_1 (InputLayer)        [(None, 8, 8, 1)]         0         
+                                                                 
+ input_qa (QActivation)      (None, 8, 8, 1)           0         
+                                                                 
+ conv2d_0_m (QConv2D)        (None, 4, 4, 8)           80        
+                                                                 
+ accum1_qa (QActivation)     (None, 4, 4, 8)           0         
+                                                                 
+ flatten (Flatten)           (None, 128)               0         
+                                                                 
+ encoded_vector (QDense)     (None, 16)                2064      
+                                                                 
+ encod_qa (QActivation)      (None, 16)                0         
+                                                                 
+=================================================================
+Total params: 2,144
+Trainable params: 2,144
+Non-trainable params: 0
+
+"""
+
+def print_dict(d, indent=0):
+    align = 20
+    for key, value in d.items():
+        print('  ' * indent + str(key), end='')
+        if isinstance(value, dict):
+            print()
+            print_dict(value, indent+1)
+        else:
+            print(':' + ' ' * (20 - len(key) - 2 * indent) + str(value))
+
+
 def normalize_data(data_values):
     # normalize input charge data rescaleInputToMax: normalizes charges to
     # maximum charge in module sumlog2 (default): normalizes charges to
@@ -66,8 +103,11 @@ def predict_and_eval_model(model, val_input, val_max, val_sum, args, save_enc_io
     input_Q, cnn_deQ, cnn_enQ = model.predict(val_input)
 
     if save_enc_io:
-        np.save("hgcal_test_input.npy", input_Q)
-        np.save("hgcal_test_output.npy", cnn_enQ)
+        i_file = os.path.join(args.odir, "hgcal_test_input.npy")
+        o_file = os.path.join(args.odir, "hgcal_test_output.npy")
+        # Save first 10 only
+        np.save(i_file, input_Q[:10])
+        np.save(o_file, cnn_enQ[:10])
 
     input_calQ = model.mapToCalQ(input_Q)  # shape = (N,48) in CALQ order
     output_calQ_fr = model.mapToCalQ(cnn_deQ)  # shape = (N,48) in CALQ order
@@ -166,12 +206,54 @@ def main(args):
         raise RuntimeError("No weights provided to preload into the model!")
 
     # Validate model performance
-    predict_and_eval_model(model, val_input, val_max, val_sum, args)
+    # predict_and_eval_model(model, val_input, val_max, val_sum, args, save_enc_io=True)
     
-    
-    # Generate 10 input/output samples for validation
-
     # Converting encoder ONLY
+    encoder = model.encoder
+    config = hls4ml.utils.config_from_keras_model(encoder, granularity='name')
+    
+    # Custom config settings
+    # config["Model"]["Strategy"] = "Resource"
+    # config["LayerName"]["input_1"]["Precision"]["result"] = "fixed<11,4,RND_CONV,SAT>"
+    # TODO: Fix the rest
+
+    print("-----------------------------------")
+    print("Configuration")
+    print_dict(config)
+    print("-----------------------------------")
+    print(f"Curr dir: {os.getcwd()}")
+    hls_model = hls4ml.converters.convert_from_keras_model(
+        encoder, 
+        hls_config=config, 
+        output_dir=os.path.join(args.odir, "hls4ml_prj"),
+        # output_dir="hls4ml_prj", 
+        input_data_tb=args.input_data_tb,
+        output_data_tb=args.output_data_tb,
+        part="xc7z020clg400-1", # pynq-z2
+        clock_period=10, # ns
+        io_type="io_stream",
+    )
+    hls4ml.utils.plot_model(
+        hls_model, 
+        show_shapes=True, 
+        show_precision=True, 
+        to_file=os.path.join(args.odir, "hls4ml_model.pdf"),
+    )
+    hls_model.compile()
+
+    # Test hls4ml model & keras model equivalence w/tb data
+    input_data_tb = np.load(args.input_data_tb)
+    output_data_tb = np.load(args.output_data_tb)[:, :, 0] # Remove last dim of 1
+    input_test = np.ascontiguousarray(input_data_tb)
+    output_hls = hls_model.predict(input_test)
+    for i, out_tb in enumerate(output_data_tb):
+        print(f"Sample #{i}")
+        print(f"output_hls: {output_hls[i]}")
+        print(f"output_tb:  {out_tb}")
+        print()
+    print(np.isclose(output_hls, output_data_tb))
+    assert np.allclose(output_hls, output_data_tb)
+
 
 
 if __name__ == "__main__":
@@ -304,6 +386,19 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--log-file", type=Path, default="log.txt", help="path to log file"
+    )
+    # hls4ml args
+    parser.add_argument(
+        "--input_data_tb",
+        type=str,
+        default="",
+        help="path to input data tb file for csim",
+    )
+    parser.add_argument(
+        "--output_data_tb",
+        type=str,
+        default="",
+        help="path to output data tb file for csim",
     )
     
     args = parser.parse_args()

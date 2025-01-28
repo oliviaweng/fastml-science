@@ -21,3 +21,5 @@ dependencies:
     - pot
     - mplhep
     - hls4ml
+    - git+ssh://git@github.com/KastnerRG/fkeras.git#egg=fkeras
+
