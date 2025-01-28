@@ -8,6 +8,8 @@ from pathlib import Path
 import tensorflow as tf
 from tensorflow.keras.models import Model
 
+
+
 from denseCNN import denseCNN
 from qDenseCNN import qDenseCNN
 
@@ -19,14 +21,12 @@ from train import (
     normalize,
     build_model,
     split,
-    train,
     evaluate_model,
-    evaluate_model_experiment,
     unnormalize,
 )
 
 # edit depending on where Vivado is installed:
-# os.environ['PATH'] = '/<Xilinx installation directory>/Vivado/<version>/bin:' + os.environ['PATH']
+os.environ['PATH'] = '/data/oweng/tools/Xilinx/Vivado/2019.2/bin:' + os.environ['PATH']
 # or source settings before running file
 
 
@@ -107,7 +107,10 @@ def predict_and_eval_model(model, val_input, val_max, val_sum, args, save_enc_io
         o_file = os.path.join(args.odir, "hgcal_test_output.npy")
         # Save first 10 only
         np.save(i_file, input_Q[:10])
-        np.save(o_file, cnn_enQ[:10])
+        np.save(o_file, cnn_enQ[:10][:, :, 0]) # Remove last dim of 1)
+
+        # np.save(i_file, input_Q[:2])
+        # np.save(o_file, cnn_enQ[:2][:, :, 0]) # Remove last dim of 1)
 
     input_calQ = model.mapToCalQ(input_Q)  # shape = (N,48) in CALQ order
     output_calQ_fr = model.mapToCalQ(cnn_deQ)  # shape = (N,48) in CALQ order
@@ -174,13 +177,13 @@ def predict_and_eval_model(model, val_input, val_max, val_sum, args, save_enc_io
 
 def main(args):
     # load data
-    ld_data_time_s = time.time()
-    data_values, phys_values = load_data(args)
-    print(f"Time to load data: {time.time() - ld_data_time_s}")
+    # ld_data_time_s = time.time()
+    # data_values, phys_values = load_data(args)
+    # print(f"Time to load data: {time.time() - ld_data_time_s}")
 
-    normdata, maxdata, sumdata = normalize_data(data_values)
-    maxdata = maxdata / 35.0  # normalize to units of transverse MIPs
-    sumdata = sumdata / 35.0  # normalize to units of transverse MIPs
+    # normdata, maxdata, sumdata = normalize_data(data_values)
+    # maxdata = maxdata / 35.0  # normalize to units of transverse MIPs
+    # sumdata = sumdata / 35.0  # normalize to units of transverse MIPs
 
     # Returns a list of models, but we will only ever test one model at a time
     model_info = build_model(args)[0]
@@ -192,19 +195,19 @@ def main(args):
     model = model_setup(model_info, args.odir)
 
     # split in training/validation datasets
-    shaped_data = model.prepInput(normdata)
-    val_input, train_input, val_ind, train_ind = split(shaped_data)
+    # shaped_data = model.prepInput(normdata)
+    # val_input, train_input, val_ind, train_ind = split(shaped_data)
 
     m_autoCNN, m_autoCNNen = model.get_models()
     model_info["m_autoCNN"] = m_autoCNN
     model_info["m_autoCNNen"] = m_autoCNNen # encoder only
     
-    val_max = maxdata[val_ind]
-    val_sum = sumdata[val_ind]
+    # val_max = maxdata[val_ind]
+    # val_sum = sumdata[val_ind]
 
     if model_info["ws"] == "":
         raise RuntimeError("No weights provided to preload into the model!")
-
+    
     # Validate model performance
     # predict_and_eval_model(model, val_input, val_max, val_sum, args, save_enc_io=True)
     
@@ -213,25 +216,57 @@ def main(args):
     config = hls4ml.utils.config_from_keras_model(encoder, granularity='name')
     
     # Custom config settings
+<<<<<<< HEAD
     # config["Model"]["Strategy"] = "Resource"
     # config["LayerName"]["input_1"]["Precision"]["result"] = "fixed<11,4,RND_CONV,SAT>"
     # TODO: Fix the rest
+=======
+    config["Model"]["Strategy"] = "Resource"
+    config["LayerName"]["input_1"]["Precision"]["result"] = "fixed<11,4,RND_CONV,SAT>"
+    config["LayerName"]["input_1"]["Strategy"] = "Latency"
+    config["LayerName"]["accum1_qa"]["Strategy"] = "Latency"
+    config["LayerName"]["flatten"]["Strategy"] = "Latency"
+    config["LayerName"]["encoded_vector"]["Strategy"] = "Latency"
+    config["LayerName"]["encoded_vector"]["Precision"]["result"] = "fixed<32,12,RND_CONV,SAT>"
+    config["LayerName"]["encoded_vector_linear"]["Precision"]["result"] = "fixed<32,12,RND_CONV,SAT>"
+    config["LayerName"]["encod_qa"]["Precision"]["result"] = "ufixed<9,1,RND_CONV,SAT>"
+    config["LayerName"]["encod_qa"]["Strategy"] = "Latency"
+    
+    # For debugging
+    for layer in config["LayerName"]:
+        config["LayerName"][layer]["Trace"] = True 
+>>>>>>> ff45a6552790b2c10cd93e48ab3c2550793690e1
 
     print("-----------------------------------")
     print("Configuration")
     print_dict(config)
     print("-----------------------------------")
+<<<<<<< HEAD
     print(f"Curr dir: {os.getcwd()}")
+=======
+>>>>>>> ff45a6552790b2c10cd93e48ab3c2550793690e1
     hls_model = hls4ml.converters.convert_from_keras_model(
         encoder, 
         hls_config=config, 
         output_dir=os.path.join(args.odir, "hls4ml_prj"),
+<<<<<<< HEAD
         # output_dir="hls4ml_prj", 
         input_data_tb=args.input_data_tb,
         output_data_tb=args.output_data_tb,
         part="xc7z020clg400-1", # pynq-z2
         clock_period=10, # ns
         io_type="io_stream",
+=======
+        input_data_tb=args.input_data_tb,
+        output_data_tb=args.output_data_tb,
+        # part="xc7z020clg400-1", # pynq-z2
+        part="xczu9eg-ffvb1156-2-e", # zcu102
+        # board="pynq-z2",
+        board="zcu102",
+        backend='VivadoAccelerator',
+        clock_period=5, # ns
+        io_type="io_parallel",
+>>>>>>> ff45a6552790b2c10cd93e48ab3c2550793690e1
     )
     hls4ml.utils.plot_model(
         hls_model, 
@@ -239,6 +274,7 @@ def main(args):
         show_precision=True, 
         to_file=os.path.join(args.odir, "hls4ml_model.pdf"),
     )
+<<<<<<< HEAD
     hls_model.compile()
 
     # Test hls4ml model & keras model equivalence w/tb data
@@ -253,6 +289,59 @@ def main(args):
         print()
     print(np.isclose(output_hls, output_data_tb))
     assert np.allclose(output_hls, output_data_tb)
+=======
+    # Test hls4ml model & keras model equivalence w/tb data
+    input_data_tb = np.load(args.input_data_tb)
+    output_data_tb = np.load(args.output_data_tb)
+    input_test = np.ascontiguousarray(input_data_tb)
+
+    wp, wph, ap, aph = hls4ml.model.profiling.numerical(
+        model=encoder, hls_model=hls_model, X=input_test,
+    )
+    wp.savefig(os.path.join(args.odir, "wp.pdf"))
+    wph.savefig(os.path.join(args.odir, "wph.pdf"))
+    ap.savefig(os.path.join(args.odir, "ap.pdf"))
+    aph.savefig(os.path.join(args.odir, "aph.pdf"))
+
+    hls_model.compile()
+
+    # _, hls4ml_trace = hls_model.trace(input_test)
+    # keras_trace = hls4ml.model.profiling.get_ymodel_keras(encoder, input_test)
+
+    # print("Comparing trace")
+    # for key in hls4ml_trace.keys():
+    #     print(key)
+    #     for i in range(0, len(input_test)):
+    #         print(i)
+    #         # print(np.isclose(hls4ml_trace[key][i], keras_trace[key][i]))
+    #         # assert np.allclose(hls4ml_trace[key][i], keras_trace[key][i])
+    #         if not np.allclose(hls4ml_trace[key][i], keras_trace[key][i]):
+    #             print(np.isclose(hls4ml_trace[key][i], keras_trace[key][i]))
+    #             # print(f"output_hls:", hls4ml_trace[key][i])
+    #             # print(f"output_keras:", keras_trace[key][i])
+    #             print(f"output_hls - output_keras: {hls4ml_trace[key][i] - keras_trace[key][i]}")
+
+    # output_hls = hls_model.predict(input_test)
+    # for i, out_tb in enumerate(output_data_tb):
+    #     print(f"Sample #{i}")
+    #     print(f"output_hls: {output_hls[i]}")
+    #     print(f"output_tb:  {out_tb}")
+    #     print()
+    # print(np.isclose(output_hls, output_data_tb))
+    # assert np.allclose(output_hls, output_data_tb)
+
+    # Build the model
+    # hls_model.build(
+    #     reset=True,
+    #     csim=False,
+    #     synth=True,
+    #     cosim=True,
+    #     validation=True,
+    #     export=True,
+    #     vsynth=True,
+    # )
+    # hls4ml.report.read_vivado_report(os.path.join(args.odir, "hls4ml_prj"))
+>>>>>>> ff45a6552790b2c10cd93e48ab3c2550793690e1
 
 
 

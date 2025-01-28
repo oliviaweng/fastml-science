@@ -1,0 +1,1 @@
+set ::AESL_AUTOSIM::gTopFileName /app/dev/pynq_z2/hls4ml_prj/myproject_prj/solution1/./sim/autowrap/testbench/myproject.cpp_pre.cpp.tb.cpp

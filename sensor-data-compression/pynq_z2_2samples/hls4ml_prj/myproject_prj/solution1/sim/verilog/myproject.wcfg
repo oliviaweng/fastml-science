@@ -1,0 +1,784 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="myproject.wdb" id="1">
+         <top_modules>
+            <top_module name="apatb_myproject_top" />
+            <top_module name="glbl" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+   </zoom_setting>
+   <column_width_setting>
+   </column_width_setting>
+   <WVObjectSize size="2" />
+   <wvobject type="group" fp_name="group1">
+      <obj_property name="label">Design Top Signals</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject type="group" fp_name="group2">
+         <obj_property name="label">C Outputs</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject type="group" fp_name="group3">
+            <obj_property name="label">layer9_out(axis)</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_15_V_TREADY">
+               <obj_property name="ElementShortName">layer9_out_V_data_15_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_15_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_15_V_TVALID">
+               <obj_property name="ElementShortName">layer9_out_V_data_15_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_15_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_14_V_TREADY">
+               <obj_property name="ElementShortName">layer9_out_V_data_14_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_14_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_14_V_TVALID">
+               <obj_property name="ElementShortName">layer9_out_V_data_14_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_14_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_13_V_TREADY">
+               <obj_property name="ElementShortName">layer9_out_V_data_13_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_13_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_13_V_TVALID">
+               <obj_property name="ElementShortName">layer9_out_V_data_13_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_13_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_12_V_TREADY">
+               <obj_property name="ElementShortName">layer9_out_V_data_12_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_12_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_12_V_TVALID">
+               <obj_property name="ElementShortName">layer9_out_V_data_12_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_12_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_11_V_TREADY">
+               <obj_property name="ElementShortName">layer9_out_V_data_11_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_11_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_11_V_TVALID">
+               <obj_property name="ElementShortName">layer9_out_V_data_11_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_11_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_10_V_TREADY">
+               <obj_property name="ElementShortName">layer9_out_V_data_10_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_10_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_10_V_TVALID">
+               <obj_property name="ElementShortName">layer9_out_V_data_10_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_10_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_9_V_TREADY">
+               <obj_property name="ElementShortName">layer9_out_V_data_9_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_9_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_9_V_TVALID">
+               <obj_property name="ElementShortName">layer9_out_V_data_9_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_9_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_8_V_TREADY">
+               <obj_property name="ElementShortName">layer9_out_V_data_8_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_8_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_8_V_TVALID">
+               <obj_property name="ElementShortName">layer9_out_V_data_8_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_8_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_7_V_TREADY">
+               <obj_property name="ElementShortName">layer9_out_V_data_7_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_7_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_7_V_TVALID">
+               <obj_property name="ElementShortName">layer9_out_V_data_7_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_7_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_6_V_TREADY">
+               <obj_property name="ElementShortName">layer9_out_V_data_6_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_6_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_6_V_TVALID">
+               <obj_property name="ElementShortName">layer9_out_V_data_6_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_6_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_5_V_TREADY">
+               <obj_property name="ElementShortName">layer9_out_V_data_5_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_5_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_5_V_TVALID">
+               <obj_property name="ElementShortName">layer9_out_V_data_5_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_5_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_4_V_TREADY">
+               <obj_property name="ElementShortName">layer9_out_V_data_4_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_4_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_4_V_TVALID">
+               <obj_property name="ElementShortName">layer9_out_V_data_4_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_4_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_3_V_TREADY">
+               <obj_property name="ElementShortName">layer9_out_V_data_3_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_3_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_3_V_TVALID">
+               <obj_property name="ElementShortName">layer9_out_V_data_3_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_3_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_2_V_TREADY">
+               <obj_property name="ElementShortName">layer9_out_V_data_2_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_2_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_2_V_TVALID">
+               <obj_property name="ElementShortName">layer9_out_V_data_2_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_2_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_1_V_TREADY">
+               <obj_property name="ElementShortName">layer9_out_V_data_1_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_1_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_1_V_TVALID">
+               <obj_property name="ElementShortName">layer9_out_V_data_1_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_1_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_0_V_TREADY">
+               <obj_property name="ElementShortName">layer9_out_V_data_0_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_0_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_0_V_TVALID">
+               <obj_property name="ElementShortName">layer9_out_V_data_0_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_0_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_15_V_TDATA">
+               <obj_property name="ElementShortName">layer9_out_V_data_15_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_15_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_14_V_TDATA">
+               <obj_property name="ElementShortName">layer9_out_V_data_14_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_14_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_13_V_TDATA">
+               <obj_property name="ElementShortName">layer9_out_V_data_13_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_13_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_12_V_TDATA">
+               <obj_property name="ElementShortName">layer9_out_V_data_12_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_12_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_11_V_TDATA">
+               <obj_property name="ElementShortName">layer9_out_V_data_11_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_11_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_10_V_TDATA">
+               <obj_property name="ElementShortName">layer9_out_V_data_10_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_10_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_9_V_TDATA">
+               <obj_property name="ElementShortName">layer9_out_V_data_9_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_9_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_8_V_TDATA">
+               <obj_property name="ElementShortName">layer9_out_V_data_8_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_8_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_7_V_TDATA">
+               <obj_property name="ElementShortName">layer9_out_V_data_7_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_7_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_6_V_TDATA">
+               <obj_property name="ElementShortName">layer9_out_V_data_6_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_6_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_5_V_TDATA">
+               <obj_property name="ElementShortName">layer9_out_V_data_5_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_5_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_4_V_TDATA">
+               <obj_property name="ElementShortName">layer9_out_V_data_4_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_4_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_3_V_TDATA">
+               <obj_property name="ElementShortName">layer9_out_V_data_3_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_3_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_2_V_TDATA">
+               <obj_property name="ElementShortName">layer9_out_V_data_2_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_2_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_1_V_TDATA">
+               <obj_property name="ElementShortName">layer9_out_V_data_1_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_1_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/AESL_inst_myproject/layer9_out_V_data_0_V_TDATA">
+               <obj_property name="ElementShortName">layer9_out_V_data_0_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_0_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+         </wvobject>
+      </wvobject>
+      <wvobject type="group" fp_name="group52">
+         <obj_property name="label">C Inputs</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject type="group" fp_name="group53">
+            <obj_property name="label">input_1(axis)</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/input_1_V_data_0_V_TREADY">
+               <obj_property name="ElementShortName">input_1_V_data_0_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">input_1_V_data_0_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/input_1_V_data_0_V_TVALID">
+               <obj_property name="ElementShortName">input_1_V_data_0_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">input_1_V_data_0_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/AESL_inst_myproject/input_1_V_data_0_V_TDATA">
+               <obj_property name="ElementShortName">input_1_V_data_0_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">input_1_V_data_0_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+         </wvobject>
+      </wvobject>
+      <wvobject type="group" fp_name="group57">
+         <obj_property name="label">Block-level IO Handshake</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/ap_start">
+            <obj_property name="ElementShortName">ap_start</obj_property>
+            <obj_property name="ObjectShortName">ap_start</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/ap_done">
+            <obj_property name="ElementShortName">ap_done</obj_property>
+            <obj_property name="ObjectShortName">ap_done</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/ap_ready">
+            <obj_property name="ElementShortName">ap_ready</obj_property>
+            <obj_property name="ObjectShortName">ap_ready</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/ap_idle">
+            <obj_property name="ElementShortName">ap_idle</obj_property>
+            <obj_property name="ObjectShortName">ap_idle</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject type="group" fp_name="group62">
+         <obj_property name="label">Reset</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/ap_rst_n">
+            <obj_property name="ElementShortName">ap_rst_n</obj_property>
+            <obj_property name="ObjectShortName">ap_rst_n</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject type="group" fp_name="group64">
+         <obj_property name="label">Clock</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject type="logic" fp_name="/apatb_myproject_top/AESL_inst_myproject/ap_clk">
+            <obj_property name="ElementShortName">ap_clk</obj_property>
+            <obj_property name="ObjectShortName">ap_clk</obj_property>
+         </wvobject>
+      </wvobject>
+   </wvobject>
+   <wvobject type="group" fp_name="group66">
+      <obj_property name="label">Test Bench Signals</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject type="group" fp_name="group67">
+         <obj_property name="label">Internal Signals</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject type="group" fp_name="group68">
+            <obj_property name="label">Simulation Status</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <wvobject type="array" fp_name="/apatb_myproject_top/AUTOTB_TRANSACTION_NUM">
+               <obj_property name="ElementShortName">AUTOTB_TRANSACTION_NUM[31:0]</obj_property>
+               <obj_property name="ObjectShortName">AUTOTB_TRANSACTION_NUM[31:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/ready_cnt">
+               <obj_property name="ElementShortName">ready_cnt[31:0]</obj_property>
+               <obj_property name="ObjectShortName">ready_cnt[31:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/done_cnt">
+               <obj_property name="ElementShortName">done_cnt[31:0]</obj_property>
+               <obj_property name="ObjectShortName">done_cnt[31:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+         </wvobject>
+         <wvobject type="group" fp_name="group69">
+            <obj_property name="label">Port Depth</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <wvobject type="array" fp_name="/apatb_myproject_top/LENGTH_input_1_V_data_0_V">
+               <obj_property name="ElementShortName">LENGTH_input_1_V_data_0_V[31:0]</obj_property>
+               <obj_property name="ObjectShortName">LENGTH_input_1_V_data_0_V[31:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/LENGTH_layer9_out_V_data_0_V">
+               <obj_property name="ElementShortName">LENGTH_layer9_out_V_data_0_V[31:0]</obj_property>
+               <obj_property name="ObjectShortName">LENGTH_layer9_out_V_data_0_V[31:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/LENGTH_layer9_out_V_data_1_V">
+               <obj_property name="ElementShortName">LENGTH_layer9_out_V_data_1_V[31:0]</obj_property>
+               <obj_property name="ObjectShortName">LENGTH_layer9_out_V_data_1_V[31:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/LENGTH_layer9_out_V_data_2_V">
+               <obj_property name="ElementShortName">LENGTH_layer9_out_V_data_2_V[31:0]</obj_property>
+               <obj_property name="ObjectShortName">LENGTH_layer9_out_V_data_2_V[31:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/LENGTH_layer9_out_V_data_3_V">
+               <obj_property name="ElementShortName">LENGTH_layer9_out_V_data_3_V[31:0]</obj_property>
+               <obj_property name="ObjectShortName">LENGTH_layer9_out_V_data_3_V[31:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/LENGTH_layer9_out_V_data_4_V">
+               <obj_property name="ElementShortName">LENGTH_layer9_out_V_data_4_V[31:0]</obj_property>
+               <obj_property name="ObjectShortName">LENGTH_layer9_out_V_data_4_V[31:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/LENGTH_layer9_out_V_data_5_V">
+               <obj_property name="ElementShortName">LENGTH_layer9_out_V_data_5_V[31:0]</obj_property>
+               <obj_property name="ObjectShortName">LENGTH_layer9_out_V_data_5_V[31:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/LENGTH_layer9_out_V_data_6_V">
+               <obj_property name="ElementShortName">LENGTH_layer9_out_V_data_6_V[31:0]</obj_property>
+               <obj_property name="ObjectShortName">LENGTH_layer9_out_V_data_6_V[31:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/LENGTH_layer9_out_V_data_7_V">
+               <obj_property name="ElementShortName">LENGTH_layer9_out_V_data_7_V[31:0]</obj_property>
+               <obj_property name="ObjectShortName">LENGTH_layer9_out_V_data_7_V[31:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/LENGTH_layer9_out_V_data_8_V">
+               <obj_property name="ElementShortName">LENGTH_layer9_out_V_data_8_V[31:0]</obj_property>
+               <obj_property name="ObjectShortName">LENGTH_layer9_out_V_data_8_V[31:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/LENGTH_layer9_out_V_data_9_V">
+               <obj_property name="ElementShortName">LENGTH_layer9_out_V_data_9_V[31:0]</obj_property>
+               <obj_property name="ObjectShortName">LENGTH_layer9_out_V_data_9_V[31:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/LENGTH_layer9_out_V_data_10_V">
+               <obj_property name="ElementShortName">LENGTH_layer9_out_V_data_10_V[31:0]</obj_property>
+               <obj_property name="ObjectShortName">LENGTH_layer9_out_V_data_10_V[31:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/LENGTH_layer9_out_V_data_11_V">
+               <obj_property name="ElementShortName">LENGTH_layer9_out_V_data_11_V[31:0]</obj_property>
+               <obj_property name="ObjectShortName">LENGTH_layer9_out_V_data_11_V[31:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/LENGTH_layer9_out_V_data_12_V">
+               <obj_property name="ElementShortName">LENGTH_layer9_out_V_data_12_V[31:0]</obj_property>
+               <obj_property name="ObjectShortName">LENGTH_layer9_out_V_data_12_V[31:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/LENGTH_layer9_out_V_data_13_V">
+               <obj_property name="ElementShortName">LENGTH_layer9_out_V_data_13_V[31:0]</obj_property>
+               <obj_property name="ObjectShortName">LENGTH_layer9_out_V_data_13_V[31:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/LENGTH_layer9_out_V_data_14_V">
+               <obj_property name="ElementShortName">LENGTH_layer9_out_V_data_14_V[31:0]</obj_property>
+               <obj_property name="ObjectShortName">LENGTH_layer9_out_V_data_14_V[31:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/LENGTH_layer9_out_V_data_15_V">
+               <obj_property name="ElementShortName">LENGTH_layer9_out_V_data_15_V[31:0]</obj_property>
+               <obj_property name="ObjectShortName">LENGTH_layer9_out_V_data_15_V[31:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+         </wvobject>
+      </wvobject>
+      <wvobject type="group" fp_name="group90">
+         <obj_property name="label">C Outputs</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject type="group" fp_name="group91">
+            <obj_property name="label">layer9_out(axis)</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/layer9_out_V_data_15_V_TREADY">
+               <obj_property name="ElementShortName">layer9_out_V_data_15_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_15_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/layer9_out_V_data_15_V_TVALID">
+               <obj_property name="ElementShortName">layer9_out_V_data_15_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_15_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/layer9_out_V_data_14_V_TREADY">
+               <obj_property name="ElementShortName">layer9_out_V_data_14_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_14_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/layer9_out_V_data_14_V_TVALID">
+               <obj_property name="ElementShortName">layer9_out_V_data_14_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_14_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/layer9_out_V_data_13_V_TREADY">
+               <obj_property name="ElementShortName">layer9_out_V_data_13_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_13_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/layer9_out_V_data_13_V_TVALID">
+               <obj_property name="ElementShortName">layer9_out_V_data_13_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_13_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/layer9_out_V_data_12_V_TREADY">
+               <obj_property name="ElementShortName">layer9_out_V_data_12_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_12_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/layer9_out_V_data_12_V_TVALID">
+               <obj_property name="ElementShortName">layer9_out_V_data_12_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_12_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/layer9_out_V_data_11_V_TREADY">
+               <obj_property name="ElementShortName">layer9_out_V_data_11_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_11_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/layer9_out_V_data_11_V_TVALID">
+               <obj_property name="ElementShortName">layer9_out_V_data_11_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_11_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/layer9_out_V_data_10_V_TREADY">
+               <obj_property name="ElementShortName">layer9_out_V_data_10_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_10_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/layer9_out_V_data_10_V_TVALID">
+               <obj_property name="ElementShortName">layer9_out_V_data_10_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_10_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/layer9_out_V_data_9_V_TREADY">
+               <obj_property name="ElementShortName">layer9_out_V_data_9_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_9_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/layer9_out_V_data_9_V_TVALID">
+               <obj_property name="ElementShortName">layer9_out_V_data_9_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_9_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/layer9_out_V_data_8_V_TREADY">
+               <obj_property name="ElementShortName">layer9_out_V_data_8_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_8_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/layer9_out_V_data_8_V_TVALID">
+               <obj_property name="ElementShortName">layer9_out_V_data_8_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_8_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/layer9_out_V_data_7_V_TREADY">
+               <obj_property name="ElementShortName">layer9_out_V_data_7_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_7_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/layer9_out_V_data_7_V_TVALID">
+               <obj_property name="ElementShortName">layer9_out_V_data_7_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_7_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/layer9_out_V_data_6_V_TREADY">
+               <obj_property name="ElementShortName">layer9_out_V_data_6_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_6_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/layer9_out_V_data_6_V_TVALID">
+               <obj_property name="ElementShortName">layer9_out_V_data_6_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_6_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/layer9_out_V_data_5_V_TREADY">
+               <obj_property name="ElementShortName">layer9_out_V_data_5_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_5_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/layer9_out_V_data_5_V_TVALID">
+               <obj_property name="ElementShortName">layer9_out_V_data_5_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_5_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/layer9_out_V_data_4_V_TREADY">
+               <obj_property name="ElementShortName">layer9_out_V_data_4_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_4_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/layer9_out_V_data_4_V_TVALID">
+               <obj_property name="ElementShortName">layer9_out_V_data_4_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_4_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/layer9_out_V_data_3_V_TREADY">
+               <obj_property name="ElementShortName">layer9_out_V_data_3_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_3_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/layer9_out_V_data_3_V_TVALID">
+               <obj_property name="ElementShortName">layer9_out_V_data_3_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_3_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/layer9_out_V_data_2_V_TREADY">
+               <obj_property name="ElementShortName">layer9_out_V_data_2_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_2_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/layer9_out_V_data_2_V_TVALID">
+               <obj_property name="ElementShortName">layer9_out_V_data_2_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_2_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/layer9_out_V_data_1_V_TREADY">
+               <obj_property name="ElementShortName">layer9_out_V_data_1_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_1_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/layer9_out_V_data_1_V_TVALID">
+               <obj_property name="ElementShortName">layer9_out_V_data_1_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_1_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/layer9_out_V_data_0_V_TREADY">
+               <obj_property name="ElementShortName">layer9_out_V_data_0_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_0_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/layer9_out_V_data_0_V_TVALID">
+               <obj_property name="ElementShortName">layer9_out_V_data_0_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_0_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/layer9_out_V_data_15_V_TDATA">
+               <obj_property name="ElementShortName">layer9_out_V_data_15_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_15_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/layer9_out_V_data_14_V_TDATA">
+               <obj_property name="ElementShortName">layer9_out_V_data_14_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_14_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/layer9_out_V_data_13_V_TDATA">
+               <obj_property name="ElementShortName">layer9_out_V_data_13_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_13_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/layer9_out_V_data_12_V_TDATA">
+               <obj_property name="ElementShortName">layer9_out_V_data_12_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_12_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/layer9_out_V_data_11_V_TDATA">
+               <obj_property name="ElementShortName">layer9_out_V_data_11_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_11_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/layer9_out_V_data_10_V_TDATA">
+               <obj_property name="ElementShortName">layer9_out_V_data_10_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_10_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/layer9_out_V_data_9_V_TDATA">
+               <obj_property name="ElementShortName">layer9_out_V_data_9_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_9_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/layer9_out_V_data_8_V_TDATA">
+               <obj_property name="ElementShortName">layer9_out_V_data_8_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_8_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/layer9_out_V_data_7_V_TDATA">
+               <obj_property name="ElementShortName">layer9_out_V_data_7_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_7_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/layer9_out_V_data_6_V_TDATA">
+               <obj_property name="ElementShortName">layer9_out_V_data_6_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_6_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/layer9_out_V_data_5_V_TDATA">
+               <obj_property name="ElementShortName">layer9_out_V_data_5_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_5_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/layer9_out_V_data_4_V_TDATA">
+               <obj_property name="ElementShortName">layer9_out_V_data_4_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_4_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/layer9_out_V_data_3_V_TDATA">
+               <obj_property name="ElementShortName">layer9_out_V_data_3_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_3_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/layer9_out_V_data_2_V_TDATA">
+               <obj_property name="ElementShortName">layer9_out_V_data_2_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_2_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/layer9_out_V_data_1_V_TDATA">
+               <obj_property name="ElementShortName">layer9_out_V_data_1_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_1_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/layer9_out_V_data_0_V_TDATA">
+               <obj_property name="ElementShortName">layer9_out_V_data_0_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">layer9_out_V_data_0_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+         </wvobject>
+      </wvobject>
+      <wvobject type="group" fp_name="group140">
+         <obj_property name="label">C Inputs</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject type="group" fp_name="group141">
+            <obj_property name="label">input_1(axis)</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/input_1_V_data_0_V_TREADY">
+               <obj_property name="ElementShortName">input_1_V_data_0_V_TREADY</obj_property>
+               <obj_property name="ObjectShortName">input_1_V_data_0_V_TREADY</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="logic" fp_name="/apatb_myproject_top/input_1_V_data_0_V_TVALID">
+               <obj_property name="ElementShortName">input_1_V_data_0_V_TVALID</obj_property>
+               <obj_property name="ObjectShortName">input_1_V_data_0_V_TVALID</obj_property>
+               <obj_property name="CustomSignalColor">#ffff00</obj_property>
+               <obj_property name="UseCustomSignalColor">true</obj_property>
+            </wvobject>
+            <wvobject type="array" fp_name="/apatb_myproject_top/input_1_V_data_0_V_TDATA">
+               <obj_property name="ElementShortName">input_1_V_data_0_V_TDATA[15:0]</obj_property>
+               <obj_property name="ObjectShortName">input_1_V_data_0_V_TDATA[15:0]</obj_property>
+               <obj_property name="Radix">HEXRADIX</obj_property>
+            </wvobject>
+         </wvobject>
+      </wvobject>
+   </wvobject>
+</wave_config>
