@@ -180,56 +180,57 @@ def main(args):
     BIT_WIDTH = args.bit_width
     strategy = "sum"
     # Hessian model-wide sensitivity ranking
-    eigenvalues, eigenvectors = hess.top_k_eigenvalues_hack(k=top_k, max_iter=500)
-    print("Eigenvectors")
-    for i in range(len(eigenvalues)):
-        print(f"Top {i+1} eigenvalue: {eigenvalues[i]}")
+    # eigenvalues, eigenvectors = hess.top_k_eigenvalues_hack(k=top_k, max_iter=500)
     print(f'Hessian eigenvalue compute time: {time.time() - hess_start} seconds\n')
+
     # eigenvalues = None
     rank_start_time = time.time()
-    param_ranking, param_scores = hess.hessian_ranking_hack(
-        eigenvectors, eigenvalues=eigenvalues, k=top_k, strategy=strategy
-    )
+    # param_ranking, param_scores = hess.hessian_ranking_hack(
+    #     eigenvectors, eigenvalues=eigenvalues, k=top_k, strategy=strategy, iter_by=1,
+    # )
+    param_ranking, param_scores = hess.aspis_taylor_ranking_hack()
 
-    sfi_model = StatFI(m_autoCNNen)
-    params_and_quants = sfi_model.get_params_and_quantizers()
+    print(f"Len param ranking: {len(param_ranking)}")
+
+    # sfi_model = StatFI(m_autoCNNen)
+    # params_and_quants = sfi_model.get_params_and_quantizers()
     # List where param idx indexes into its associated quantizer idx, which
     # we use to index into the list of quantizers
     # Need ([param0_quant_idx, param1_quant_idx], [quant1, quant2]) for mixed precision
-    if processed_layer_precision_info is not None:
-        param_idx_to_quant_list = []
-        quantizers = []
-        # Example: [(800,5),(8192,7)]
-        param_counter = 0
-        for i, num_param_and_bitwidth in enumerate(processed_layer_precision_info):
-            num_params = num_param_and_bitwidth[0]
-            quantizers.append(params_and_quants[1][i])
-            for _ in range(param_counter, param_counter + num_params):
-                param_idx_to_quant_list.append(i)
-            param_counter += num_params
-        quantizer_info = (param_idx_to_quant_list, quantizers)
-    else: # else just a single quantizer for uniform precision
-        quantizer_info = params_and_quants[1][0]
+    # if processed_layer_precision_info is not None:
+    #     param_idx_to_quant_list = []
+    #     quantizers = []
+    #     # Example: [(800,5),(8192,7)]
+    #     param_counter = 0
+    #     for i, num_param_and_bitwidth in enumerate(processed_layer_precision_info):
+    #         num_params = num_param_and_bitwidth[0]
+    #         quantizers.append(params_and_quants[1][i])
+    #         for _ in range(param_counter, param_counter + num_params):
+    #             param_idx_to_quant_list.append(i)
+    #         param_counter += num_params
+    #     quantizer_info = (param_idx_to_quant_list, quantizers)
+    # else: # else just a single quantizer for uniform precision
+    #     quantizer_info = params_and_quants[1][0]
     # print(quantizer_info)
 
     # Hessian param ranking + quantizer_info for hybrid Hessian + BinFI analysis
-    pickled_param_ranking_file = os.path.join(args.odir, f"hessian_ranked_params_{args.model_id}.pkl")
-    obj = (list(param_ranking), quantizer_info)
-    pickled_obj = codecs.encode(pickle.dumps(obj), "base64").decode()
-    with open(pickled_param_ranking_file, "w") as f:
-        f.write(pickled_obj)
+    # pickled_param_ranking_file = os.path.join(args.odir, f"hessian_ranked_params_{args.model_id}.pkl")
+    # obj = (list(param_ranking), quantizer_info)
+    # pickled_obj = codecs.encode(pickle.dumps(obj), "base64").decode()
+    # with open(pickled_param_ranking_file, "w") as f:
+    #     f.write(pickled_obj)
     
 
     # Compute bit ranking
-    # bitwise_rank, bitwise_scores = hess.rank_bits(param_scores, 5) # add m = 5 bits (doesn't work; TODO: delete)
-    # bitwise_rank = hess.convert_param_ranking_to_msb_bit_ranking(param_ranking, BIT_WIDTH)
-
-    # pickled_ranking_file = os.path.join(args.odir, f"hessian_ranked_model_bits_iccad_2023_{args.model_id}.pkl")
+    ranking_type = "taylor"
+    bitwise_rank = hess.convert_param_ranking_to_msb_bit_ranking(param_ranking, BIT_WIDTH)
+    print(f"Len bitwise ranking: {len(bitwise_rank)}")
+    pickled_ranking_file = os.path.join(args.odir, f"{ranking_type}_ranked_model_bits_with_bias_{args.model_id}.pkl")
     
-    # obj = list(bitwise_rank)
-    # pickled_obj = codecs.encode(pickle.dumps(obj), "base64").decode()
-    # with open(pickled_ranking_file, "w") as f:
-    #     f.write(pickled_obj)
+    obj = list(bitwise_rank)
+    pickled_obj = codecs.encode(pickle.dumps(obj), "base64").decode()
+    with open(pickled_ranking_file, "w") as f:
+        f.write(pickled_obj)
 
     # gradient_rank, _ = hess.gradient_ranking_hack()
     # bitwise_rank = hess.convert_param_ranking_to_msb_bit_ranking(gradient_rank, BIT_WIDTH)
