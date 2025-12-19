@@ -21,8 +21,8 @@ elif [ $1 -eq 1 ]; then
 elif [ $1 -eq 2 ]; then
 	PRETRAINED_MODEL=$PATH_PREFIX/training/fkeras-big-econ-hawq-end-of-life/run5-row21-big-econ/run5-row21-big-econ.hdf5
 	MODEL_NAME=run5-row21-big-econ
-	# EXTRA_FLAGS="--layer_precision_info '[(800,5),(8192,7)]'"
-	EXTRA_FLAGS="--layer_precision_info '[(800,5),(32,5),(8192,7),(16,7)]'" # with bias
+	EXTRA_FLAGS="--layer_precision_info '[(800,5),(8192,7)]'"
+	# EXTRA_FLAGS="--layer_precision_info '[(800,5),(32,5),(8192,7),(16,7)]'" # with bias
 	MODEL_ID="ECONT-large-pareto"
 
 else

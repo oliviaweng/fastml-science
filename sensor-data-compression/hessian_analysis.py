@@ -188,12 +188,24 @@ def main(args):
     # param_ranking, param_scores = hess.hessian_ranking_hack(
     #     eigenvectors, eigenvalues=eigenvalues, k=top_k, strategy=strategy, iter_by=1,
     # )
+
+    # Taylor ranking
     param_ranking, param_scores = hess.aspis_taylor_ranking_hack()
 
     print(f"Len param ranking: {len(param_ranking)}")
 
     # sfi_model = StatFI(m_autoCNNen)
     # params_and_quants = sfi_model.get_params_and_quantizers()
+    # print(f"len(params_and_quants[0]) = {len(params_and_quants[0])}")
+    # print(f"len(params_and_quants[1]) = {len(params_and_quants[1])}")
+    # print(params_and_quants)
+    # Save params (not ranked) and quantizers for StatFI and BinFI analysis
+    # pickled_obj = codecs.encode(pickle.dumps(params_and_quants), "base64").decode()
+    # fp_pickle = os.path.join(args.odir, f"{args.model_id}_params_and_quants.pkl")
+    # with open(f"{fp_pickle}_params_and_quants.pkl", "w") as f:
+    #     f.write(pickled_obj)
+
+
     # List where param idx indexes into its associated quantizer idx, which
     # we use to index into the list of quantizers
     # Need ([param0_quant_idx, param1_quant_idx], [quant1, quant2]) for mixed precision
@@ -214,7 +226,10 @@ def main(args):
     # print(quantizer_info)
 
     # Hessian param ranking + quantizer_info for hybrid Hessian + BinFI analysis
-    # pickled_param_ranking_file = os.path.join(args.odir, f"hessian_ranked_params_{args.model_id}.pkl")
+    # quantizer_info = params_and_quants[1][0]
+    # print(quantizer_info)
+
+    # pickled_param_ranking_file = os.path.join(args.odir, f"taylor_ranked_params_with_bias_{args.model_id}.pkl")
     # obj = (list(param_ranking), quantizer_info)
     # pickled_obj = codecs.encode(pickle.dumps(obj), "base64").decode()
     # with open(pickled_param_ranking_file, "w") as f:
@@ -225,7 +240,7 @@ def main(args):
     ranking_type = "taylor"
     bitwise_rank = hess.convert_param_ranking_to_msb_bit_ranking(param_ranking, BIT_WIDTH)
     print(f"Len bitwise ranking: {len(bitwise_rank)}")
-    pickled_ranking_file = os.path.join(args.odir, f"{ranking_type}_ranked_model_bits_with_bias_{args.model_id}.pkl")
+    pickled_ranking_file = os.path.join(args.odir, f"{ranking_type}_ranked_model_bits_{args.model_id}.pkl")
     
     obj = list(bitwise_rank)
     pickled_obj = codecs.encode(pickle.dumps(obj), "base64").decode()
