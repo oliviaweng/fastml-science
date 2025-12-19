@@ -12,7 +12,7 @@ dependencies:
     - matplotlib
     - pillow
     - jupyter
-    - tensorflow
+    - tensorflow==2.10.0
     - keras
     - qkeras
     - tensorflow-model-optimization

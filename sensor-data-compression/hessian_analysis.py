@@ -147,6 +147,7 @@ def main(args):
     if args.layer_precision_info != None:
         processed_layer_precision_info = eval(args.layer_precision_info[1:-1])
 
+    hess_start = time.time()
     hess = HessianMetrics(
         m_autoCNN, 
         telescopeMSE8x8_for_FKeras, 
@@ -175,22 +176,22 @@ def main(args):
     # )
         
 
-    hess_start = time.time()
     top_k = 8
     BIT_WIDTH = args.bit_width
     strategy = "sum"
     # Hessian model-wide sensitivity ranking
-    # eigenvalues, eigenvectors = hess.top_k_eigenvalues_hack(k=top_k, max_iter=500)
-    print(f'Hessian eigenvalue compute time: {time.time() - hess_start} seconds\n')
+    eigenvalues, eigenvectors = hess.top_k_eigenvalues_hack(k=top_k, max_iter=500)
 
     # eigenvalues = None
     rank_start_time = time.time()
-    # param_ranking, param_scores = hess.hessian_ranking_hack(
-    #     eigenvectors, eigenvalues=eigenvalues, k=top_k, strategy=strategy, iter_by=1,
-    # )
+    param_ranking, param_scores = hess.hessian_ranking_hack(
+        eigenvectors, eigenvalues=eigenvalues, k=top_k, strategy=strategy, iter_by=1,
+    )
+    print(f'Hessian ranking compute time: {time.time() - hess_start} seconds\n')
+    return
 
     # Taylor ranking
-    param_ranking, param_scores = hess.aspis_taylor_ranking_hack()
+    # param_ranking, param_scores = hess.aspis_taylor_ranking_hack()
 
     print(f"Len param ranking: {len(param_ranking)}")
 

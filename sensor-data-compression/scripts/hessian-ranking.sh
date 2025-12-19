@@ -3,7 +3,8 @@
 # DATASET=../../elegun-low-pt-high-eta/nElinks_5 # begin of life data
 DATASET=../../hgcal22data_signal_driven_ttbar_v11/nElinks_5/ # end of life data
 
-PATH_PREFIX=/home/olivia/xdr/econ-t/fastml-science/sensor-data-compression
+PATH_PREFIX=/home/l.weng/xdr/fastml-science/sensor-data-compression
+# PATH_PREFIX=/home/olivia/xdr/econ-t/fastml-science/sensor-data-compression
 OUTPUT_DIR="$PATH_PREFIX/ranked_model_bits"
 EXTRA_FLAGS=""
 BIT_WIDTH=0
@@ -29,7 +30,7 @@ else
 	echo "Error"
 fi
 
-python3 hessian_analysis.py \
+CUDA_VISIBLE_DEVICES=0 python3 hessian_analysis.py \
 	-i $DATASET \
 	-o ${OUTPUT_DIR} \
 	--AEonly 1 \
